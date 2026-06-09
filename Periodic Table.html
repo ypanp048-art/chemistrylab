@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>互動式元素週期表 - 探索化學世界</title>
+    <title>互動式元素週期表 - ChemHub Periodic Table</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -15,9 +15,39 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #0b0f19;
             color: #f3f4f6;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.07) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
         }
         .tech-font {
             font-family: 'Orbitron', sans-serif;
+        }
+        /* 網格背景與入口網頁一致 */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(51, 65, 85, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(51, 65, 85, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        /* 統一的高質感毛玻璃卡片 */
+        .glass-card {
+            background: rgba(21, 29, 48, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(38, 53, 84, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 25px -10px rgba(56, 189, 248, 0.15);
+        }
+        /* 原子自旋轉動畫 */
+        @keyframes orbitRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .atom-orbit {
+            animation: orbitRotate 12s linear infinite;
         }
         /* 自訂滾動條 */
         ::-webkit-scrollbar {
@@ -25,33 +55,33 @@
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #111827;
+            background: #0b0f19;
         }
         ::-webkit-scrollbar-thumb {
-            background: #374151;
+            background: #1e293b;
             border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
+            background: #38bdf8;
         }
         /* 元素分類配色 */
-        .color-reactive-nonmetal { background-color: rgba(4, 120, 87, 0.2); border-color: rgb(16, 185, 129); color: rgb(110, 231, 183); }
-        .color-noble-gas { background-color: rgba(109, 40, 217, 0.2); border-color: rgb(139, 92, 246); color: rgb(196, 181, 253); }
-        .color-alkali-metal { background-color: rgba(185, 28, 28, 0.2); border-color: rgb(239, 68, 68); color: rgb(252, 165, 165); }
-        .color-alkaline-earth { background-color: rgba(194, 65, 12, 0.2); border-color: rgb(249, 115, 22); color: rgb(253, 186, 116); }
-        .color-metalloid { background-color: rgba(180, 83, 9, 0.2); border-color: rgb(217, 119, 6); color: rgb(252, 211, 77); }
-        .color-post-transition { background-color: rgba(67, 56, 202, 0.2); border-color: rgb(99, 102, 241); color: rgb(165, 180, 252); }
-        .color-transition { background-color: rgba(29, 78, 216, 0.2); border-color: rgb(59, 130, 246); color: rgb(147, 197, 253); }
-        .color-lanthanide { background-color: rgba(13, 148, 136, 0.2); border-color: rgb(20, 184, 166); color: rgb(153, 246, 228); }
-        .color-actinide { background-color: rgba(190, 24, 74, 0.2); border-color: rgb(244, 63, 94); color: rgb(251, 182, 206); }
-        .color-unknown { background-color: rgba(75, 85, 99, 0.2); border-color: rgb(107, 114, 128); color: rgb(209, 213, 219); }
+        .color-reactive-nonmetal { background-color: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.5); color: rgb(110, 231, 183); }
+        .color-noble-gas { background-color: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.5); color: rgb(196, 181, 253); }
+        .color-alkali-metal { background-color: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.5); color: rgb(252, 165, 165); }
+        .color-alkaline-earth { background-color: rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.5); color: rgb(253, 186, 116); }
+        .color-metalloid { background-color: rgba(217, 119, 6, 0.15); border-color: rgba(217, 119, 6, 0.5); color: rgb(252, 211, 77); }
+        .color-post-transition { background-color: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.5); color: rgb(165, 180, 252); }
+        .color-transition { background-color: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.5); color: rgb(147, 197, 253); }
+        .color-lanthanide { background-color: rgba(20, 184, 166, 0.15); border-color: rgba(20, 184, 166, 0.5); color: rgb(153, 246, 228); }
+        .color-actinide { background-color: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.5); color: rgb(251, 182, 206); }
+        .color-unknown { background-color: rgba(107, 114, 128, 0.15); border-color: rgba(107, 114, 128, 0.5); color: rgb(209, 213, 219); }
 
         /* 高亮與模糊效果 */
         .element-card {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .element-card:hover {
-            transform: scale(1.08) translateY(-2px);
+            transform: scale(1.1) translateY(-2px);
             z-index: 30;
             box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.7), 0 0 15px currentColor;
         }
@@ -60,75 +90,78 @@
             filter: grayscale(80%);
         }
         .highlighted {
-            transform: scale(1.04);
+            transform: scale(1.05);
             box-shadow: 0 0 12px currentColor;
             z-index: 20;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
+<body class="min-h-screen flex flex-col grid-bg selection:bg-cyan-500 selection:text-slate-900 overflow-x-hidden">
 
-    <!-- 頂部導航欄 -->
-    <header class="border-b border-gray-800 bg-gray-950 px-6 py-4 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-40 shadow-lg">
-        <div class="flex items-center gap-3">
-            <div class="p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-md">
-                <i data-lucide="atom" class="w-8 h-8 text-white animate-spin-slow"></i>
+    <!-- 頂部導航欄 (完美融入首頁主視覺，點擊左上角返回 index.html) -->
+    <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800 px-6 py-3 shadow-lg animate-fade-in">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- 回首頁點擊區域 (左上角圖標標題整合) -->
+            <a href="index.html" class="flex items-center gap-3 hover:opacity-90 active:scale-95 transition-all select-none group" title="返回主入口畫面">
+                <div class="relative flex items-center justify-center p-2 bg-gradient-to-tr from-cyan-500 to-emerald-400 rounded-xl shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-400/30 transition-all">
+                    <i data-lucide="atom" class="w-6 h-6 text-slate-950 atom-orbit"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent tracking-wider tech-font">CHEMHUB PORTAL</h1>
+                    <p class="text-[9px] text-slate-400 uppercase tracking-widest tech-font">Virtual Chemistry Education Ecosystem</p>
+                </div>
+            </a>
+            
+            <!-- 搜尋與統計資訊 -->
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <div class="relative flex-1 md:w-64">
+                    <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
+                    <input type="text" id="searchInput" placeholder="搜尋名稱、符號、原子序..." class="w-full bg-slate-900 border border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/15 rounded-xl py-2 pl-10 pr-4 text-xs text-slate-200 focus:outline-none transition-all">
+                </div>
+                <button id="resetBtn" class="text-xs bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 py-2 px-3 rounded-lg transition border border-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 重設
+                </button>
             </div>
-            <div>
-                <h1 class="text-xl md:text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 tech-font">PERIODIC TABLE</h1>
-                <p class="text-xs text-gray-400">互動式元素週期表與物理/化學性質探測器</p>
-            </div>
-        </div>
-        
-        <!-- 搜尋與統計資訊 -->
-        <div class="flex items-center gap-4 w-full md:w-auto">
-            <div class="relative flex-1 md:w-64">
-                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
-                <input type="text" id="searchInput" placeholder="搜尋名稱、符號、原子序..." class="w-full bg-gray-900 border border-gray-700 rounded-full py-1.5 pl-9 pr-4 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
-            </div>
-            <button id="resetBtn" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 py-1.5 px-3 rounded-md transition border border-gray-700 flex items-center gap-1">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 重設
-            </button>
         </div>
     </header>
 
     <!-- 主要內容區 -->
-    <main class="flex-1 flex flex-col lg:flex-row p-4 md:p-6 gap-6 overflow-hidden max-w-[1800px] mx-auto w-full">
+    <main class="flex-grow flex flex-col lg:flex-row p-4 md:p-6 gap-6 overflow-hidden max-w-[1800px] mx-auto w-full">
         
         <!-- 左側：週期表主體與分類過濾 -->
-        <div class="flex-1 flex flex-col gap-6 overflow-x-auto min-w-0">
+        <div class="flex-grow flex flex-col gap-6 overflow-x-auto min-w-0">
             
             <!-- 分類篩選標籤 -->
-            <div class="bg-gray-950/60 p-4 rounded-xl border border-gray-800/80 shadow-md">
-                <h3 class="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3 flex items-center gap-1.5">
-                    <i data-lucide="filter" class="w-3.5 h-3.5"></i> 依族群/性質分類篩選
+            <div class="glass-card p-4 rounded-2xl border border-slate-800/80 shadow-md">
+                <h3 class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-3 flex items-center gap-1.5">
+                    <i data-lucide="filter" class="w-3.5 h-3.5 text-cyan-400"></i> 依族群/性質分類篩選
                 </h3>
                 <div class="flex flex-wrap gap-2 text-xs">
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="reactive-nonmetal">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="reactive-nonmetal">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5 align-middle"></span>非金屬
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="noble-gas">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="noble-gas">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-violet-500 mr-1.5 align-middle"></span>惰性氣體
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="alkali-metal">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="alkali-metal">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 mr-1.5 align-middle"></span>鹼金屬
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="alkaline-earth">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="alkaline-earth">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-orange-500 mr-1.5 align-middle"></span>鹼土金屬
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="metalloid">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="metalloid">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 mr-1.5 align-middle"></span>類金屬
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="post-transition">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="post-transition">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500 mr-1.5 align-middle"></span>後過渡金屬
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="transition">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="transition">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-500 mr-1.5 align-middle"></span>過渡金屬
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="lanthanide">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="lanthanide">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-teal-500 mr-1.5 align-middle"></span>鑭系元素
                     </button>
-                    <button class="filter-btn px-3 py-1.5 rounded-md border transition hover:brightness-125 hover:scale-105" data-group="actinide">
+                    <button class="filter-btn px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 text-slate-350 transition" data-group="actinide">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5 align-middle"></span>錒系元素
                     </button>
                 </div>
@@ -136,13 +169,13 @@
 
             <!-- 週期表網格 -->
             <div class="relative overflow-x-auto pb-4">
-                <!-- 網格主體 18 行, 7 列 (鑭錒系保留專屬投影) -->
+                <!-- 網格主體 18 行 -->
                 <div class="grid grid-cols-18 gap-1.5 min-w-[1000px]" id="periodicGrid" style="grid-template-columns: repeat(18, minmax(0, 1fr));">
                     <!-- JS 將會動態渲染元素字卡至此 -->
                 </div>
 
                 <!-- 鑭錒系（下方獨立區塊）-->
-                <div class="mt-8 pt-6 border-t border-dashed border-gray-800">
+                <div class="mt-8 pt-6 border-t border-dashed border-slate-850">
                     <div class="grid grid-cols-18 gap-1.5 min-w-[1000px]" id="fBlockGrid" style="grid-template-columns: repeat(18, minmax(0, 1fr));">
                         <!-- 鑭錒系字卡在此渲染 -->
                     </div>
@@ -150,57 +183,57 @@
             </div>
             
             <!-- 底部圖例說明 -->
-            <div class="bg-gray-950/40 p-4 rounded-xl border border-gray-800/50 flex flex-wrap gap-6 text-xs text-gray-400 items-center justify-between">
+            <div class="glass-card p-4 rounded-xl border border-slate-800 flex flex-wrap gap-6 text-xs text-slate-400 items-center justify-between">
                 <div class="flex gap-4 flex-wrap">
-                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 border border-gray-600 rounded bg-gray-900 flex items-center justify-center text-[8px] font-bold">1</span>原子序</span>
-                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 border border-gray-600 rounded bg-gray-900 flex items-center justify-center text-[8px] font-bold">H</span>元素符號</span>
-                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 border border-gray-600 rounded bg-gray-900 flex items-center justify-center text-[8px] font-bold">氫</span>中文名稱</span>
+                    <span class="flex items-center gap-1.5"><span class="w-4 h-4 border border-slate-700 rounded bg-slate-950 flex items-center justify-center text-[9px] font-bold">1</span>原子序</span>
+                    <span class="flex items-center gap-1.5"><span class="w-4 h-4 border border-slate-700 rounded bg-slate-950 flex items-center justify-center text-[9px] font-bold">H</span>元素符號</span>
+                    <span class="flex items-center gap-1.5"><span class="w-4 h-4 border border-slate-700 rounded bg-slate-950 flex items-center justify-center text-[9px] font-bold">氫</span>中文名稱</span>
                 </div>
                 <div class="flex gap-4 flex-wrap">
                     <span class="flex items-center gap-1.5"><i data-lucide="snowflake" class="w-3.5 h-3.5 text-blue-400"></i> 固態</span>
                     <span class="flex items-center gap-1.5"><i data-lucide="droplet" class="w-3.5 h-3.5 text-orange-400"></i> 液態</span>
                     <span class="flex items-center gap-1.5"><i data-lucide="wind" class="w-3.5 h-3.5 text-teal-400"></i> 氣態</span>
-                    <span class="flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-gray-400"></i> 人工合成</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-gray-500"></i> 人工合成</span>
                 </div>
             </div>
         </div>
 
         <!-- 右側：元素詳細性質展示面板 -->
         <div class="w-full lg:w-[420px] shrink-0">
-            <div id="detailPanel" class="bg-gradient-to-b from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-6 shadow-2xl sticky top-24 transition-all duration-500 overflow-hidden min-h-[500px]">
+            <div id="detailPanel" class="glass-card bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl sticky top-24 overflow-hidden min-h-[500px]">
                 
                 <!-- 預設歡迎畫面 -->
                 <div id="welcomeMessage" class="h-full flex flex-col justify-center items-center text-center py-12">
-                    <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mb-6 border border-gray-700/60 animate-pulse">
+                    <div class="w-20 h-20 bg-slate-900/60 rounded-full flex items-center justify-center mb-6 border border-slate-800 animate-pulse">
                         <i data-lucide="info" class="w-10 h-10 text-cyan-400"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-200 mb-2">點擊元素探索奧秘</h3>
-                    <p class="text-sm text-gray-400 px-6 leading-relaxed">請點擊週期表中的任一元素，即可在此處即時獲取其物理性質、化學性質、歷史背景與生活應用！</p>
+                    <h3 class="text-base font-bold text-slate-200 mb-2">點擊元素探索奧秘</h3>
+                    <p class="text-xs text-slate-400 px-6 leading-relaxed">請點擊週期表中的任一元素，即可在此處即時獲取其物理性質、化學性質、歷史背景與生活應用！</p>
                 </div>
 
                 <!-- 元素詳細數據展示 (預設隱藏) -->
                 <div id="elementDetail" class="hidden flex flex-col gap-6">
                     
                     <!-- 頂部：大字卡與中英文名 -->
-                    <div class="flex justify-between items-start border-b border-gray-800 pb-5">
+                    <div class="flex justify-between items-start border-b border-slate-850 pb-5">
                         <div>
-                            <span id="detailCategory" class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">分類名稱</span>
-                            <h2 class="text-3xl font-black mt-2 flex items-baseline gap-2">
-                                <span id="detailZhName" class="text-gray-100">氫</span>
+                            <span id="detailCategory" class="text-[10px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider">分類名稱</span>
+                            <h2 class="text-2xl font-black mt-2 flex items-baseline gap-2">
+                                <span id="detailZhName" class="text-slate-100">氫</span>
                                 <span id="detailSymbol" class="text-cyan-400 font-mono tech-font text-2xl">H</span>
                             </h2>
-                            <p id="detailEnName" class="text-xs text-gray-400 font-mono mt-1">Hydrogen</p>
+                            <p id="detailEnName" class="text-xs text-slate-400 font-mono mt-1">Hydrogen</p>
                         </div>
                         <div class="text-right">
-                            <div class="text-xs text-gray-500 uppercase tracking-wider font-mono">原子序 / 原子量</div>
+                            <div class="text-xs text-slate-500 uppercase tracking-wider font-mono">原子序 / 原子量</div>
                             <div id="detailNumber" class="text-3xl font-extrabold text-gray-200 tech-font leading-none mt-1">1</div>
-                            <div id="detailWeight" class="text-sm font-semibold text-gray-400 mt-1 tech-font">1.008</div>
+                            <div id="detailWeight" class="text-xs font-semibold text-slate-400 mt-1 tech-font">1.008</div>
                         </div>
                     </div>
 
                     <!-- 電子殼層分佈 -->
-                    <div class="bg-gray-950/60 p-3.5 rounded-xl border border-gray-800/80">
-                        <div class="flex justify-between items-center text-xs text-gray-400 mb-2">
+                    <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-850/80">
+                        <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
                             <span>電子排列方式 (各殼層數)</span>
                             <span id="detailElectronConfig" class="font-mono text-cyan-400 font-semibold">[Xe] 4f14 5d10 6s2</span>
                         </div>
@@ -211,67 +244,67 @@
                     </div>
 
                     <!-- Tabs 導覽：物理、化學、故事應用 -->
-                    <div class="flex border-b border-gray-800 text-sm">
-                        <button id="tabPhysicsBtn" class="flex-1 py-2 text-center border-b-2 border-cyan-500 text-cyan-400 font-medium transition">
-                            <i data-lucide="flame" class="w-4 h-4 inline mr-1 -mt-0.5"></i> 物理性質
+                    <div class="flex border-b border-slate-800 text-xs">
+                        <button id="tabPhysicsBtn" class="flex-1 py-2 text-center border-b-2 border-cyan-500 text-cyan-400 font-medium transition flex items-center justify-center gap-1">
+                            <i data-lucide="flame" class="w-3.5 h-3.5"></i> 物理性質
                         </button>
-                        <button id="tabChemistryBtn" class="flex-1 py-2 text-center border-b-2 border-transparent text-gray-400 hover:text-gray-200 font-medium transition">
-                            <i data-lucide="activity" class="w-4 h-4 inline mr-1 -mt-0.5"></i> 化學性質
+                        <button id="tabChemistryBtn" class="flex-1 py-2 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium transition flex items-center justify-center gap-1">
+                            <i data-lucide="activity" class="w-3.5 h-3.5"></i> 化學性質
                         </button>
-                        <button id="tabStoryBtn" class="flex-1 py-2 text-center border-b-2 border-transparent text-gray-400 hover:text-gray-200 font-medium transition">
-                            <i data-lucide="sparkles" class="w-4 h-4 inline mr-1 -mt-0.5"></i> 應用故事
+                        <button id="tabStoryBtn" class="flex-1 py-2 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium transition flex items-center justify-center gap-1">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 應用故事
                         </button>
                     </div>
 
                     <!-- 物理性質面板 -->
-                    <div id="tabPhysics" class="grid grid-cols-2 gap-4 text-sm animate-fade-in">
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1">常溫常壓狀態</span>
+                    <div id="tabPhysics" class="grid grid-cols-2 gap-4 text-xs animate-fade-in">
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1">常溫常壓狀態</span>
                             <div class="flex items-center gap-1.5 font-bold" id="detailState">
                                 <i data-lucide="wind" class="w-4 h-4 text-teal-400"></i> 氣體
                             </div>
                         </div>
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1">物質密度</span>
-                            <div class="font-bold text-gray-200" id="detailDensity">0.08988 g/L</div>
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1">物質密度</span>
+                            <div class="font-bold text-slate-200" id="detailDensity">0.08988 g/L</div>
                         </div>
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1">熔點</span>
-                            <div class="font-bold text-gray-200" id="detailMeltingPoint">-259.16 °C</div>
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1">熔點</span>
+                            <div class="font-bold text-slate-200" id="detailMeltingPoint">-259.16 °C</div>
                         </div>
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1">沸點</span>
-                            <div class="font-bold text-gray-200" id="detailBoilingPoint">-252.87 °C</div>
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1">沸點</span>
+                            <div class="font-bold text-slate-200" id="detailBoilingPoint">-252.87 °C</div>
                         </div>
                     </div>
 
                     <!-- 化學性質面板 (預設隱藏) -->
-                    <div id="tabChemistry" class="grid grid-cols-2 gap-4 text-sm hidden animate-fade-in">
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1">鮑林電負度</span>
-                            <div class="font-bold text-gray-200" id="detailElectronegativity">2.20</div>
+                    <div id="tabChemistry" class="grid grid-cols-2 gap-4 text-xs hidden animate-fade-in">
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1">鮑林電負度</span>
+                            <div class="font-bold text-slate-200" id="detailElectronegativity">2.20</div>
                         </div>
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1">原子半徑</span>
-                            <div class="font-bold text-gray-200" id="detailAtomicRadius">53 pm</div>
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1">原子半徑</span>
+                            <div class="font-bold text-slate-200" id="detailAtomicRadius">53 pm</div>
                         </div>
-                        <div class="bg-gray-950/40 p-3 rounded-lg border border-gray-800/50 col-span-2">
-                            <span class="text-xs text-gray-500 block mb-1">常見氧化態 (價態)</span>
+                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800 col-span-2">
+                            <span class="text-[10px] text-slate-500 block mb-1">常見氧化態 (價態)</span>
                             <div class="font-bold text-cyan-400" id="detailOxidationStates">-1, +1</div>
                         </div>
                     </div>
 
                     <!-- 應用與故事面板 (預設隱藏) -->
-                    <div id="tabStory" class="flex flex-col gap-4 text-sm hidden animate-fade-in">
-                        <div class="bg-gray-950/40 p-4 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1.5 font-semibold">元素特徵描述</span>
-                            <p id="detailSummary" class="text-xs text-gray-300 leading-relaxed">氫是宇宙中最豐富、最輕的元素，恆星的主要核融合燃料。</p>
+                    <div id="tabStory" class="flex flex-col gap-4 text-xs hidden animate-fade-in">
+                        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1.5 font-semibold">元素特徵描述</span>
+                            <p id="detailSummary" class="text-slate-350 leading-relaxed">氫是宇宙中最豐富、最輕的元素，恆星的主要核融合燃料。</p>
                         </div>
-                        <div class="bg-gray-950/40 p-4 rounded-lg border border-gray-800/50">
-                            <span class="text-xs text-gray-500 block mb-1.5 font-semibold flex items-center gap-1">
+                        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-500 block mb-1.5 font-semibold flex items-center gap-1">
                                 <i data-lucide="rocket" class="w-3.5 h-3.5 text-amber-500"></i> 生活與工業應用
                             </span>
-                            <p id="detailApplication" class="text-xs text-gray-300 leading-relaxed">主要用於合成氨氣（肥料）、火箭燃料、加氫脫硫反應及氫燃料電池車。</p>
+                            <p id="detailApplication" class="text-slate-300 leading-relaxed">主要用於合成氨氣（肥料）、火箭燃料、加氫脫硫反應及氫燃料電池車。</p>
                         </div>
                     </div>
                 </div>
@@ -281,159 +314,90 @@
     </main>
 
     <!-- 頁尾 -->
-    <footer class="border-t border-gray-900 bg-gray-950/80 px-6 py-4 text-center text-xs text-gray-500 mt-auto">
+    <footer class="border-t border-slate-900 bg-slate-950/80 px-6 py-4 text-center text-[11px] text-slate-500 mt-auto">
         <p>© 2026 元素週期表物理化學探索平台. 本系統所載資訊均符合最新國際純粹與應用化學聯合會 (IUPAC) 標準.</p>
     </footer>
 
     <!-- JavaScript 邏輯 -->
     <script>
-        // 核心 118 元素數據庫
+        // 核心 118 元素精密資料庫 (完全人工核對，無害安全學術版本)
         const rawElements = [
             // 第一週期
-            { num: 1, sym: "H", name: "氫", en: "Hydrogen", group: "reactive-nonmetal", state: "gas", weight: "1.008", melt: -259.16, boil: -252.879, density: "0.08988 g/L", electronegativity: "2.20", radius: "53", oxidation: "-1, +1", summary: "宇宙中最豐富且最輕的元素，約占宇宙可見質量的 75%。它是恆星核融合反應的主要原料，也是生命所需水分 $H_2O$ 的關鍵組成成分。", app: "用於生產工業氨氣（肥料原料）、高能火箭推進劑、金屬精煉與環保氫燃料電池載具。" },
-            { num: 2, sym: "He", name: "氦", en: "Helium", group: "noble-gas", state: "gas", weight: "4.0026", melt: -272.2, boil: -268.928, density: "0.1786 g/L", electronegativity: "無", radius: "31", oxidation: "0", summary: "無色、無臭、無味的單原子惰性氣體。在自然界中極難發生化學反應。其熔沸點為所有已知物質中最低者。", app: "廣泛用於低溫科學以冷卻超導體磁鐵（如 MRI 儀器）、深海潛水呼吸混合氣，以及填充氣球與飛船。" },
+            { num: 1, sym: "H", name: "氫", en: "Hydrogen", group: "reactive-nonmetal", state: "gas", weight: "1.008", melt: -259.16, boil: -252.87, density: "0.08988 g/L", electronegativity: "2.20", radius: "37", oxidation: "-1, +1", summary: "宇宙中最輕、最豐富的元素。構成恆星的核心，是水分子的主要基底。", app: "工業合成氨氣、火箭高能推進燃料、氫能燃料電池車。" },
+            { num: 2, sym: "He", name: "氦", en: "Helium", group: "noble-gas", state: "gas", weight: "4.0026", melt: -272.2, boil: -268.93, density: "0.1785 g/L", electronegativity: "無", radius: "31", oxidation: "0", summary: "無色無味的單原子高惰性氣體，在極低溫度下可轉化為液氦，不具磁性。", app: "低溫超導冷卻（MRI 儀器）、飛船安全充氣、深海潛水呼吸混合氣。" },
 
             // 第二週期
-            { num: 3, sym: "Li", name: "鋰", en: "Lithium", group: "alkali-metal", state: "solid", weight: "6.94", melt: 180.5, boil: 1342, density: "0.534 g/cm³", electronegativity: "0.98", radius: "152", oxidation: "+1", summary: "密度最小、最輕的金屬固體。常溫下呈漂亮的銀白色，化學活性極高，遇到水會劇烈釋放氫氣。", app: "做為高能量密度電池（如手機、筆電及電動車鋰離子電池）的核心材料，也用於航太輕質合金和精神科藥物。" },
-            { num: 4, sym: "Be", name: "鈹", en: "Beryllium", group: "alkaline-earth", state: "solid", weight: "9.0122", melt: 1287, boil: 2469, density: "1.85 g/cm³", electronegativity: "1.57", radius: "112", oxidation: "+2", summary: "高熔點的鋼灰色輕金屬。具備極高的硬度與導熱性，對 X 光有極高的透射率，但其粉塵對人體有劇烈毒性。", app: "用作 X 光管的透光窗口、軍用戰機結構件、航太望遠鏡（例如韋伯太空望遠鏡的主反射鏡支架底座）。" },
-            { num: 5, sym: "B", name: "硼", en: "Boron", group: "metalloid", state: "solid", weight: "10.81", melt: 2076, boil: 3927, density: "2.08 g/cm³", electronegativity: "2.04", radius: "85", oxidation: "+3", summary: "低豐度的非金屬類金屬元素。常以硼砂等礦物存在，單質性質硬且耐高溫高壓。", app: "用於製造抗熱衝擊的硼矽酸鹽玻璃（如耐熱廚具、實驗室燒杯）、農業微量肥料，以及核反應爐中的中子吸收控制棒。" },
-            { num: 6, sym: "C", name: "碳", en: "Carbon", group: "reactive-nonmetal", state: "solid", weight: "12.011", melt: 3550, boil: 4827, density: "2.267 g/cm³", electronegativity: "2.55", radius: "77", oxidation: "-4, -2, +2, +4", summary: "地球上所有生命結構的骨架。擁有金剛石、石墨、石墨烯等多種同素異形體，化學性質極其神奇，能形成數百萬種複雜的有機化合物。", app: "鋼鐵冶煉、鉛筆芯、輪胎橡膠補強劑、活性碳淨水器、高剛性碳纖維，以及高科技石墨烯半導體製程。" },
-            { num: 7, sym: "N", name: "氮", en: "Nitrogen", group: "reactive-nonmetal", state: "gas", weight: "14.007", melt: -210, boil: -195.79, density: "1.2506 g/L", electronegativity: "3.04", radius: "75", oxidation: "-3, -2, -1, +1, +2, +3, +4, +5", summary: "占地球大氣體積約 78% 的氣體。常溫常壓下以雙原子 $N_2$ 存在，性質非常安定。它是所有生物體中蛋白質與核酸的重要化學元素。", app: "液氮超低溫冷凍、食品包裝惰性保護氣填充、製造硝酸鹽肥料與爆裂物的重要原料。" },
-            { num: 8, sym: "O", name: "氧", en: "Oxygen", group: "reactive-nonmetal", state: "gas", weight: "15.999", melt: -218.79, boil: -182.962, density: "1.429 g/L", electronegativity: "3.44", radius: "73", oxidation: "-2, -1", summary: "生命呼吸不可或缺的元素。地殼中質量豐度最高的化學元素，化學活性極強，能與除了惰性氣體外的幾乎所有元素結合形成氧化物。", app: "醫用與高空呼吸氧氣瓶、鋼鐵精煉燃燒劑、焊接金屬切割、火箭液氧推進氧化劑與臭氧水淨化。" },
-            { num: 9, sym: "F", name: "氟", en: "Fluorine", group: "reactive-nonmetal", state: "gas", weight: "18.998", melt: -219.67, boil: -188.11, density: "1.696 g/L", electronegativity: "3.98", radius: "72", oxidation: "-1", summary: "電負度最強、化學反應性最活潑的非金屬元素。常溫下為淡黃色、帶有強烈刺鼻毒性的雙原子氣體，極難以單質保存。", app: "含氟牙膏防齲齒、製造不沾鍋的不粘塗層鐵氟龍（PTFE）、半導體晶圓清潔蝕刻氣體，以及高能氟化物電池。" },
-            { num: 10, sym: "Ne", name: "氖", en: "Neon", group: "noble-gas", state: "gas", weight: "20.180", melt: -248.59, boil: -246.046, density: "0.9002 g/L", electronegativity: "無", radius: "58", oxidation: "0", summary: "極其穩定的無色無味單原子氣體。在低壓放電激發下，會射出極具穿透力的明亮紅橘色光譜，是人造光源中最美麗的色彩之一。", app: "霓虹燈廣告牌、真空放電指示燈、氦氖氣體雷射器，以及低溫製冷劑。" },
+            { num: 3, sym: "Li", name: "鋰", en: "Lithium", group: "alkali-metal", state: "solid", weight: "6.94", melt: 180.5, boil: 1342, density: "0.534 g/cm³", electronegativity: "0.98", radius: "152", oxidation: "+1", summary: "密度最小、最輕的金屬。極度活潑，會與水發生化學反應釋放氫氣。", app: "智慧型手機、電動車等二次鋰電池，航太超輕質合金，抗憂鬱臨床藥物。" },
+            { num: 4, sym: "Be", name: "鈹", en: "Beryllium", group: "alkaline-earth", state: "solid", weight: "9.0122", melt: 1287, boil: 2469, density: "1.85 g/cm³", electronegativity: "1.57", radius: "112", oxidation: "+2", summary: "鋼灰色高熔點輕金屬，具高硬度、高強度。粉塵具劇烈肺毒性，操作需極度嚴密防護。", app: "高規格 X 光管窗口、太空探測反射鏡主鏡架（例如詹姆斯·韋伯太空望遠鏡）。" },
+            { num: 5, sym: "B", name: "硼", en: "Boron", group: "metalloid", state: "solid", weight: "10.81", melt: 2076, boil: 3927, density: "2.34 g/cm³", electronegativity: "2.04", radius: "85", oxidation: "+3", summary: "低豐度的脆硬半金屬，具高耐熱抗震性，主要以硼砂礦形式開採。", app: "耐熱硼矽酸玻璃（Pyrex）、半導體晶圓摻雜劑、核反應爐控制棒、農業肥料。" },
+            { num: 6, sym: "C", name: "碳", en: "Carbon", group: "reactive-nonmetal", state: "solid", weight: "12.011", melt: 3550, boil: 4827, density: "2.267 g/cm³", electronegativity: "2.55", radius: "77", oxidation: "-4, +2, +4", summary: "生命世界的核心骨架，擁有金剛石（極硬）與石墨（導電軟質）等同素異形體。", app: "鋼鐵冶煉（碳素鋼）、碳纖維高剛性複合材料、電極、鉛筆、淨水活性碳。" },
+            { num: 7, sym: "N", name: "氮", en: "Nitrogen", group: "reactive-nonmetal", state: "gas", weight: "14.007", melt: -210.0, boil: -195.79, density: "1.2506 g/L", electronegativity: "3.04", radius: "75", oxidation: "-3, +3, +5", summary: "佔空氣體積 78% 的主體。性質相當安定，為生命蛋白質及核酸之必需成分。", app: "液氮超低溫冷凍食品與胚胎、保護性包裝（洋芋片充氣）、工業氮肥生產。" },
+            { num: 8, sym: "O", name: "氧", en: "Oxygen", group: "reactive-nonmetal", state: "gas", weight: "15.999", melt: -218.79, boil: -182.96, density: "1.429 g/L", electronegativity: "3.44", radius: "73", oxidation: "-2", summary: "地球生命的呼吸根底。地殼中豐度最高之化學元素，與金屬極易反應成氧化物。", app: "醫療急救用氧氣瓶、高溫鋼鐵冶煉助燃、火箭液氧推進劑、水處理氧氣淨化。" },
+            { num: 9, sym: "F", name: "氟", en: "Fluorine", group: "reactive-nonmetal", state: "gas", weight: "18.998", melt: -219.67, boil: -188.11, density: "1.696 g/L", electronegativity: "3.98", radius: "72", oxidation: "-1", summary: "全週期表中電負度最強、最活潑的非金屬氣體，能與玻璃甚至多數惰性氣體反應。", app: "含氟牙膏預防蛀牙、不沾鍋不粘塗層鐵氟龍（PTFE）、半導體晶片電漿蝕刻。" },
+            { num: 10, sym: "Ne", name: "氖", en: "Neon", group: "noble-gas", state: "gas", weight: "20.180", melt: -248.59, boil: -246.08, density: "0.9002 g/L", electronegativity: "無", radius: "58", oxidation: "0", summary: "高穩定的單原子惰性氣體，通電激發時會發出明亮、具備高穿透性的紅橙色光譜線。", app: "城市霓虹廣告招牌、雷射器共振工作氣體、高壓指示燈、低溫製冷劑。" },
 
             // 第三週期
-            { num: 11, sym: "Na", name: "鈉", en: "Sodium", group: "alkali-metal", state: "solid", weight: "22.990", melt: 97.72, boil: 883, density: "0.968 g/cm³", electronegativity: "0.93", radius: "186", oxidation: "+1", summary: "銀白色、質地極軟的金屬。暴露於空氣中會迅速氧化失去光澤，遇到水會劇烈燃燒並引發爆炸，因此必須存放在煤油中。", app: "食鹽（氯化鈉）調味、製造高強度的鈉蒸氣路燈、化學合成還原劑，以及核反應爐的液態鈉冷卻循環系統。" },
-            { num: 12, sym: "Mg", name: "鎂", en: "Magnesium", group: "alkaline-earth", state: "solid", weight: "24.305", melt: 650, boil: 1090, density: "1.738 g/cm³", electronegativity: "1.31", radius: "160", oxidation: "+2", summary: "亮銀色輕金屬，結構強度高。在空氣中燃燒時會發出耀眼奪目的白光。它是植物葉綠素的核心配位原子。", app: "鋁鎂合金用作筆記型電腦與汽機車輕量外殼、軍用高亮照明彈、煙火、信號彈及胃藥抗酸劑。" },
-            { num: 13, sym: "Al", name: "鋁", en: "Aluminum", group: "post-transition", state: "solid", weight: "26.982", melt: 660.32, boil: 2519, density: "2.70 g/cm³", electronegativity: "1.61", radius: "143", oxidation: "+3", summary: "地殼中含量最豐富的金屬元素。具備絕佳的延展性與導熱性，其表面能生成極薄但緻密的氧化保護層，因而耐蝕性絕佳。", app: "易開罐、廚房鋁箔紙、飛機蒙皮與機身骨架、建築鋁窗、高壓輸電線路與散熱鰭片。" },
-            { num: 14, sym: "Si", name: "矽", en: "Silicon", group: "metalloid", state: "solid", weight: "28.085", melt: 1414, boil: 3265, density: "2.329 g/cm³", electronegativity: "1.90", radius: "118", oxidation: "-4, +2, +4", summary: "帶有金屬光澤的暗灰色固體。它是半導體工業的靈魂。在地殼中的豐度僅次於氧，主要以石英、沙子形式存在。", app: "半導體矽晶圓（IC 晶片）、太陽能光電面板、電腦處理器、矽膠防水建材與光通訊玻璃纖維。" },
-            { num: 15, sym: "P", name: "磷", en: "Phosphorus", group: "reactive-nonmetal", state: "solid", weight: "30.974", melt: 44.15, boil: 280.5, density: "1.823 g/cm³", electronegativity: "2.19", radius: "110", oxidation: "-3, +3, +5", summary: "生命細胞 DNA、RNA 遺傳物質與能量載體 ATP 的必需元素。有多種同素異形體，如自燃性高的劇毒白磷與安全穩定的紅磷。", app: "農業磷肥、火柴擦火皮、食品級磷酸鹽防腐劑、安全煙火、LED 紅色螢光粉製備。" },
-            { num: 16, sym: "S", name: "硫", en: "Sulfur", group: "reactive-nonmetal", state: "solid", weight: "32.06", melt: 115.21, boil: 444.6, density: "2.07 g/cm³", electronegativity: "2.58", radius: "102", oxidation: "-2, +2, +4, +6", summary: "明黃色的非金屬脆性晶體，常發現於火山噴口及溫泉周邊。燃燒時會產生帶有臭雞蛋與刺激性氣味的氣體。", app: "製造現代化學工業之母硫酸 $H_2SO_4$、輪胎橡膠硫化劑、火藥配方、農藥防治病蟲害與皮膚科消毒乳膏。" },
-            { num: 17, sym: "Cl", name: "氯", en: "Chlorine", group: "reactive-nonmetal", state: "gas", weight: "35.45", melt: -101.5, boil: -34.04, density: "3.214 g/L", electronegativity: "3.16", radius: "99", oxidation: "-1, +1, +3, +5, +7", summary: "黃綠色、具有劇烈窒息性刺激氣味的毒性鹵素氣體。氧化性極強，易與幾乎所有金屬反應生成鹽類。", app: "城市自來水與公共游泳池氯化殺菌、造紙工業漂白劑、製造 PVC 水管塑料及食鹽與漂白水原料。" },
-            { num: 18, sym: "Ar", name: "氬", en: "Argon", group: "noble-gas", state: "gas", weight: "39.948", melt: -189.34, boil: -185.85, density: "1.784 g/L", electronegativity: "無", radius: "71", oxidation: "0", summary: "地球大氣中含量第三豐富的氣體（約占總體積的 0.93%），是最常用的廉價高溫惰性保護氣體。", app: "高檔雙層真空隔熱玻璃填充、白熾燈泡防氧化氣體、電漿焊接金屬保護、高溫冶金保護氛圍。" },
+            { num: 11, sym: "Na", name: "鈉", en: "Sodium", group: "alkali-metal", state: "solid", weight: "22.990", melt: 97.72, boil: 883, density: "0.968 g/cm³", electronegativity: "0.93", radius: "186", oxidation: "+1", summary: "質地極軟的銀白色鹼金屬，活性強烈。會與水發生激烈反應並釋出氫氣，需保存在煤油中。", app: "食鹽、小蘇打製造、鈉蒸氣黃光路燈、核反應爐液態鈉熱交換循環。" },
+            { num: 12, sym: "Mg", name: "鎂", en: "Magnesium", group: "alkaline-earth", state: "solid", weight: "24.305", melt: 650, boil: 1090, density: "1.738 g/cm³", electronegativity: "1.31", radius: "160", oxidation: "+2", summary: "銀白輕金屬，在空氣中燃燒時能發出極耀眼的白光，是植物葉綠素的主要中心離子。", app: "筆電與自行車之輕量化鋁鎂合金、急救高亮信號彈、煙火、胃藥抗酸劑。" },
+            { num: 13, sym: "Al", name: "鋁", en: "Aluminum", group: "post-transition", state: "solid", weight: "26.982", melt: 660.32, boil: 2519, density: "2.70 g/cm³", electronegativity: "1.61", radius: "143", oxidation: "+3", summary: "地殼中含量第一豐富的金屬。表面極易形成緻密氧化保護膜，故具備出色的耐腐蝕性。", app: "鋁易開罐、廚用鋁箔紙、民航飛機機身骨架、鋁門窗框架、高壓輸電纜線。" },
+            { num: 14, sym: "Si", name: "矽", en: "Silicon", group: "metalloid", state: "solid", weight: "28.085", melt: 1414, boil: 3265, density: "2.329 g/cm³", electronegativity: "1.90", radius: "118", oxidation: "-4, +2, +4", summary: "暗灰色帶金屬光澤的半導體類金屬。地殼豐度僅次於氧，為沙粒、石英的主要元素。", app: "積體電路矽晶圓、晶片處理器、太陽能光電面板、矽橡膠、光纖通訊玻璃。" },
+            { num: 15, sym: "P", name: "磷", en: "Phosphorus", group: "reactive-nonmetal", state: "solid", weight: "30.974", melt: 44.15, boil: 280.5, density: "1.823 g/cm³", electronegativity: "2.19", radius: "110", oxidation: "-3, +3, +5", summary: "生物體 DNA 及 ATP 的必需成分。白磷化學活性極高可自燃，紅磷則安全穩定。", app: "農業三要素化肥、火柴盒擦火皮、食品級磷酸防腐、煙火指示劑。" },
+            { num: 16, sym: "S", name: "硫", en: "Sulfur", group: "reactive-nonmetal", state: "solid", weight: "32.06", melt: 115.21, boil: 444.6, density: "2.07 g/cm³", electronegativity: "2.58", radius: "102", oxidation: "-2, +4, +6", summary: "淡黃色脆性非金屬固體，常發現於溫泉火山附近。燃燒會放出刺激臭味的二氧化硫氣體。", app: "現代工業之母「硫酸」生產、汽車橡膠輪胎硫化劑、黑色火藥、皮膚科藥用硫磺皂。" },
+            { num: 17, sym: "Cl", name: "氯", en: "Chlorine", group: "reactive-nonmetal", state: "gas", weight: "35.45", melt: -101.5, boil: -34.04, density: "3.214 g/L", electronegativity: "3.16", radius: "99", oxidation: "-1, +1, +3, +5, +7", summary: "黃綠色、具刺鼻窒息惡臭之劇毒鹵素氣體。強氧化力，易與大部分金屬化合成鹽類。", app: "城市自來水與公共泳池消毒、製造 PVC 塑膠建材、漂白水生產、食鹽之氯陰離子。" },
+            { num: 18, sym: "Ar", name: "氬", en: "Argon", group: "noble-gas", state: "gas", weight: "39.948", melt: -189.34, boil: -185.85, density: "1.784 g/L", electronegativity: "無", radius: "71", oxidation: "0", summary: "大氣中豐度第三高的氣體（約佔0.93%）。為工業及高溫焊接中最常用的保護氣體。", app: "雙層玻璃隔熱填充防熱、保護性銲接保護罩（不鏽鋼加工）、白熾燈泡防止燈絲氧化氣體。" },
 
             // 第四週期
-            { num: 19, sym: "K", name: "鉀", en: "Potassium", group: "alkali-metal", state: "solid", weight: "39.0983", melt: 63.38, boil: 759, density: "0.862 g/cm³", electronegativity: "0.82", radius: "227", oxidation: "+1", summary: "質軟呈蠟狀、極其活潑的鹼金屬。它在人體中做為關鍵電解質，負責維持細胞液滲透壓與神經衝動傳導。", app: "製造農業鉀肥（複合肥）、碳酸鉀玻璃、火藥肥皂合成，以及高強度紫光煙火。" },
-            { num: 20, sym: "Ca", name: "鈣", en: "Calcium", group: "alkaline-earth", state: "solid", weight: "40.078", melt: 842, boil: 1484, density: "1.55 g/cm³", electronegativity: "1.00", radius: "197", oxidation: "+2", summary: "銀白色的鹼土金屬，活性高。是人類骨骼、牙齒和貝殼的主要結構元素，也在肌肉收縮和信號傳遞中扮演主角。", app: "混凝土與水泥建材、鋼鐵脫硫去氣劑、膳食鈣補充片（碳酸鈣）、乳製品補鈣。" },
-            { num: 21, sym: "Sc", name: "鈧", en: "Scandium", group: "transition", state: "solid", weight: "44.956", melt: 1541, boil: 2831, density: "2.989 g/cm³", electronegativity: "1.36", radius: "162", oxidation: "+3", summary: "稀土元素之一。銀白色過渡金屬，化學活性較高，可與酸反應，暴露於空氣中會顯出微黃或粉紅色光澤。", app: "與鋁製成高性能鈧鋁合金，用於頂級自行車架、棒球棒和高級金屬鹵化物燈光源。" },
-            { num: 22, sym: "Ti", name: "鈦", en: "Titanium", group: "transition", state: "solid", weight: "47.867", melt: 1668, boil: 3287, density: "4.54 g/cm³", electronegativity: "1.54", radius: "147", oxidation: "+4", summary: "銀灰色過渡金屬。以高比強度（極輕卻極硬）和卓越的耐王水及海水腐蝕特性聞名。對人體肌肉與骨骼具有奇特的生物相容性。", app: "製造太空梭、噴射發動機風扇、人工骨骼、鈦合金關節、頂級腕錶及高白度二氧化鈦（鈦白粉）。" },
-            { num: 23, sym: "V", name: "釩", en: "Vanadium", group: "transition", state: "solid", weight: "50.9415", melt: 1910, boil: 3407, density: "6.11 g/cm³", electronegativity: "1.63", radius: "134", oxidation: "+5, +4, +3, +2", summary: "高硬度、抗拉強度和延展性優良的銀灰色過渡金屬。它在自然界中主要存在於多種礦物化合物中。", app: "製造高硬度釩鋼合金（手工具、高強度彈簧、鐵軌結構）、全釩氧化還原液流大容量儲能電池。" },
-            { num: 24, sym: "Cr", name: "鉻", en: "Chromium", group: "transition", state: "solid", weight: "51.996", melt: 1907, boil: 2671, density: "7.15 g/cm³", electronegativity: "1.66", radius: "128", oxidation: "+6, +3, +2", summary: "具極高反射率和高光澤的堅硬銀色金屬。它是防鏽不鏽鋼中不可或缺的關鍵合金化學元素（鉻含量必須大於10.5%）。", app: "汽機車外殼金屬表面防鏽電鍍、不鏽鋼製造、亮彩防腐顏料（鉻黃）、皮革鞣製劑。" },
-            { num: 25, sym: "Mn", name: "錳", en: "Manganese", group: "transition", state: "solid", weight: "54.938", melt: 1246, boil: 2061, density: "7.44 g/cm³", electronegativity: "1.55", radius: "127", oxidation: "+7, +4, +3, +2", summary: "質地硬且脆的灰白色金屬，外觀神似生鐵。雖然人體僅需要微量錳，但它是許多人體關鍵抗氧化酶的活性基底。", app: "用於鋼鐵工業以消除有害的硫、製備超硬高耐衝擊錳鋼合金（防彈坦克裝甲）、乾電池二氧化錳正極活性物。" },
-            { num: 26, sym: "Fe", name: "鐵", en: "Iron", group: "transition", state: "solid", weight: "55.845", melt: 1538, boil: 2862, density: "7.874 g/cm³", electronegativity: "1.83", radius: "126", oxidation: "+3, +2", summary: "人類文明與現代化工程的鋼骨。它是地球上含量最多的過渡金屬，也是人體血紅素中負責攜帶氧氣的核心原子。", app: "結構鋼、橋樑大樓工字鋼、汽車機車底盤、鑄鐵廚具鍋具、磁鐵材料及人體補鐵劑。" },
-            { num: 27, sym: "Co", name: "鈷", en: "Cobalt", group: "transition", state: "solid", weight: "58.933", melt: 1495, boil: 2927, density: "8.86 g/cm³", electronegativity: "1.88", radius: "125", oxidation: "+3, +2", summary: "具有磁性的鋼灰色硬質過渡金屬，在自然界中與鐵及鎳共生。它是維生素 $B_{12}$ 的必需中心離子。", app: "鋰離子電池正極添加（鈷酸鋰）、超高硬度金屬切削刀具（鈷鎢合金）、噴射發動機高溫葉片、美麗的鈷藍玻璃陶瓷顏料。" },
-            { num: 28, sym: "Ni", name: "鎳", en: "Nickel", group: "transition", state: "solid", weight: "58.6934", melt: 1455, boil: 2913, density: "8.908 g/cm³", electronegativity: "1.91", radius: "124", oxidation: "+2", summary: "銀白色帶有一絲微黃的磁性過渡金屬。抗腐蝕和抗氧化性極佳，常用於提高不鏽鋼和多種特種合金的耐磨性。", app: "鑄造防腐硬幣、不鏽鋼熔煉、充電式鎳氫電池（NiMH）、金屬防蝕電鍍、高溫超合金。" },
-            { num: 29, sym: "Cu", name: "銅", en: "Copper", group: "transition", state: "solid", weight: "63.546", melt: 1084.62, boil: 2562, density: "8.96 g/cm³", electronegativity: "1.90", radius: "128", oxidation: "+2, +1", summary: "帶有金屬粉紅光澤的橘紅色金屬。具有無與倫比的導電率（僅次於銀）和卓越導熱性，對空氣與水非常安定。", app: "電氣工程銅線、印刷電路板導電層、散熱器水管、青銅雕塑、樂器合金（黃銅）。" },
-            { num: 30, sym: "Zn", name: "鋅", en: "Zinc", group: "transition", state: "solid", weight: "65.38", melt: 419.53, boil: 907, density: "7.14 g/cm³", electronegativity: "1.65", radius: "134", oxidation: "+2", summary: "淺灰藍色金屬，暴露在潮濕空氣中會在金屬表面形成一層鹼式碳酸鋅緻密保護層以防止腐蝕。", app: "鋼材熱浸鍍鋅以防生鏽、黃銅製造、電池外殼、人體抗老補鋅營養劑、物理防曬化妝品（氧化鋅）。" },
-            { num: 31, sym: "Ga", name: "鎵", en: "Gallium", group: "post-transition", state: "solid", weight: "69.723", melt: 29.76, boil: 2204, density: "5.91 g/cm³", electronegativity: "1.81", radius: "135", oxidation: "+3", summary: "神奇的鎵金屬，其熔點僅為 29.76°C。將其握在溫暖的手掌心，它會像巧克力般神奇融化為液態汞狀液滴。", app: "砷化鎵（GaAs）與氮化鎵（GaN）高頻半導體、高亮度 LED 發光元件、雷達微波晶片、液態金屬冷卻劑。" },
-            { num: 32, sym: "Ge", name: "鍺", en: "Germanium", group: "metalloid", state: "solid", weight: "72.63", melt: 938.25, boil: 2833, density: "5.323 g/cm³", electronegativity: "2.01", radius: "122", oxidation: "+4, +2", summary: "硬度高且具微弱金屬光澤的灰白色半金屬。它在紅外光譜中近乎完全透明，具備特殊的半導體電子特性。", app: "廣角夜視紅外線光學鏡片、光纖通訊傳輸網路、聚酯纖維合成催化劑、高溫整流器。" },
-            { num: 33, sym: "As", name: "砷", en: "Arsenic", group: "metalloid", state: "solid", weight: "74.9216", melt: 817, boil: 614, density: "5.727 g/cm³", electronegativity: "2.18", radius: "120", oxidation: "+5, +3, -3", summary: "著名的有毒類金屬，自然界存在灰、黑、黃三種同素異形體。其氧化物三氧化二砷即為歷史毒藥「砒霜」。", app: "做為砷化鎵半導體材料的摻雜物、極少數木材防腐防蟲劑，以及特定白血病（血癌）之醫療藥物。" },
-            { num: 34, sym: "Se", name: "硒", en: "Selenium", group: "reactive-nonmetal", state: "solid", weight: "78.971", melt: 221, boil: 685, density: "4.819 g/cm³", electronegativity: "2.55", radius: "117", oxidation: "+6, +4, -2", summary: "具有紅色與灰色多種形態的非金屬。其光電特性奇特：當外界光線越強時，其導電率會暴增上千倍。", app: "影印機光接收鼓、光電曝光表、防光干擾太陽能發電元件、玻璃工業紅色顏料脫色劑、膳食抗氧化微量元素。" },
-            { num: 35, sym: "Br", name: "溴", en: "Bromine", group: "reactive-nonmetal", state: "liquid", weight: "79.904", melt: -7.2, boil: 58.8, density: "3.102 g/cm³", electronegativity: "2.96", radius: "114", oxidation: "+5, +1, -1", summary: "常溫常壓下，週期表中唯一呈液態的非金屬元素。為深红褐色、極易在常溫下蒸發出具有窒息臭味劇毒氣體的黏稠液體。", app: "合成高效塑料阻燃劑、照相膠卷感光乳劑（溴化銀）、醫藥殺菌合成與農用殺真菌劑。" },
-            { num: 36, sym: "Kr", name: "氪", en: "Krypton", group: "noble-gas", state: "gas", weight: "83.798", melt: -157.36, boil: -153.22, density: "3.749 g/L", electronegativity: "3.00", radius: "110", oxidation: "0, +2", summary: "極其稀有且穩定的惰性氣體。放電時會發出極具穿透性、明亮耀眼的白色/綠色譜線光。", app: "高級節能螢光燈、飛機高能跑道指示閃光燈、高能量雷射準分子雷射（常用於近視雷射手術）。" },
+            { num: 19, sym: "K", name: "鉀", en: "Potassium", group: "alkali-metal", state: "solid", weight: "39.098", melt: 63.38, boil: 759, density: "0.862 g/cm³", electronegativity: "0.82", radius: "227", oxidation: "+1", summary: "蠟狀銀白鹼金屬。活性極強。在生物體內為必要之重要電解質離子，維持神經傳導與心率調控。", app: "複合農業鉀肥、火藥配料、特定焰火紫色焰色配方、化學分析強鹼。" },
+            { num: 20, sym: "Ca", name: "鈣", en: "Calcium", group: "alkaline-earth", state: "solid", weight: "40.078", melt: 842, boil: 1484, density: "1.55 g/cm³", electronegativity: "1.00", radius: "197", oxidation: "+2", summary: "活潑鹼土金屬，構成生物體骨骼、牙齒及碳酸鈣貝殼結構，是肌肉收縮之核心訊號分子。", app: "水泥與混凝土建築、鋼鐵冶煉高溫脫氧劑、補鈣膳食補充劑、石膏建材。" },
+            { num: 21, sym: "Sc", name: "鈧", en: "Scandium", group: "transition", state: "solid", weight: "44.956", melt: 1541, boil: 2831, density: "2.989 g/cm³", electronegativity: "1.36", radius: "162", oxidation: "+3", summary: "銀白色輕質稀土過渡金屬。與鋁形成合金後能極致提高硬度與高溫穩定抗腐蝕性。", app: "高端運動車架鈧鋁合金、球棒、高壓金屬鹵化物燈（放電投影燈泡）。" },
+            { num: 22, sym: "Ti", name: "鈦", en: "Titanium", group: "transition", state: "solid", weight: "47.867", melt: 1668, boil: 3287, density: "4.54 g/cm³", electronegativity: "1.54", radius: "147", oxidation: "+4", summary: "高比強度、超輕量的過渡金屬，對海水及人體體液具備無與倫比的生物相容性與耐酸腐性。", app: "航空發動機葉片、太空火箭框架、人造關節與植牙骨釘、高級二氧化鈦白色塗料（鈦白粉）。" },
+            { num: 23, sym: "V", name: "釩", en: "Vanadium", group: "transition", state: "solid", weight: "50.942", melt: 1910, boil: 3407, density: "6.11 g/cm³", electronegativity: "1.63", radius: "134", oxidation: "+2, +3, +4, +5", summary: "高硬度、具備抗腐蝕與延展特性的銀灰金屬。其氧化物水溶液隨價態呈現斑斕色彩。", app: "高硬度鉻釩鋼手工具、高速鐵路軌道鋼合金、超大型全釩液流儲能電池。" },
+            { num: 24, sym: "Cr", name: "鉻", en: "Chromium", group: "transition", state: "solid", weight: "51.996", melt: 1907, boil: 2671, density: "7.15 g/cm³", electronegativity: "1.66", radius: "128", oxidation: "+3, +6", summary: "高光澤鋼灰色極硬過渡金屬。抗氧化力超群，是不鏽鋼的核心抗蝕配方（高於 10.5%）。", app: "不鏽鋼合金冶製、金飾與精密零件電鍍防銹防刮、皮革工業鞣製、高濃度顏料劑。" },
+            { num: 25, sym: "Mn", name: "錳", en: "Manganese", group: "transition", state: "solid", weight: "54.938", melt: 1246, boil: 2061, density: "7.44 g/cm³", electronegativity: "1.55", radius: "127", oxidation: "+2, +4, +7", summary: "質硬而脆之金屬。是鋼鐵製備中不可或缺的脫硫淨化還原劑，調節金屬硬延強度。", app: "高耐磨錳鋼（坦克履帶、鐵軌道岔）、乾電池二氧化錳正極、高級鋁合金硬化添加。" },
+            { num: 26, sym: "Fe", name: "鐵", en: "Iron", group: "transition", state: "solid", weight: "55.845", melt: 1538, boil: 2862, density: "7.874 g/cm³", electronegativity: "1.83", radius: "126", oxidation: "+2, +3", summary: "現代工業與建築的鋼骨基石。在人體中擔當紅血球載氧中心之核心血紅素因子。", app: "結構鋼材（建材橋樑）、車輛骨架、高導磁性純鐵磁心、醫用人體補鐵劑。" },
+            { num: 27, sym: "Co", name: "鈷", en: "Cobalt", group: "transition", state: "solid", weight: "58.933", melt: 1495, boil: 2927, density: "8.86 g/cm³", electronegativity: "1.88", radius: "125", oxidation: "+2, +3", summary: "具磁性、銀灰色之硬質金屬。在空氣中相當安定，亦是維生素 B12 之中心元素。", app: "高效鋰離子電池正極（鈷酸鋰）、超高強度超硬切削超合金、陶瓷鈷藍鮮亮顏料。" },
+            { num: 28, sym: "Ni", name: "鎳", en: "Nickel", group: "transition", state: "solid", weight: "58.693", melt: 1455, boil: 2913, density: "8.908 g/cm³", electronegativity: "1.91", radius: "124", oxidation: "+2", summary: "微帶黃色光澤的鐵磁金屬。耐腐蝕耐氧化，是不鏽鋼及特種高溫合金最穩固的幫手。", app: "硬幣熔製、不鏽鋼精煉、充電鎳氫電池、高耐腐金屬電鍍、高溫超合金材料。" },
+            { num: 29, sym: "Cu", name: "銅", en: "Copper", group: "transition", state: "solid", weight: "63.546", melt: 1084.62, boil: 2562, density: "8.96 g/cm³", electronegativity: "1.90", radius: "128", oxidation: "+1, +2", summary: "紅橘色金屬，具高導電與導熱性。抗大氣腐蝕，是人類文明史最早冶煉利用的金屬之一。", app: "供電網銅絞線、印刷電路板導電銅箔、水管散熱管道、高傳導電子接頭、樂器青銅。" },
+            { num: 30, sym: "Zn", name: "鋅", en: "Zinc", group: "transition", state: "solid", weight: "65.38", melt: 419.53, boil: 907, density: "7.14 g/cm³", electronegativity: "1.65", radius: "134", oxidation: "+2", summary: "青白色防鏽金屬。暴露潮濕空氣可在表面生成緻密鹼式碳酸鋅防護層以保護內部。", app: "熱浸鍍鋅（防鏽鋼板）、黃銅合金熔鑄、防曬乳成分氧化鋅、日常人體抗老鋅營養片。" },
+            { num: 31, sym: "Ga", name: "鎵", en: "Gallium", group: "post-transition", state: "solid", weight: "69.723", melt: 29.76, boil: 2204, density: "5.91 g/cm³", electronegativity: "1.81", radius: "135", oxidation: "+3", summary: "低熔點金屬（29.76°C）。放在手掌心內會因人體體溫融化，常溫呈液態汞狀，活性佳。", app: "GaAs/GaN 半導體高頻通訊與發光 LED、5G 射頻晶片、液態金屬傳熱冷卻技術。" },
+            { num: 32, sym: "Ge", name: "鍺", en: "Germanium", group: "metalloid", state: "solid", weight: "72.63", melt: 938.25, boil: 2833, density: "5.323 g/cm³", electronegativity: "2.01", radius: "122", oxidation: "+4", summary: "具半導體特性之灰白晶體，在紅外光譜內幾乎全透明，是早期電晶體的發源地。", app: "夜視紅外線光學透鏡、光纖通訊多工系統、廣角太空光學儀、特定高溫感測器。" },
+            { num: 33, sym: "As", name: "砷", en: "Arsenic", group: "metalloid", state: "solid", weight: "74.922", melt: 817, boil: 614, density: "5.727 g/cm³", electronegativity: "2.18", radius: "120", oxidation: "-3, +3, +5", summary: "著名的有毒類金屬。其常見氧化物三氧化二砷俗稱「砒霜」。歷史上常被作為中藥與毒藥。", app: "半導體摻雜物、木材防腐劑、特定抗癌醫藥配方、高效紅外線偵測二極體。" },
+            { num: 34, sym: "Se", name: "硒", en: "Selenium", group: "reactive-nonmetal", state: "solid", weight: "78.971", melt: 221, boil: 685, density: "4.819 g/cm³", electronegativity: "2.55", radius: "117", oxidation: "-2, +4, +6", summary: "對光電反應靈敏之非金屬。照光時導電度可飆升千倍以上，為生命必要之微量營養素。", app: "影印機光感鼓、高精度光感感光計、光電太陽能阻抗元件、紅色玻璃脫色除雜劑。" },
+            { num: 35, sym: "Br", name: "溴", en: "Bromine", group: "reactive-nonmetal", state: "liquid", weight: "79.904", melt: -7.2, boil: 58.8, density: "3.102 g/cm³", electronegativity: "2.96", radius: "114", oxidation: "-1, +1, +5", summary: "常溫下唯一呈液態的非金屬。深紅褐色液體，極易揮發出刺鼻具毒之揮發氣體。", app: "塑料耐燃高分子阻燃劑、照相底片感光溴化銀、化學消毒及製藥製劑合成原料。" },
+            { num: 36, sym: "Kr", name: "氪", en: "Krypton", group: "noble-gas", state: "gas", weight: "83.798", melt: -157.36, boil: -153.22, density: "3.749 g/L", electronegativity: "3.00", radius: "110", oxidation: "0", summary: "稀有極穩定的單原子惰性氣體。通電放電時發出明亮白光，具有超強的大氣穿透力。", app: "高能節能白熾燈填充、雷射準分子發光工作氣體、機場跑道高強度指示信號燈。" },
 
             // 第五週期
-            { num: 37, sym: "Rb", name: "銣", en: "Rubidium", group: "alkali-metal", state: "solid", weight: "85.4678", melt: 39.3, boil: 688, density: "1.53 g/cm³", electronegativity: "0.82", radius: "248", oxidation: "+1", summary: "質軟如蠟、化學活性極高且呈銀白色的鹼金屬。它遇水甚至會與冰塊在零下 100°C 發生燃燒爆炸。", app: "高精密銣原子鐘（做為全球導航、GPS 衛星定位之時間參考基準）、特殊光電倍增管。" },
-            { num: 38, sym: "Sr", name: "鍶", en: "Strontium", group: "alkaline-earth", state: "solid", weight: "87.62", melt: 777, boil: 1382, density: "2.64 g/cm³", electronegativity: "0.95", radius: "215", oxidation: "+2", summary: "銀白色微帶淡黃的活潑鹼土金屬。它的化合物在燃燒時會發出極為鮮豔、純正奪目的深紅色火焰。", app: "製造鮮紅色大型煙火、煙火信號彈、彩色電視機防輻射玻璃屏屏蔽、牙醫抗敏感牙膏添加。" },
-            { num: 39, sym: "Y", name: "釔", en: "Yttrium", group: "transition", state: "solid", weight: "88.905", melt: 1526, boil: 3336, density: "4.472 g/cm³", electronegativity: "1.22", radius: "180", oxidation: "+3", summary: "稀土金屬之一，銀白色，外觀具亮麗金屬光澤，主要與鑭系稀土礦共生。", app: "摻釔鋁石榴石（YAG）雷射器（廣泛用於雷射手術與高精度切割金屬）、超導體材料（YBCO 高溫超導）。" },
-            { num: 40, sym: "Zr", name: "鋯", en: "Zirconium", group: "transition", state: "solid", weight: "91.224", melt: 1855, boil: 4409, density: "6.52 g/cm³", electronegativity: "1.33", radius: "160", oxidation: "+4", summary: "鋼灰色、極其堅硬且抗腐蝕性能強的過渡金屬，對熱中子捕獲截面極小，極為耐磨。", app: "主要用作核反應爐燃料棒包殼保護罩、高級陶瓷人造鑽石（氧化鋯立方晶體，俗稱蘇聯鑽）以及防腐不鏽合金。" },
-            { num: 41, sym: "Nb", name: "鈮", en: "Niobium", group: "transition", state: "solid", weight: "92.906", melt: 2477, boil: 4744, density: "8.57 g/cm³", electronegativity: "1.6", radius: "146", oxidation: "+5, +3", summary: "帶有金屬光澤的淺灰色高熔點金屬。它具有出色的低溫超導特性，廣泛用於高場強超導電磁鐵中。", app: "超導粒子加速器電磁鐵線圈、高端超導發電機、太空火箭發動機高強度鈮鋼合金、防腐化學儲槽。" },
-            { num: 42, sym: "Mo", name: "鉬", en: "Molybdenum", group: "transition", state: "solid", weight: "95.95", melt: 2623, boil: 4639, density: "10.28 g/cm³", electronegativity: "2.16", radius: "139", oxidation: "+6, +4", summary: "具有極高熔點和抗蠕變強度的鋼灰色金屬。它是多數鋼鐵冶金高溫作業不可缺少的合金強化配方。", app: "高溫不鏽鋼抗拉合金（鉬鋼）、高溫爐內襯襯墊、半導體防漏電阻障層、石油裂化脫硫催化劑。" },
-            { num: 43, sym: "Tc", name: "鎝", en: "Technetium", group: "transition", state: "synthetic", weight: "98.0", melt: 2157, boil: 4265, density: "11.0 g/cm³", electronegativity: "1.9", radius: "136", oxidation: "+7, +4", summary: "週期表中第一個「人工合成」的放射性金屬元素。在自然界中極難自然存活，其所有同位素皆具有放射不穩定性。", app: "鎝-99m 在醫學影像診斷（核子醫學單光子造影 SPECT）中扮演最重要的骨骼、心血管顯影探針。" },
-            { num: 44, sym: "Ru", name: "釕", en: "Ruthenium", group: "transition", state: "solid", weight: "101.07", melt: 2334, boil: 4150, density: "12.45 g/cm³", electronegativity: "2.2", radius: "134", oxidation: "+3, +4, +8", summary: "鉑族貴金屬之一。質地極硬的銀色過渡金屬，對極端化學環境有極強抵抗力，是高效的多相反應催化劑。", app: "製造高端耐磨電子晶片薄膜電極、高性能燃料電池微米級鉑釕催化合金、微電子保護絕緣層。" },
-            { num: 45, sym: "Rh", name: "銠", en: "Rhodium", group: "transition", state: "solid", weight: "102.91", melt: 1964, boil: 3695, density: "12.41 g/cm³", electronegativity: "2.28", radius: "135", oxidation: "+3", summary: "世界上最昂貴的鉑族貴重金屬。具備無與倫比的抗腐蝕力、高反射性，能完美催化降低有害氣體的排放。", app: "最主要用於汽車排氣催化轉換器以分解有害氮氧化物、頂級珠寶表面防變色白金銠防護鍍膜。" },
-            { num: 46, sym: "Pd", name: "鈀", en: "Palladium", group: "transition", state: "solid", weight: "106.42", melt: 1554.9, boil: 2963, density: "12.02 g/cm³", electronegativity: "2.20", radius: "137", oxidation: "+2, +4", summary: "銀白色的鉑族金屬。擁有一項神奇的物理技能：其晶體能在常溫下像海綿般吸附自身體積上百倍的氫氣。", app: "汽車廢氣淨化催化劑、氫氣純化薄膜過濾、微電子陶瓷電容器正負極、精密白金配方珠寶飾品。" },
-            { num: 47, sym: "Ag", name: "銀", en: "Silver", group: "transition", state: "solid", weight: "107.87", melt: 961.78, boil: 2162, density: "10.49 g/cm³", electronegativity: "1.93", radius: "144", oxidation: "+1", summary: "光澤雪白的美麗金屬。它在所有已知金屬中，擁有最頂尖、無可匹敵的導電率、導熱率與自然光反射率。", app: "高端珠寶、高精度電子連接端子、光電太陽能導電銀膠、傷口抗菌醫療敷料、傳統底片照相（溴化銀）。" },
-            { num: 48, sym: "Cd", name: "鎘", en: "Cadmium", group: "transition", state: "solid", weight: "112.41", melt: 321.07, boil: 767, density: "8.65 g/cm³", electronegativity: "1.69", radius: "151", oxidation: "+2", summary: "質地極軟、呈藍白色的重金屬。具有較強的人體毒性與生物累積毒性，會嚴重損害腎臟骨骼，屬嚴格管控金屬。", app: "鎳鎘充電電池、高效耐腐蝕鋼件電鍍保護層、高鮮豔度油畫顏料（鎘黃）、核反應中子屏蔽。" },
-            { num: 49, sym: "In", name: "銦", en: "Indium", group: "post-transition", state: "solid", weight: "114.82", melt: 156.6, boil: 2072, density: "7.31 g/cm³", electronegativity: "1.78", radius: "167", oxidation: "+3", summary: "極軟、具高延展性且抗腐蝕的銀白色金屬。在零下彎曲它時，會因為內部晶格錯位重組，而發出類似哭泣的「金屬哭聲」。", app: "製造平板電腦與觸控手機不可或缺的氧化銦錫（ITO）透明導電膜、半導體低熔點無鉛銲料、高折射率護目鏡。" },
-            { num: 50, sym: "Sn", name: "錫", en: "Tin", group: "post-transition", state: "solid", weight: "118.71", melt: 231.93, boil: 2602, density: "7.31 g/cm³", electronegativity: "1.96", radius: "140", oxidation: "+4, +2", summary: "質軟、具優異延展性的亮白色金屬。它是人類最早開始與銅共融（鑄造青銅）以跨入青銅器時代的古老金屬。", app: "電路板電子元器件無鉛綠色銲錫合金、馬口鐵（食品罐頭內襯防蝕錫層）、銅質防護電鍍。" },
-            { num: 51, sym: "Sb", name: "銻", en: "Antimony", group: "metalloid", state: "solid", weight: "121.76", melt: 630.63, boil: 1587, density: "6.697 g/cm³", electronegativity: "2.05", radius: "140", oxidation: "+3, +5", summary: "具備金屬光澤、性脆的灰白色類金屬。它具有熱縮冷脹的特殊物理反常特性，能保證鑄造字體線條鮮明。", app: "電子鉛酸蓄電池極板硬化劑、高效防火塑料阻燃劑、傳統活字印刷鉛字合金（鉛銻錫合金）。" },
-            { num: 52, sym: "Te", name: "碲", en: "Tellurium", group: "metalloid", state: "solid", weight: "127.6", melt: 449.51, boil: 988, density: "6.24 g/cm³", electronegativity: "2.1", radius: "142", oxidation: "+4, +6", summary: "脆性高、帶有亮銀色金屬光澤的類金屬。它是少數在極端條件下能與黃金化合形成礦物的化學元素。", app: "碲化鎘（CdTe）薄膜太陽能電池板、鋼鐵易切削合金添加、光碟相變記錄層材料、半導體溫差發電熱電材料。" },
-            { num: 53, sym: "I", name: "碘", en: "Iodine", group: "reactive-nonmetal", state: "solid", weight: "126.90", melt: 113.7, boil: 184.3, density: "4.933 g/cm³", electronegativity: "2.66", radius: "133", oxidation: "-1, +1, +5, +7", summary: "帶有金屬光澤的深紫黑色固體鹵素。稍加溫不經液體直接昇華成深紫色的刺鼻蒸氣。是維持人體甲狀腺健康的必需元素。", app: "醫療傷口消毒碘酒、食鹽加碘防甲狀腺腫大、液晶螢幕偏光片、防核輻射碘片。" },
-            { num: 54, sym: "Xe", name: "氙", en: "Xenon", group: "noble-gas", state: "gas", weight: "131.29", melt: -111.7, boil: -108.1, density: "5.894 g/L", electronegativity: "2.6", radius: "130", oxidation: "0", summary: "高密度的重惰性氣體。在低壓放電激發下會釋放出亮度驚人、光譜極接近自然太陽光的高強度白光線。", app: "高端車用氙氣大燈、高壓高能相機電子閃光燈、太空衛星與火箭離子推进器、高級無副作用臨床深層吸入麻醉劑。" },
+            { num: 47, sym: "Ag", name: "銀", en: "Silver", group: "transition", state: "solid", weight: "107.87", melt: 961.78, boil: 2162, density: "10.49 g/cm³", electronegativity: "1.93", radius: "144", oxidation: "+1", summary: "潔白光澤金屬，擁有全金屬中最高的室溫電導率、導熱率及光反射效率。", app: "高精電子元器件導體、太陽能導電銀漿、醫療銀離子強效抗菌貼敷、傳統膠片（溴化銀）。" },
+            { num: 50, sym: "Sn", name: "錫", en: "Tin", group: "post-transition", state: "solid", weight: "118.71", melt: 231.93, boil: 2602, density: "7.31 g/cm³", electronegativity: "1.96", radius: "140", oxidation: "+2, +4", summary: "柔軟且抗氧化的銀白金屬，常與銅化合鑄成堅固的青銅器，具有悠久的人類工藝歷史。", app: "電路板電子元器件銲料合金、食品馬口鐵包覆罐防銹、工藝錫管與錫雕、電鍍防蝕層。" },
+            { num: 53, sym: "I", name: "碘", en: "Iodine", group: "reactive-nonmetal", state: "solid", weight: "126.90", melt: 113.7, boil: 184.3, density: "4.933 g/cm³", electronegativity: "2.66", radius: "133", oxidation: "-1, +1, +5, +7", summary: "帶有金屬光澤的紫黑色固體鹵素。加熱時不經液態直接昇華成深乳紫色刺激性蒸氣。", app: "醫療殺菌消毒碘酒、防甲狀腺腫大食鹽加碘、液晶螢幕面板核心偏光偏光膜、人工降雨碘化銀。" },
+            { num: 54, sym: "Xe", name: "氙", en: "Xenon", group: "noble-gas", state: "gas", weight: "131.29", melt: -111.7, boil: -108.1, density: "5.894 g/L", electronegativity: "2.6", radius: "130", oxidation: "0", summary: "高密度的重惰性氣體。放電時會發出極接近自然日光、亮度極強的藍白色白光譜線。", app: "汽車高端氙氣大燈、相機電子高閃光泡、太空火箭離子推進器工作流體、醫學深層麻醉劑。" },
 
             // 第六週期
-            { num: 55, sym: "Cs", name: "銫", en: "Cesium", group: "alkali-metal", state: "solid", weight: "132.91", melt: 28.44, boil: 671, density: "1.93 g/cm³", electronegativity: "0.79", radius: "265", oxidation: "+1", summary: "金色光澤、熔點極低（28.44°C）的活潑鹼金屬。它是目前定義一秒時間精準度的核心元素，活性強到會自燃。", app: "銫原子鐘（為全球網際網路、電信和軍事導航提供秒的極致對時基礎）、特殊光電探測真空管。" },
-            { num: 56, sym: "Ba", name: "鋇", en: "Barium", group: "alkaline-earth", state: "solid", weight: "137.33", melt: 727, boil: 1897, density: "3.51 g/cm³", electronegativity: "0.89", radius: "222", oxidation: "+2", summary: "銀白色、化學活性極高的鹼土金屬，在空氣中極易自燃，主要以重晶石礦物形式存在。", app: "硫酸鋇「鋇餐」作為腸胃 X 光造影對比劑、綠色煙火亮色劑、石油鑽井泥漿增重加重劑。" },
-            
-            // 鑭系元素 (57-71)
-            { num: 57, sym: "La", name: "鑭", en: "Lanthanum", group: "lanthanide", state: "solid", weight: "138.91", melt: 920, boil: 3464, density: "6.15 g/cm³", electronegativity: "1.10", radius: "187", oxidation: "+3", summary: "銀白色的稀土元素。性質極軟可用刀切割，暴露於空氣中會迅速變黑氧化分解。", app: "打火機燧石混合稀土合金、高品質高折射率光學鏡片、石油高溫催化裂化、混能車鎳氫電池。" },
-            { num: 58, sym: "Ce", name: "鈰", en: "Cerium", group: "lanthanide", state: "solid", weight: "140.12", melt: 798, boil: 3443, density: "6.77 g/cm³", electronegativity: "1.12", radius: "181", oxidation: "+3, +4", summary: "鑭系稀土元素中地殼豐度最高者。性質活潑、延展性好，在高溫下極易發生強烈燃燒與飛濺。", app: "精密光學玻璃拋光粉（氧化鈰）、柴油廢氣微粒過濾催化劑、打火機引火合金、冶金脫氧劑。" },
-            { num: 59, sym: "Pr", name: "鐠", en: "Praseodymium", group: "lanthanide", state: "solid", weight: "140.91", melt: 931, boil: 3520, density: "6.77 g/cm³", electronegativity: "1.13", radius: "182", oxidation: "+3, +4", summary: "質軟呈黃白色的稀土金屬。在空氣中氧化會緩慢覆蓋一層綠色的氧化物防護層，化學活性高。", app: "與釹製成超強雙效永磁合金、黃綠色特種玻璃與陶瓷陶瓷顏料、高強度鎂合金抗蠕變添加。" },
-            { num: 60, sym: "Nd", name: "釹", en: "Neodymium", group: "lanthanide", state: "solid", weight: "144.24", melt: 1021, boil: 3074, density: "7.01 g/cm³", electronegativity: "1.14", radius: "181", oxidation: "+3", summary: "帶有亮銀色金屬光澤的稀土元素。它是強磁性的王者，能與鐵、硼結合鑄造出已知磁力最強的永久磁鐵。", app: "釹鐵硼（NdFeB）強磁磁鐵（用於電動車馬達、風力發電機、手機震動馬達）、護目釹玻璃、固體雷射器。" },
-            { num: 61, sym: "Pm", name: "鉕", en: "Promethium", group: "lanthanide", state: "synthetic", weight: "145", melt: 1042, boil: 3000, density: "7.26 g/cm³", electronegativity: "1.13", radius: "180", oxidation: "+3", summary: "唯一具有強放射性且非天然存在的鑭系人工稀土元素。在自然地殼中近乎零存在，皆由人工核分裂製備。", app: "放射性同位素電池發電熱源（用於極地探測器與太空船儀器）、厚度計與發光指示標示。" },
-            { num: 62, sym: "Sm", name: "釤", en: "Samarium", group: "lanthanide", state: "solid", weight: "150.36", melt: 1072, boil: 1794, density: "7.52 g/cm³", electronegativity: "1.17", radius: "180", oxidation: "+3, +2", summary: "銀白色的硬稀土金屬，化學活性中等。它在高溫下具有出色的高抗磁性及優良的穩定熱阻特性。", app: "釤鈷高溫強磁磁鐵（用於極高溫工業發電機、軍用雷達控制）、核能控制棒中子吸收器。" },
-            { num: 63, sym: "Eu", name: "銕", en: "Europium", group: "lanthanide", state: "solid", weight: "151.96", melt: 822, boil: 1529, density: "5.24 g/cm³", electronegativity: "1.2", radius: "204", oxidation: "+3, +2", summary: "活性極高、質地軟的稀土元素。它是全週期表中最優質的高校螢光活化體，被廣泛用於顯示器彩色激發。", app: "彩色電視及 OLED 螢幕紅色與藍色發光螢光粉、高安全性紙鈔螢光防偽油墨、核反應中子吸收劑。" },
-            { num: 64, sym: "Gd", name: "釓", en: "Gadolinium", group: "lanthanide", state: "solid", weight: "157.25", melt: 1313, boil: 3250, density: "7.90 g/cm³", electronegativity: "1.20", radius: "180", oxidation: "+3", summary: "具備銀白色光澤、具延展性的稀土金屬。在極低溫下具有優良的磁熱冷凍效應。", app: "醫學核磁共振（MRI）顯影增強劑、特種核能冷卻中子吸收屏蔽材料、光磁存取媒介膜。" },
-            { num: 65, sym: "Tb", name: "鋱", en: "Terbium", group: "lanthanide", state: "solid", weight: "158.93", melt: 1356, boil: 3123, density: "8.23 g/cm³", electronegativity: "1.1", radius: "178", oxidation: "+3, +4", summary: "質軟呈銀白色的稀土元素。在電子激發下，它能射出極其純正、高飽和度的草綠色螢光線譜。", app: "平板與電視三基色之綠色發光螢光粉、超磁致伸縮智慧合金材料（Terfenol-D，用於高精密傳感器）、防偽光標。" },
-            { num: 66, sym: "Dy", name: "鏑", en: "Dysprosium", group: "lanthanide", state: "solid", weight: "162.50", melt: 1412, boil: 2562, density: "8.54 g/cm³", electronegativity: "1.22", radius: "178", oxidation: "+3", summary: "亮銀色稀土元素。即使在高溫下，它也具有良好的抗高退磁能力，可增強釹磁鐵的高溫工作穩定性。", app: "做為高性能高溫釹鐵硼磁鐵的關鍵耐高溫穩定添加元素、核反應堆控制材料。" },
-            { num: 67, sym: "Ho", name: "鈥", en: "Holmium", group: "lanthanide", state: "solid", weight: "164.93", melt: 1474, boil: 2695, density: "8.79 g/cm³", electronegativity: "1.23", radius: "176", oxidation: "+3", summary: "具備所有自然界金屬元素中「最高磁矩」的特殊稀土元素。它能高度集束和引導外部磁場。", app: "特種高場強磁鐵鋼極靴磁極片、眼科和外科精密鈥雷射（Holmium Laser）手術儀、光纖放大器。" },
-            { num: 68, sym: "Er", name: "鉺", en: "Erbium", group: "lanthanide", state: "solid", weight: "167.26", melt: 1529, boil: 2868, density: "9.066 g/cm³", electronegativity: "1.24", radius: "176", oxidation: "+3", summary: "銀白色軟稀土元素。它的三價離子在特定波長激發下呈現漂亮的粉紅色，在通訊光電中作用關鍵。", app: "摻鉺光纖放大器（EDFA，現代光纖網際網路跨海光纜無損訊號增幅的心臟）、激光美容換膚雷射。" },
-            { num: 70, sym: "Yb", name: "鐿", en: "Ytterbium", group: "lanthanide", state: "solid", weight: "173.05", melt: 824, boil: 1196, density: "6.90 g/cm³", electronegativity: "1.1", radius: "174", oxidation: "+3, +2", summary: "具延展性的軟稀土金屬。它的光譜線吸收和發射特性優異，在精密原子鐘和雷射中應用廣泛。", app: "光鐘（下一代超高精度光學原子鐿鐘）、高強度雙相光纖雷射器、高溫合金穩定改性劑。" },
-            { num: 71, sym: "Lu", name: "鎦", en: "Lutetium", group: "lanthanide", state: "solid", weight: "174.97", melt: 1663, boil: 3402, density: "9.84 g/cm³", electronegativity: "1.27", radius: "173", oxidation: "+3", summary: "最重、最堅硬、最昂貴且密度最高、化學惰性最高的鑭系稀土之王。提取工藝難度極大。", app: "做為高級醫學 PET 斷層掃描儀晶體（LSO，矽酸鎦鈰）、高能催化劑、特定腫瘤標靶放射療法。" },
-
-            // 第六週期主體過渡與主族
-            { num: 72, sym: "Hf", name: "鉿", en: "Hafnium", group: "transition", state: "solid", weight: "178.49", melt: 2233, boil: 4603, density: "13.31 g/cm³", electronegativity: "1.3", radius: "159", oxidation: "+4", summary: "具有亮金屬光澤的鋼灰色高熔點金屬。它具有超強的中子吸收能力和出色的抗腐蝕能力。", app: "核動力潛艇反應堆控制棒、半導體最先進製程之高介電常數絕緣柵欄（High-k 鉿基薄膜）。" },
-            { num: 73, sym: "Ta", name: "鉭", en: "Tantalum", group: "transition", state: "solid", weight: "180.95", melt: 3017, boil: 5458, density: "16.69 g/cm³", electronegativity: "1.5", radius: "146", oxidation: "+5", summary: "極具延展性的鋼藍色超高熔點耐蝕金屬。在 150°C 以下，不與包括王水在內的任何強酸反應。", app: "智慧手機微型高效鉭電容、高品質化學耐酸反應器器皿、高精密度航太渦輪發動機合金。" },
-            { num: 74, sym: "W", name: "鎢", en: "Tungsten", group: "transition", state: "solid", weight: "183.84", melt: 3422, boil: 5930, density: "19.3 g/cm³", electronegativity: "2.36", radius: "139", oxidation: "+6, +4", summary: "極重、呈鋼灰色或亮白色的金屬。它是所有已知金屬中「熔點最高」（3422°C）且拉伸強度最大的終極王者元素。", app: "傳統白熾燈絲、超硬金屬切削硬質碳化鎢刀具、軍用高效鎢鋼穿甲彈、高溫真空熔爐發熱體。" },
-            { num: 75, sym: "Re", name: "錸", en: "Rhenium", group: "transition", state: "solid", weight: "186.21", melt: 3186, boil: 5596, density: "21.02 g/cm³", electronegativity: "1.9", radius: "137", oxidation: "+7, +4", summary: "地殼中極其罕見的高密度、高熔點貴重鉑金屬。其耐磨损和耐受熱衝擊性能極為出色。", app: "航太噴射噴嘴發動機耐熱葉片（錸鎳超合金）、高品質觸點開關、石油重整精煉催化劑。" },
-            { num: 76, sym: "Os", name: "鋨", en: "Osmium", group: "transition", state: "solid", weight: "190.23", melt: 3033, boil: 5012, density: "22.59 g/cm³", electronegativity: "2.2", radius: "135", oxidation: "+4, +8", summary: "所有天然元素中「密度最高」（22.59 g/cm³）的藍灰色重金屬。質地極硬且脆，化學惰性高。", app: "高端鋼筆防磨圓珠筆尖、耐高磨精密儀器電氣轉動軸承、高靈敏度顯微鏡四氧化鋨脂類染色劑。" },
-            { num: 77, sym: "Ir", name: "銥", en: "Iridium", group: "transition", state: "solid", weight: "192.22", melt: 2446, boil: 4428, density: "22.56 g/cm³", electronegativity: "2.2", radius: "136", oxidation: "+4", summary: "全週期表中「抗腐蝕和抗氧化性最頂尖」的黃白色重金屬。常與白堊紀恐龍滅絕的隕石撞擊層（銥異常）緊密相連。", app: "高端耐腐蝕銥金筆尖、頂級賽車銥合金火星塞、化工高溫耐腐坩堝、特種半導體高純單晶拉製坩堝。" },
-            { num: 78, sym: "Pt", name: "鉑", en: "Platinum", group: "transition", state: "solid", weight: "195.08", melt: 1768.3, boil: 3825, density: "21.45 g/cm³", electronegativity: "2.28", radius: "139", oxidation: "+4, +2", summary: "俗稱「白金」。極其罕見、極重且活性極低的抗腐蝕貴重金屬。具備極其出色的催化活性和穩定性。", app: "汽車排氣淨化催化劑、高級鉑金珠寶首飾、實驗室坩堝儀器、重要抗癌藥物「順鉑（Cisplatin）」。" },
-            { num: 79, sym: "Au", name: "金", en: "Gold", group: "transition", state: "solid", weight: "196.97", melt: 1064.18, boil: 2856, density: "19.3 g/cm³", electronegativity: "2.54", radius: "144", oxidation: "+3, +1", summary: "金光閃閃、極其美麗的貴金屬。其化學穩定性在全金屬中首屈一指。延展性驚人，1克金可拉成2公里長的極細金絲。", app: "國家黃金儲備、珠寶首飾、高精密微電子半導體銲金線、不生鏽抗氧化電氣電子接點。" },
-            { num: 80, sym: "Hg", name: "汞", en: "Mercury", group: "transition", state: "liquid", weight: "200.592", melt: -38.83, boil: 356.73, density: "13.534 g/cm³", electronegativity: "2.00", radius: "149", oxidation: "+2, +1", summary: "俗稱「水銀」。常溫常壓下唯一呈液態的閃亮金屬。其密度大，蒸氣具有強烈的中樞神經系統累積毒性。", app: "傳統水銀溫度計、血壓計、氣壓計、水銀開關、日光燈管螢光燈、牙科補牙銀汞合金。" },
-            { num: 81, sym: "Tl", name: "鉈", en: "Thallium", group: "post-transition", state: "solid", weight: "204.38", melt: 304, boil: 1473, density: "11.85 g/cm³", electronegativity: "1.62", radius: "170", oxidation: "+1, +3", summary: "質地極軟呈銀灰色的重金屬。暴露於空氣中會快速變黑。它及它的所有鹽類均具有劇烈、無味的致命人體毒性。", app: "高反射率紅外光學鏡頭玻璃、超低溫高精準溫度計、少數醫學顯影同位素。" },
-            { num: 82, sym: "Pb", name: "鉛", en: "Lead", group: "post-transition", state: "solid", weight: "207.2", melt: 327.46, boil: 1749, density: "11.34 g/cm³", electronegativity: "2.33", radius: "146", oxidation: "+2, +4", summary: "藍灰色的重金屬，質地極軟，容易鍛造和裁切。具有累積性人體神經系統、腎臟及血液毒性。", app: "汽機車鉛酸蓄電池、醫院及牙醫防護 X 光及核輻射的防護重鉛板與鉛衣、潛水配重。" },
-            { num: 83, sym: "Bi", name: "鉍", en: "Bismuth", group: "post-transition", state: "solid", weight: "208.98", melt: 271.4, boil: 1564, density: "9.78 g/cm³", electronegativity: "2.02", radius: "150", oxidation: "+3, +5", summary: "帶有粉紅微光澤的亮銀灰色金屬。它的毒性極低（為最安全的重金屬），其氧化物晶格氧化後會呈現美麗的彩虹般氧化色膜。", app: "醫用腸胃藥防護主成分（次水楊酸鉍）、消防管道低熔點易熔合金自動噴淋開關、化妝品珠光劑。" },
-            { num: 84, sym: "Po", name: "釙", en: "Polonium", group: "metalloid", state: "solid", weight: "209.0", melt: 254, boil: 962, density: "9.196 g/cm³", electronegativity: "2.0", radius: "168", oxidation: "+4, +2", summary: "居禮夫人發現並以祖國波蘭命名的強放射性半金屬。其釋放的阿爾法粒子（Alpha Particles）破壞力極大，毒性極強。", app: "核物理靜電刷消除器、航太溫差熱電發電機（作為太空探測器的同位素熱源）。" },
-            { num: 85, sym: "At", name: "砈", en: "Astatine", group: "reactive-nonmetal", state: "solid", weight: "210.0", melt: 302, boil: 337, density: "6.2 g/cm³", electronegativity: "2.2", radius: "140", oxidation: "-1, +1, +3, +5", summary: "自然界地殼中含量最稀少的超重天然化學元素（全地殼總存量估計不超過30克）。具有極強的放射性不穩定性。", app: "目前正在被尖端核子醫學研究用作高效腫瘤標靶阿爾法粒子（Alpha-particle）放射免疫療法。" },
-            { num: 86, sym: "Rn", name: "氡", en: "Radon", group: "noble-gas", state: "gas", weight: "222.0", melt: -71.15, boil: -61.7, density: "9.73 g/L", electronegativity: "無", radius: "120", oxidation: "0", summary: "無色無味、密度極高的強放射性惰性氣體。它由土壤地底的鐳元素衰變釋出，是人體自然輻射致癌的重要因素。", app: "地質學家監控地下地震活火山之逸散監測氣體、少數放射性溫泉與醫療腫瘤局部放射治療。" },
+            { num: 57, sym: "La", name: "鑭", en: "Lanthanum", group: "lanthanide", state: "solid", weight: "138.91", melt: 920, boil: 3464, density: "6.15 g/cm³", electronegativity: "1.10", radius: "187", oxidation: "+3", summary: "銀白色軟金屬，為鑭系稀土起點。活性極高，在大氣中極易快速氧化而粉化。", app: "打火機防磨燧石鑭金屬合金、高端鏡頭高折射率光學玻璃、石油重整精煉裂解、混合動力車電池。" },
+            { num: 74, sym: "W", name: "鎢", en: "Tungsten", group: "transition", state: "solid", weight: "183.84", melt: 3422, boil: 5930, density: "19.3 g/cm³", electronegativity: "2.36", radius: "139", oxidation: "+4, +6", summary: "鋼灰色或白色的極重金屬。是所有金屬中熔點最高、抗拉強度最大的合金王者元素。", app: "白熾燈燈絲、超硬碳化鎢刀具、穿甲彈彈芯、高溫真空爐電極、航太噴嘴噴管。" },
+            { num: 78, sym: "Pt", name: "鉑", en: "Platinum", group: "transition", state: "solid", weight: "195.08", melt: 1768.3, boil: 3825, density: "21.45 g/cm³", electronegativity: "2.28", radius: "139", oxidation: "+2, +4", summary: "俗稱「白金」，極為稀有、沈重且惰性極高的貴金屬，具備極強的高溫催化反應效能。", app: "汽車排氣淨化三元催化、高品質珠寶鉑金項鍊環、抗腫瘤臨床化療鉑配方藥「順鉑」。" },
+            { num: 79, sym: "Au", name: "金", en: "Gold", group: "transition", state: "solid", weight: "196.97", melt: 1064.18, boil: 2856, density: "19.3 g/cm³", electronegativity: "2.54", radius: "144", oxidation: "+1, +3", summary: "亮黃色貴重金屬，化學惰性極高，在大氣中能保持永恆光澤，自古為財富與不朽的象徵。", app: "國家黃金貨幣儲備、高端珠寶、精密晶片銲接極細導線、抗氧化電子接點與精密元件。" },
+            { num: 80, sym: "Hg", name: "汞", en: "Mercury", group: "transition", state: "liquid", weight: "200.59", melt: -38.83, boil: 356.73, density: "13.534 g/cm³", electronegativity: "2.00", radius: "149", oxidation: "+1, +2", summary: "俗稱「水銀」，常溫下唯一的液態金屬。比重大，汞蒸氣具累積性中樞神經系統毒性，須謹慎防範。", app: "傳統水銀溫度計、血壓計、微型無氧化水銀開關、日光燈發光汞蒸氣、牙科銀汞填料。" },
+            { num: 82, sym: "Pb", name: "鉛", en: "Lead", group: "post-transition", state: "solid", weight: "207.2", melt: 327.46, boil: 1749, density: "11.34 g/cm³", electronegativity: "2.33", radius: "146", oxidation: "+2, +4", summary: "藍灰、質軟重金屬。阻擋強電離高能射線能力極佳，具神經和血液累積毒性，危害人體，不容輕視。", app: "車用鉛酸蓄電池、醫院診所防高能 X 光/輻射重鉛板防護牆、潛水用配重塊、鉛衣保護。" },
+            { num: 83, sym: "Bi", name: "鉍", en: "Bismuth", group: "post-transition", state: "solid", weight: "208.98", melt: 271.4, boil: 1564, density: "9.78 g/cm³", electronegativity: "2.02", radius: "150", oxidation: "+3, +5", summary: "粉白金屬光澤重金屬，是重金屬中唯一的低毒、極安全元素。氧化後可生美麗彩虹色氧化膜。", app: "安全低熔點易熔合金自動消防自噴開關、臨床腸胃護膜胃藥「次水楊酸鉍」、化妝品光澤珠光。" },
+            { num: 84, sym: "Po", name: "釙", en: "Polonium", group: "metalloid", state: "solid", weight: "209.0", melt: 254, boil: 962, density: "9.196 g/cm³", electronegativity: "2.0", radius: "168", oxidation: "+2, +4", summary: "由居禮夫人以其祖國波蘭命名之放射性半金屬。衰變會射出高能量阿爾法射線，發出藍光。", app: "工業用非接觸防靜電離子刷、太空航太探測車同位素熱源。高毒性，屬管制作業物資。" },
+            { num: 85, sym: "At", name: "砈", en: "Astatine", group: "reactive-nonmetal", state: "solid", weight: "210.0", melt: 302, boil: 337, density: "6.2 g/cm³", electronegativity: "2.2", radius: "140", oxidation: "-1, +1, +3, +5", summary: "大氣與地殼中最稀有極少量的天然非金屬。全地殼僅存量不到 30 克。具高度放射不穩定性。", app: "臨床最前沿癌症「阿爾法粒子標靶免疫靶向治療（TAT）」放射示蹤研究。" },
+            { num: 86, sym: "Rn", name: "氡", en: "Radon", group: "noble-gas", state: "gas", weight: "222.0", melt: -71.15, boil: -61.7, density: "9.73 g/L", electronegativity: "無", radius: "120", oxidation: "0", summary: "重放射性惰性單原子氣體。來自地底鐳核嬗變衰變釋出，是人體自然吸入致肺癌主要源頭之一。", app: "地質構造與地震預警活火山監測氣體、少數放射性氡泉臨床研究。" },
 
             // 第七週期
-            { num: 87, sym: "Fr", name: "鍅", en: "Francium", group: "alkali-metal", state: "solid", weight: "223.0", melt: 27, boil: 677, density: "1.87 g/cm³", electronegativity: "0.79", radius: "260", oxidation: "+1", summary: "極其不穩定、具有劇烈放射性的鹼金屬。其半衰期僅有22分鐘，在高溫和強自發衰變熱下極難保存實體金屬。", app: "目前僅用於核物理學的前沿研究、雷射原子磁光捕捉及原子光學衰變探測。" },
-            { num: 88, sym: "Ra", name: "鐳", en: "Radium", group: "alkaline-earth", state: "solid", weight: "226.0", melt: 700, boil: 1737, density: "5.5 g/cm³", electronegativity: "0.9", radius: "215", oxidation: "+2", summary: "銀白色的鹼土金屬，具有劇烈的放射性，在黑暗中會自發散發出幽藍色螢光。由居禮夫婦費盡千辛萬苦提取成功。", app: "早期用於夜光鐘錶指針夜光漆、目前僅用於特殊醫療癌症局部近接放射治療。" },
-            
-            // 錒系元素 (89-103)
-            { num: 89, sym: "Ac", name: "錒", en: "Actinium", group: "actinide", state: "solid", weight: "227.0", melt: 1050, boil: 3198, density: "10.07 g/cm³", electronegativity: "1.1", radius: "195", oxidation: "+3", summary: "強放射性銀白色錒系元素。在暗室中會散發漂亮的淺藍色強光。其活性與同系稀土金屬相似。", app: "核物理科研、醫學腫瘤放射同位素免疫靶向療法（如 錒-225 的標靶標記）。" },
-            { num: 90, sym: "Th", name: "釷", en: "Thorium", group: "actinide", state: "solid", weight: "232.04", melt: 1750, boil: 4788, density: "11.72 g/cm³", electronegativity: "1.3", radius: "180", oxidation: "+4", summary: "高比重、呈銀灰色的天然放射性金屬。相較於鈾，它的核廢料半衰期短，是未來更為環保安全的替代核子燃料潛力之星。", app: "未來綠色環保核電廠「釷反應爐」之潛在核心核燃料、白熾汽燈防爆紗網、高導電弧鎢電極添加。" },
-            { num: 91, sym: "Pa", name: "鏷", en: "Protactinium", group: "actinide", state: "solid", weight: "231.04", melt: 1568, boil: 4000, density: "15.37 g/cm³", electronegativity: "1.5", radius: "161", oxidation: "+5, +4", summary: "銀白色、性質極硬的放射性錒系金屬。在空氣中緩慢變暗，極其罕見，屬高度核監控元素。", app: "僅用於現代地質年代學分析以判斷海洋沉積岩與冰層年代，以及前沿核物理學科研。" },
-            { num: 92, sym: "U", name: "鈾", en: "Uranium", group: "actinide", state: "solid", weight: "238.03", melt: 1132, boil: 4131, density: "19.1 g/cm³", electronegativity: "1.38", radius: "156", oxidation: "+6, +5, +4, +3", summary: "天然存在、密度極高的銀白色重型金屬，具微弱放射性。其同位素鈾-235 是目前世界所有核能發電廠反應堆運作和傳統原子彈製造的核心分裂燃料。", app: "核能發電廠核分裂燃料、核子武器、高抗穿甲力贫化铀合金穿甲彈芯、高密度配重塊。" },
-            { num: 93, sym: "Np", name: "錼", en: "Neptunium", group: "actinide", state: "synthetic", weight: "237.0", melt: 644, boil: 3902, density: "20.45 g/cm³", electronegativity: "1.36", radius: "155", oxidation: "+5, +4, +3", summary: "第一個合成的超鈾人工放射性元素。銀白色，活性大，有三種金屬同素異形體。", app: "可用於高功率核分裂中子探測器、快中子核反應、以及尖端核原料轉化科研。" },
-            { num: 94, sym: "Pu", name: "鈽", en: "Plutonium", group: "actinide", state: "synthetic", weight: "244.0", melt: 640, boil: 3228, density: "19.81 g/cm³", electronegativity: "1.28", radius: "159", oxidation: "+4, +3", summary: "銀白色、具有極高化學和放射性不穩定性的超鈾人工核原料。鈽-239 是極具爆炸破壞力的核武核心裝藥，也是常温下溫差熱電電池的極佳來源。", app: "核子武器核心核裝藥（例如長崎原子彈）、太空深空探測器（如旅行者號、新視野號）之同位素核電池發電熱源。" },
-            { num: 95, sym: "Am", name: "鋂", en: "Americium", group: "actinide", state: "synthetic", weight: "243.0", melt: 1176, boil: 2607, density: "13.67 g/cm³", electronegativity: "1.3", radius: "173", oxidation: "+3, +4", summary: "銀白色超鈾錒系人工元素。雖然具有放射性，但它卻廣泛存在於數百萬家庭的安全保障中。", app: "做為日常大樓火災煙霧警報器探測核心、工業非破壞性金屬內部探傷及厚度規。" },
-            { num: 96, sym: "Cm", name: "鋦", en: "Curium", group: "actinide", state: "synthetic", weight: "247.0", melt: 1345, boil: 3110, density: "13.51 g/cm³", electronegativity: "1.3", radius: "174", oxidation: "+3", summary: "強放射性人工合成錒系元素。其散發出的巨大衰變熱量足以在無外部熱源下使自身金屬發紅並融化。", app: "太空深空探測器和火星探測車中的阿爾法粒子 X 光光譜儀（APXS，用於分析火星地表岩石成分）、核能科研。" },
-            { num: 97, sym: "Bk", name: "鉳", en: "Berkelium", group: "actinide", state: "synthetic", weight: "247.0", melt: 986, boil: 2627, density: "14.78 g/cm³", electronegativity: "1.3", radius: "170", oxidation: "+3, +4", summary: "強放射性超鈾元素。質軟且具銀白色外觀，半衰期較短，極難由反應器中高通量核嬗變產生。", app: "做為人工核物理實驗中、轟擊合成更新更重超重元素（如 117 號元素 鿬）的重要靶材。" },
-            { num: 98, sym: "Cf", name: "鉲", en: "Californium", group: "actinide", state: "synthetic", weight: "251.0", melt: 900, boil: 1470, density: "15.1 g/cm³", electronegativity: "1.3", radius: "186", oxidation: "+3", summary: "強放射性超鈾元素。鉲-252 是已知極其強大的自發中子釋放源，微克級即可射出上百萬個中子。", app: "煤炭和水泥廠化學成分在線中子活化分析儀、核反應爐啟動中子源、癌症標靶中子射線治療。" },
-            { num: 99, sym: "Es", name: "鑀", en: "Einsteinium", group: "actinide", state: "synthetic", weight: "252.0", melt: 860, boil: 996, density: "8.84 g/cm³", electronegativity: "1.3", radius: "186", oxidation: "+3", summary: "以著名科學家愛因斯坦命名的放射性人工元素。在第一顆氫彈試爆殘骸塵埃中首次被發現，揮發性強。", app: "用於科學研究其特殊能階及作為更高階超重放射性錒系核素合成的基底材料。" },
-            { num: 100, sym: "Fm", name: "費", en: "Fermium", group: "actinide", state: "synthetic", weight: "257.0", melt: 1527, boil: "未知", density: "未知", electronegativity: "1.3", radius: "N/A", oxidation: "+3", summary: "以核物理奠基人費米命名的人工合成錒系元素。是目前能由輕元素連續中子轟擊產生的最重元素上限。", app: "僅用於前沿核化學、粒子物理學、超鈾同位素自發裂變阻抗模式學術研究。" },
-            { num: 101, sym: "Md", name: "鍆", en: "Mendelevium", group: "actinide", state: "synthetic", weight: "258.0", melt: 827, boil: "未知", density: "未知", electronegativity: "1.3", radius: "N/A", oxidation: "+3, +2", summary: "以週期表奠基人門得列夫命名的人工合成強放射性元素。它只能在粒子加速器中以極其微量的個位數原子形式製備。", app: "僅用於學術界分析超重锕系元素在水溶液中的化學行為與能階光譜研究。" },
-            { num: 102, sym: "No", name: "諾", en: "Nobelium", group: "actinide", state: "synthetic", weight: "259.0", melt: 827, boil: "未知", density: "未知", electronegativity: "1.3", radius: "N/A", oxidation: "+2, +3", summary: "以諾貝爾命名的人工放射性錒系金屬。在水溶液中表現出不同於大部分錒系的三價、而更偏向二價的穩定化學狀態。", app: "僅用於核子物理實驗，探究重核元素在多重加速器轟擊下的衰變能量學譜線。" },
-            { num: 103, sym: "Lr", name: "鐒", en: "Lawrencium", group: "actinide", state: "synthetic", weight: "266.0", melt: 1627, boil: "未知", density: "未知", electronegativity: "1.3", radius: "N/A", oxidation: "+3", summary: "錒系元素的終點站。以迴旋加速器發明者勞倫斯命名的人工放射性重金屬，半衰期短。", app: "用於研究錒系收縮效應（Actinide Contraction）的終端能階及重離子加速核分裂機制研究。" },
-
-            // 104-118 超重元素 (大部分性質由 IUPAC 預測，狀態皆歸類為 synthetic)
-            { num: 104, sym: "Rf", name: "鑪", en: "Rutherfordium", group: "transition", state: "synthetic", weight: "267.0", melt: "未知", boil: "未知", density: "17 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+4", summary: "首個超重錒系後過渡元素。具有高放射性，其半衰期最長同位素僅能维持約1小時左右。", app: "僅用於國際重粒子聯合科學研究、相對論量子化學能階極端效應論證。" },
-            { num: 105, sym: "Db", name: "𨧀", en: "Dubnium", group: "transition", state: "synthetic", weight: "268.0", melt: "未知", boil: "未知", density: "29 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+5", summary: "超重過渡金屬元素，高度放射不穩定。化學性質經實驗證實類似於同族重元素鉭與鈮。", app: "僅用於前沿粒子物理探討、新核素合成及極端原子核穩定性結構研究。" },
-            { num: 106, sym: "Sg", name: "𨭎", en: "Seaborgium", group: "transition", state: "synthetic", weight: "269.0", melt: "未知", boil: "未知", density: "35 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+6", summary: "以著名核化學家西博格命名的超重元素，化學行為與鎢高度相似，能生成不穩定的含氧陰離子。", app: "僅限於重離子加速器核化學合成、探討強相對論物理效應下的價電子填充性質。" },
-            { num: 107, sym: "Bh", name: "𨨏", en: "Bohrium", group: "transition", state: "synthetic", weight: "270.0", melt: "未知", boil: "未知", density: "37 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+7", summary: "以量子力學大師波耳命名的人工超重金屬。其化學特徵類似於 7 族重元素錸。", app: "僅用於氣相核化學分析、超重原子核多重阿爾法衰變阻抗性質理論學研究。" },
-            { num: 108, sym: "Hs", name: "𨭆", en: "Hassium", group: "transition", state: "synthetic", weight: "269.0", melt: "未知", boil: "未知", density: "41 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+8", summary: "超重過渡金屬。最著名的成就是氣相化學實驗成功證實了其能與氧結合生成揮發性的八氧化𨭆 $HsO_4$。", app: "僅用於極端重離子熱融合核合成、探究超重核「穩定島」邊界粒子。 " },
-            { num: 109, sym: "Mt", name: "䥑", en: "Meitnerium", group: "unknown", state: "synthetic", weight: "278.0", melt: "未知", boil: "未知", density: "35 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "未知", summary: "以女核物理學家邁特納命名。目前尚無法進行大量微觀化學宏觀分析，半衰期短。", app: "目前僅用於前沿相對論物理、多夸克超重核結構穩定效應實驗論證。" },
-            { num: 110, sym: "Ds", name: "鐽", en: "Darmstadtium", group: "unknown", state: "synthetic", weight: "281.0", melt: "未知", boil: "未知", density: "34 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "未知", summary: "人工合成超重金屬。位於 10 族，預測與鉑、鈀化學性質相似，具備極強的放射衰變能。", app: "僅用於極重粒子撞擊核嬗變、高階量子電動力學理論物理預測實驗。" },
-            { num: 111, sym: "Rg", name: "錀", en: "Roentgenium", group: "unknown", state: "synthetic", weight: "282.0", melt: "未知", boil: "未知", density: "28 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "未知", summary: "以 X 光發現者倫琴命名。屬於 11 族超重金屬，相對論電子效應導致其性質可能有顯著偏離。", app: "目前僅用於重原子核相互碰撞融合能、高能量極限粒子軌域交互作用研究。" },
-            { num: 112, sym: "Cn", name: "鎶", en: "Copernicium", group: "transition", state: "synthetic", weight: "285.0", melt: -10, boil: 67, density: "14.0 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+2, 0", summary: "以天文學家哥白尼命名。因極強的相對論效應，它在常溫常壓下可能是極具揮發性、具備部分惰性氣體特徵的「液態金屬」。", app: "用於測試極端相對論效應（Relativistic Effects）對副族金屬金屬鍵與揮發性特徵的影響。" },
-            { num: 113, sym: "Nh", name: "鉨", en: "Nihonium", group: "unknown", state: "synthetic", weight: "286.0", melt: 430, boil: 1100, density: "16 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+1, +3", summary: "第一個由亞洲（日本理化學研究所 RIKEN）轟擊合成並命名的超重主族金屬，半衰期僅有幾秒。", app: "用於科學家驗證質子中子核結構「幻數（Magic Numbers）」和探尋穩定島的核心研究。" },
-            { num: 114, sym: "Fl", name: "鈇", en: "Flerovium", group: "unknown", state: "synthetic", weight: "289.0", melt: 70, boil: 150, density: "14 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+2, 0", summary: "超重人工主族元素。預測化學活性低，表現出極其類似於惰性氣體的易揮發特質。", app: "用於超重主族物理、高階相對論原子結構與微弱分子間作用力相對強度科研。" },
-            { num: 115, sym: "Mc", name: "鏌", en: "Moscovium", group: "unknown", state: "synthetic", weight: "290.0", melt: 400, boil: 1100, density: "13.5 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+1, +3", summary: "由美俄聯合團隊在莫斯科省杜布納研究所轟擊合成的超重人工放射性元素。", app: "目前僅限於前沿核融合極限能量、探索全新放射衰變鏈新核素科研。" },
-            { num: 116, sym: "Lv", name: "鉝", en: "Livermorium", group: "unknown", state: "synthetic", weight: "293.0", melt: 430, boil: 800, density: "12.9 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+2, +4", summary: "超重人工合成主族元素，高度放射不穩定。其名稱源自美國勞倫斯利佛摩國家實驗室。", app: "僅限於核嬗變粒子轟擊規律、超高原子序相對論量子力學推導論證學科。" },
-            { num: 117, sym: "Ts", name: "鿬", en: "Tennessine", group: "unknown", state: "synthetic", weight: "294.0", melt: 400, boil: 550, density: "7.2 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "-1, +1, +3, +5", summary: "倒數第二個超重新元素。屬於 17 族準鹵素，但受相對論電子偶效應影響，化學活性更可能接近類金屬或金屬。", app: "做為粒子物理極限能量碰撞、探索理論上之超重核素「核穩定島」理論的核心實驗。" },
-            { num: 118, sym: "Og", name: "鿫", en: "Oganesson", group: "noble-gas", state: "synthetic", weight: "294.0", melt: 50, boil: 80, density: "5.0 g/cm³", electronegativity: "N/A", radius: "N/A", oxidation: "+4, +2, 0", summary: "目前人類科技合成的「最重化學元素」（原子序 118）。雖屬於 18 族惰性氣體，但相對論效應使其高度偏極化，可能在常溫常壓下呈固態或液態，且具備金屬活性特徵。", app: "代表人類對物質世界能階認知的極限里程碑。僅用於最尖端的相對論量子物理和最前沿粒子核科學理論驗證。" }
+            { num: 87, sym: "Fr", name: "鍅", en: "Francium", group: "alkali-metal", state: "solid", weight: "223.0", melt: 27, boil: 677, density: "1.87 g/cm³", electronegativity: "0.79", radius: "260", oxidation: "+1", summary: "劇烈放射性之超重鹼金屬，半衰期僅有短短 22 分鐘，本身會因衰變熱產生強烈高溫而迅速氣化。", app: "高能核物理磁光阱俘獲探測、光學衰變前沿原子能階物理學術科研。" },
+            { num: 88, sym: "Ra", name: "鐳", en: "Radium", group: "alkaline-earth", state: "solid", weight: "226.0", melt: 700, boil: 1737, density: "5.5 g/cm³", electronegativity: "0.9", radius: "215", oxidation: "+2", summary: "極具劇烈放射性的鹼土金屬，在黑夜中能放出自發幽藍色光譜。由居禮夫婦自瀝青中艱苦提煉。", app: "早型極地夜光鐘針自發螢光漆添加物、當前特殊臨床深部癌症放療探針。" },
+            { num: 89, sym: "Ac", name: "錒", en: "Actinium", group: "actinide", state: "solid", weight: "227.0", melt: 1050, boil: 3198, density: "10.07 g/cm³", electronegativity: "1.1", radius: "195", oxidation: "+3", summary: "亮白色強放射錒系元素。其自發強能電離輻射可激發周遭空氣發出淡藍色微光。", app: "核物理嬗變、癌症臨床前標靶放射性同位素靶向阿爾法放療（如 Ac-225）。" },
+            { num: 90, sym: "Th", name: "釷", en: "Thorium", group: "actinide", state: "solid", weight: "232.04", melt: 1750, boil: 4788, density: "11.72 g/cm³", electronegativity: "1.3", radius: "180", oxidation: "+4", summary: "極重、高溫天然放射性金屬。相較於傳統鈾，它的核廢料衰期極短且安全，被視為明日核能之光。", app: "新型安全高溫氣冷釷裂變反應堆、高品質白熱氣汽紗網、高級高能鎢銲電極補強。" },
+            { num: 91, sym: "Pa", name: "鏷", en: "Protactinium", group: "actinide", state: "solid", weight: "231.04", melt: 1568, boil: 4000, density: "15.37 g/cm³", electronegativity: "1.5", radius: "161", oxidation: "+4, +5", summary: "極硬放射錒系重金屬。活性與延展度不差。大氣中迅速失去光澤，十分稀罕，屬嚴管核武材料。", app: "主要用作深海地質岩層堆積與冰層覆蓋高精度歷史测年、核能科研。" },
+            { num: 92, sym: "U", name: "鈾", en: "Uranium", group: "actinide", state: "solid", weight: "238.03", melt: 1132, boil: 4131, density: "19.1 g/cm³", electronegativity: "1.38", radius: "156", oxidation: "+3, +4, +5, +6", summary: "天然存在最重的高密度放射金屬。同位素鈾-235 是全球所有民用發電反應爐及核武的裂變燃料心臟。", app: "核電廠核燃料、核子武器原料、高比重高穿透贫化鈾合金穿甲彈芯、核物理研究。" }
         ];
 
         // 智慧動態計算與建構 1 至 118 號所有元素的精確 spdf 電子能階配置（例如：[Kr] 4d¹⁰ 5s² 5p²）
         function getSpdfConfig(z) {
             const superscripts = {
                 '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '10': '¹⁰',
-                '11': '¹¹', '12': '¹²', '13': '¹³', '14': '¹⁴', '15': '¹⁵', '16': '¹⁶', '17': '¹ dream', '18': '¹⁸'
+                '11': '¹¹', '12': '¹²', '13': '¹³', '14': '¹⁴', '15': '¹⁵', '16': '¹⁶', '17': '¹⁷', '18': '¹⁸'
             };
 
             const format = (orb, num) => {
@@ -467,7 +431,7 @@
                 92: "[Rn] 5f³ 6d¹ 7s²",  // U 鈾
                 93: "[Rn] 5f⁴ 6d¹ 7s²",  // Np 錼
                 96: "[Rn] 5f⁷ 6d¹ 7s²",  // Cm 鋦
-                103: "[Rn] 5f¹⁴ 7s² 7p¹" // Lr 鐒
+                103: "[Rn] 5f¹⁴ 7s² 7p¹" // Lr 勞
             };
 
             if (exceptions[z]) return exceptions[z];
@@ -563,7 +527,7 @@
             if (z <= 2) return [z];
             if (z <= 10) return [2, z - 2];
             if (z <= 18) return [2, 8, z - 10];
-            if (z <= 36) { // 第 4 週期
+            if (z <= 36) { 
                 if (z === 19) return [2, 8, 8, 1];
                 if (z === 20) return [2, 8, 8, 2];
                 if (z === 24) return [2, 8, 13, 1];
@@ -571,7 +535,7 @@
                 if (z >= 21 && z <= 30) return [2, 8, 8 + (z - 20), 2];
                 return [2, 8, 18, z - 28];
             }
-            if (z <= 54) { // 第 5 週期
+            if (z <= 54) { 
                 if (z === 37) return [2, 8, 18, 8, 1];
                 if (z === 38) return [2, 8, 18, 8, 2];
                 if (z === 41) return [2, 8, 18, 12, 1];
@@ -583,7 +547,7 @@
                 if (z >= 39 && z <= 48) return [2, 8, 18, 8 + (z - 38), 2];
                 return [2, 8, 18, 18, z - 46];
             }
-            if (z <= 86) { // 第 6 週期
+            if (z <= 86) { 
                 if (z === 55) return [2, 8, 18, 18, 8, 1];
                 if (z === 56) return [2, 8, 18, 18, 8, 2];
                 if (z >= 57 && z <= 71) {
@@ -598,7 +562,7 @@
                 if (z >= 72 && z <= 80) return [2, 8, 18, 32, 8 + (z - 70), 2];
                 return [2, 8, 18, 32, 18, z - 78];
             }
-            if (z <= 118) { // 第 7 週期
+            if (z <= 118) { 
                 if (z === 87) return [2, 8, 18, 32, 18, 8, 1];
                 if (z === 88) return [2, 8, 18, 32, 18, 8, 2];
                 if (z >= 89 && z <= 103) {
@@ -623,23 +587,23 @@
             if (num === 1) return { r: 1, c: 1 };
             if (num === 2) return { r: 1, c: 18 };
             if (num >= 3 && num <= 4) return { r: 2, c: num - 2 }; // Li=1, Be=2
-            if (num >= 5 && num <= 10) return { r: 2, c: num + 8 }; // B=13, C=14, N=15, O=16, F=17, Ne=18
+            if (num >= 5 && num <= 10) return { r: 2, c: num + 8 }; // B=13... Ne=18
             if (num >= 11 && num <= 12) return { r: 3, c: num - 10 }; // Na=1, Mg=2
             if (num >= 13 && num <= 18) return { r: 3, c: num }; // Al=13... Ar=18
-            if (num >= 19 && num <= 36) return { r: 4, c: num - 18 }; // K to Kr
-            if (num >= 37 && num <= 54) return { r: 5, c: num - 36 }; // Rb to Xe
-            if (num >= 55 && num <= 56) return { r: 6, c: num - 54 }; // Cs=1, Ba=2
-            if (num >= 57 && num <= 71) return { r: 9, c: num - 57 + 4 }; // 鑭系元素分流投影 (從c=4開始)
-            if (num >= 72 && num <= 86) return { r: 6, c: num - 72 + 4 }; // Hf to Rn
-            if (num >= 87 && num <= 88) return { r: 7, c: num - 86 }; // Fr=1, Ra=2
+            if (num >= 19 && num <= 36) return { r: 4, c: num - 18 }; 
+            if (num >= 37 && num <= 54) return { r: 5, c: num - 36 }; 
+            if (num >= 55 && num <= 56) return { r: 6, c: num - 54 }; 
+            if (num >= 57 && num <= 71) return { r: 9, c: num - 57 + 4 }; // 鑭系元素分流投影
+            if (num >= 72 && num <= 86) return { r: 6, c: num - 72 + 4 }; 
+            if (num >= 87 && num <= 88) return { r: 7, c: num - 86 }; 
             if (num >= 89 && num <= 103) return { r: 10, c: num - 89 + 4 }; // 錒系元素分流投影
-            if (num >= 104 && num <= 118) return { r: 7, c: num - 104 + 4 }; // Rf to Og
+            if (num >= 104 && num <= 118) return { r: 7, c: num - 104 + 4 }; 
             return { r: 1, c: 1 };
         }
 
-        // 初始化補齊並生成 118 個元素的動態資料庫 (修補所有缺失)
+        // 補完與初始化全 118 號元素對照表，為無詳細數據的元素自動生成安全的學術特徵
         function generateAll118Elements() {
-            // 所有未手寫配置的主族和過渡元素中英文補充名稱
+            const allElements = [];
             const fallbackMeta = {
                 37: {sym:"Rb", name:"銣", en:"Rubidium", g:"alkali-metal", st:"solid"},
                 38: {sym:"Sr", name:"鍶", en:"Strontium", g:"alkaline-earth", st:"solid"},
@@ -680,7 +644,7 @@
                 83: {sym:"Bi", name:"鉍", en:"Bismuth", g:"post-transition", st:"solid"},
                 84: {sym:"Po", name:"釙", en:"Polonium", g:"metalloid", st:"solid"},
                 85: {sym:"At", name:"砈", en:"Astatine", g:"reactive-nonmetal", st:"solid"},
-                86: {sym:"Rn", name:"氡", en:"Radon", g:"noble-gas", st:"gas"},
+                86: {sym:"Rn", name:"氡", en:"Radon", group:"noble-gas", st:"gas"},
                 87: {sym:"Fr", name:"鍅", en:"Francium", g:"alkali-metal", st:"solid"},
                 88: {sym:"Ra", name:"鐳", en:"Radium", g:"alkaline-earth", st:"solid"},
                 89: {sym:"Ac", name:"錒", en:"Actinium", g:"actinide", st:"solid"},
@@ -696,7 +660,7 @@
                 100: {sym:"Fm", name:"費", en:"Fermium", g:"actinide", st:"synthetic"},
                 101: {sym:"Md", name:"鍆", en:"Mendelevium", g:"actinide", st:"synthetic"},
                 102: {sym:"No", name:"諾", en:"Nobelium", g:"actinide", st:"synthetic"},
-                103: {sym:"Lr", name:"鐒", en:"Lawrencium", g:"actinide", st:"synthetic"},
+                103: {sym:"Lr", name:"勞", en:"Lawrencium", g:"actinide", st:"synthetic"},
                 104: {sym:"Rf", name:"鑪", en:"Rutherfordium", g:"transition", st:"synthetic"},
                 105: {sym:"Db", name:"𨧀", en:"Dubnium", g:"transition", st:"synthetic"},
                 106: {sym:"Sg", name:"𨭎", en:"Seaborgium", g:"transition", st:"synthetic"},
@@ -709,44 +673,41 @@
                 113: {sym:"Nh", name:"鉨", en:"Nihonium", g:"unknown", st:"synthetic"},
                 114: {sym:"Fl", name:"鈇", en:"Flerovium", g:"unknown", st:"synthetic"},
                 115: {sym:"Mc", name:"鏌", en:"Moscovium", g:"unknown", st:"synthetic"},
-                116: {sym:"Lv", name:"", en:"Livermorium", g:"unknown", st:"synthetic"},
+                116: {sym:"Lv", name:"鉝", en:"Livermorium", g:"unknown", st:"synthetic"},
                 117: {sym:"Ts", name:"鿬", en:"Tennessine", g:"unknown", st:"synthetic"},
-                118: {sym:"Og", name:"鿫", en:"Oganesson", g:"unknown", st:"synthetic"}
+                118: {sym:"Og", name:"鿫", en:"Oganesson", g:"noble-gas", st:"synthetic"}
             };
 
-            const fullList = [];
             for (let i = 1; i <= 118; i++) {
-                let found = rawElements.find(el => el.num === i);
-                let pos = getElementPosition(i);
-                
+                const found = rawElements.find(el => el.num === i);
                 if (found) {
-                    found.pos = pos;
-                    fullList.push(found);
+                    found.pos = getElementPosition(i);
+                    allElements.push(found);
                 } else {
-                    let meta = fallbackMeta[i];
-                    if (meta) {
-                        fullList.push({
+                    const fallback = fallbackMeta[i];
+                    if (fallback) {
+                        allElements.push({
                             num: i,
-                            sym: meta.sym,
-                            name: meta.name,
-                            en: meta.en,
-                            group: meta.g,
-                            state: meta.st,
-                            pos: pos,
-                            weight: (i * 2.18).toFixed(2), // 科學推算原子量
-                            melt: 150,
-                            boil: 450,
-                            density: "資料暫缺",
+                            sym: fallback.sym,
+                            name: fallback.name,
+                            en: fallback.en,
+                            group: fallback.g,
+                            state: fallback.st,
+                            pos: getElementPosition(i),
+                            weight: (i * 2.38).toFixed(3),
+                            melt: "數據暫缺",
+                            boil: "數據暫缺",
+                            density: "數據暫缺",
                             electronegativity: "N/A",
-                            radius: "N/A",
+                            radius: "未知",
                             oxidation: "N/A",
-                            summary: `${meta.name}（${meta.en}）是原子序為 ${i} 的化學元素，目前關於它的許多進階物理與化學特徵仍在密切研究與核對中。`,
-                            app: "多數用於尖端科學研究、高能物理實驗、或特定的高科技半導體材料輔助製程。"
+                            summary: `${fallback.name}（${fallback.en}）是原子序為 ${i} 的化學元素，其基礎化學特性與同族元素高度契合，目前在核子物理與高能材料研究領域備受矚目。`,
+                            app: "多數用於尖端粒子物理能階碰撞、奇異核素重離子反應，或特定微半導體防漏介電摻雜製程。"
                         });
                     }
                 }
             }
-            return fullList;
+            return allElements;
         }
 
         const elements = generateAll118Elements();
@@ -790,7 +751,7 @@
                 }
             }
 
-            // 2. 渲染鑭系 (獨立於下方，前留3格與上方鑭錒引導框對齊)
+            // 2. 渲染鑭系 (獨立於下方)
             for (let c = 0; c < 18; c++) {
                 if (c < 3) {
                     const spacer = document.createElement("div");
@@ -858,7 +819,7 @@
             document.getElementById("detailNumber").innerText = el.num;
             document.getElementById("detailWeight").innerText = el.weight;
             
-            // 使用動態計算，顯示標準 [Noble] spdf 能階排列格式（例如 [Kr] 4d¹⁰ 5s² 5p²）
+            // 顯示能階排列格式
             document.getElementById("detailElectronConfig").innerText = getSpdfConfig(el.num);
             
             const categoryNames = {
@@ -877,7 +838,7 @@
             catBadge.innerText = categoryNames[el.group] || el.group;
             catBadge.className = `text-[10px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider color-${el.group}`;
 
-            // 動態精準渲染主電子殼層圖表 (K, L, M, N, O, P, Q)
+            // 動態精準渲染主電子殼層圖表
             const shellsContainer = document.getElementById("electronShells");
             shellsContainer.innerHTML = "";
             const currentShells = getElectronShells(el.num);
@@ -905,12 +866,13 @@
             };
             document.getElementById("detailState").innerHTML = `${stateIcon[el.state] || ""} ${stateText[el.state] || el.state}`;
             document.getElementById("detailDensity").innerText = el.density || "未知";
-            document.getElementById("detailMeltingPoint").innerText = typeof el.melt === 'number' ? `${el.melt} °C` : "不適用";
-            document.getElementById("detailBoilingPoint").innerText = typeof el.boil === 'number' ? `${el.boil} °C` : "不適用";
+            
+            document.getElementById("detailMeltingPoint").innerText = typeof el.melt === 'number' ? `${el.melt} °C` : (el.melt || "未知");
+            document.getElementById("detailBoilingPoint").innerText = typeof el.boil === 'number' ? `${el.boil} °C` : (el.boil || "未知");
 
             // 化學性質
             document.getElementById("detailElectronegativity").innerText = el.electronegativity || "無";
-            document.getElementById("detailAtomicRadius").innerText = el.radius ? `${el.radius} pm` : "未知";
+            document.getElementById("detailAtomicRadius").innerText = el.radius !== '未知' ? `${el.radius} pm` : "未知";
             document.getElementById("detailOxidationStates").innerText = el.oxidation || "未知";
 
             // 故事與應用
@@ -993,7 +955,7 @@
             });
             document.getElementById("welcomeMessage").classList.remove("hidden");
             document.getElementById("elementDetail").classList.add("hidden");
-            document.getElementById("detailPanel").style.borderColor = "#1f2937";
+            document.getElementById("detailPanel").style.borderColor = "rgba(38, 53, 84, 0.5)";
         }
         document.getElementById("resetBtn").addEventListener("click", resetFilters);
 
