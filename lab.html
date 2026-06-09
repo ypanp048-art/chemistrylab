@@ -97,6 +97,16 @@
             animation: flameWobble 0.2s infinite ease-in-out;
             transform-origin: bottom center;
         }
+        /* 導管氣流傳輸動畫 */
+        @keyframes tubeFlow {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+        .animate-tube-flow {
+            stroke-dasharray: 6, 6;
+            animation: tubeFlow 1.2s linear infinite;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col grid-bg selection:bg-cyan-500 selection:text-slate-900 overflow-hidden">
@@ -118,7 +128,7 @@
             <!-- 實驗教學下拉選單與操作按鈕 -->
             <div class="flex items-center gap-3">
                 <div class="hidden sm:flex items-center gap-2">
-                    <label for="experiment-select" class="text-xs font-medium text-slate-300">課程導引：</label>
+                    <label for="experiment-select" class="text-xs font-medium text-slate-300">選擇實驗課程：</label>
                     <select id="experiment-select" class="bg-slate-900/90 text-slate-200 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-cyan-500 focus:outline-none">
                         <option value="sandbox">【自由沙盒模式】</option>
                         <option value="titration">1. 酸鹼中和滴定實驗</option>
@@ -136,7 +146,7 @@
                     </select>
                 </div>
                 
-                <button id="btn-reset" class="bg-rose-600/20 hover:bg-rose-600 border border-rose-500/30 hover:border-rose-400 text-rose-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shadow-md">
+                <button id="btn-reset" class="bg-rose-600/20 hover:bg-rose-600 border border-rose-500/30 hover:border-rose-400 text-rose-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shadow-md shadow-rose-950/20">
                     <i class="fa-solid fa-arrow-rotate-left"></i> 清空桌面
                 </button>
                 <button id="btn-sound" class="bg-slate-900 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
@@ -163,7 +173,10 @@
 
             <!-- 實驗桌 (主舞台) -->
             <div id="lab-table" class="flex-grow lab-table relative p-4 select-none">
-                <!-- 冰水浴區域 -->
+                <!-- 導管連線 SVG 畫布層 -->
+                <svg id="connections-svg" class="absolute inset-0 pointer-events-none w-full h-full z-20"></svg>
+
+                <!-- 冰水浴區域 (輔助器材) -->
                 <div id="ice-bath" class="absolute left-6 top-6 w-44 h-44 rounded-2xl bg-cyan-950/20 border-2 border-cyan-500/30 backdrop-blur-md flex flex-col items-center justify-center pointer-events-none transition-all">
                     <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-cyan-400/5 to-cyan-400/10 animate-pulse"></div>
                     <i class="fa-solid fa-snowflake text-cyan-400 text-3xl mb-1.5"></i>
@@ -182,10 +195,33 @@
                 <div id="instruments-container" class="absolute inset-0 pointer-events-none">
                     <!-- 儀器將被動態渲染至此 -->
                 </div>
+
+                <!-- 氣體檢驗模態視窗 -->
+                <div id="gas-test-modal" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-slate-950/95 border border-slate-800 p-4 rounded-xl shadow-2xl z-50 pointer-events-auto backdrop-blur-md">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-emerald-400 tracking-wider flex items-center gap-1"><i data-lucide="check-square" class="w-4 h-4"></i> 氣體化學檢驗中心</span>
+                        <button onclick="closeGasTestModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <p class="text-[11px] text-slate-300 mb-4" id="gas-test-hint">偵測到容器中含有特殊氣體，請選擇檢驗方式：</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left bg-slate-900 hover:bg-slate-850 p-2.5 rounded text-xs text-white flex items-center gap-2 border border-slate-800 transition" onclick="performGasTest('glowing_splint')">
+                            <i class="fa-solid fa-fire-burner text-amber-500"></i> 帶火星的木條 (Glowing Splint)
+                        </button>
+                        <button class="w-full text-left bg-slate-900 hover:bg-slate-850 p-2.5 rounded text-xs text-white flex items-center gap-2 border border-slate-800 transition" onclick="performGasTest('burning_splint')">
+                            <i class="fa-solid fa-fire text-rose-500"></i> 點燃的木條 (Burning Splint)
+                        </button>
+                        <button class="w-full text-left bg-slate-900 hover:bg-slate-850 p-2.5 rounded text-xs text-white flex items-center gap-2 border border-slate-800 transition" onclick="performGasTest('litmus_paper')">
+                            <i class="fa-solid fa-note-sticky text-sky-400"></i> 潮濕的紅色石蕊試紙 (Damp Red Litmus)
+                        </button>
+                        <button class="w-full text-left bg-slate-900 hover:bg-slate-850 p-2.5 rounded text-xs text-white flex items-center gap-2 border border-slate-800 transition" onclick="performGasTest('limewater_test')">
+                            <i class="fa-solid fa-circle-notch text-slate-300"></i> 澄清石灰水測試 (Limewater Test)
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- 下方控制、觀測與圖表面板 -->
-            <div class="h-60 border-t border-slate-800 bg-slate-950/90 text-slate-100 flex flex-col md:flex-row">
+            <div class="h-64 border-t border-slate-800 bg-slate-950/90 text-slate-100 flex flex-col md:flex-row">
                 <!-- 數據感測面板 -->
                 <div class="w-full md:w-1/4 p-4 border-r border-slate-800 flex flex-col justify-between">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
@@ -246,7 +282,7 @@
                     <span class="text-xs font-bold text-slate-300 tracking-wider flex items-center gap-1">
                         <i class="fa-solid fa-vial text-emerald-400"></i> 化學試劑庫
                     </span>
-                    <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800/40 px-1.5 py-0.5 rounded">點選注入選定儀器</span>
+                    <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded">點選注入選定儀器</span>
                 </div>
                 <!-- 試劑頁籤導覽列 -->
                 <div class="bg-slate-800/50 flex border-b border-slate-800 text-xs shrink-0">
@@ -262,29 +298,29 @@
                     <!-- 分頁1: 酸鹼試劑 -->
                     <div id="tab-acid-base" class="reagent-panel space-y-2">
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <button class="reagent-btn bg-red-950/20 hover:bg-red-900/40 text-red-300 border border-red-900/30 rounded-xl p-2 text-left transition" data-reagent="HCl">
+                            <button class="reagent-btn bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-900/60 rounded p-2 text-left transition" data-reagent="HCl">
                                 <div class="font-bold">HCl (鹽酸)</div>
                                 <div class="text-[10px] text-red-400/80">強酸 1.0 M</div>
                             </button>
-                            <button class="reagent-btn bg-blue-950/20 hover:bg-blue-900/40 text-blue-300 border border-blue-900/30 rounded-xl p-2 text-left transition" data-reagent="NaOH">
-                                <div class="font-bold">NaOH (鈉鹼)</div>
+                            <button class="reagent-btn bg-blue-950/40 hover:bg-blue-900/60 text-blue-300 border border-blue-900/60 rounded p-2 text-left transition" data-reagent="NaOH">
+                                <div class="font-bold">NaOH (氫氧化鈉)</div>
                                 <div class="text-[10px] text-blue-400/80">強鹼 1.0 M</div>
                             </button>
-                            <button class="reagent-btn bg-orange-950/20 hover:bg-orange-900/40 text-orange-300 border border-orange-900/30 rounded-xl p-2 text-left transition" data-reagent="CH3COOH">
+                            <button class="reagent-btn bg-orange-950/40 hover:bg-orange-900/60 text-orange-300 border border-orange-900/60 rounded p-2 text-left transition" data-reagent="CH3COOH">
                                 <div class="font-bold">CH₃COOH (醋酸)</div>
                                 <div class="text-[10px] text-orange-400/80">弱酸 1.0 M</div>
                             </button>
-                            <button class="reagent-btn bg-sky-950/20 hover:bg-sky-900/40 text-sky-300 border border-sky-900/30 rounded-xl p-2 text-left transition" data-reagent="NH3_aq">
+                            <button class="reagent-btn bg-sky-950/40 hover:bg-sky-900/60 text-sky-300 border border-sky-900/60 rounded p-2 text-left transition" data-reagent="NH3_aq">
                                 <div class="font-bold">NH₃ (氨水)</div>
                                 <div class="text-[10px] text-sky-400/80">弱鹼 1.0 M</div>
                             </button>
-                            <button class="reagent-btn bg-fuchsia-950/20 hover:bg-fuchsia-900/40 text-fuchsia-300 border border-fuchsia-900/30 rounded-xl p-2 text-left transition" data-reagent="phenolphthalein">
+                            <button class="reagent-btn bg-fuchsia-950/40 hover:bg-fuchsia-900/60 text-fuchsia-300 border border-fuchsia-900/60 rounded p-2 text-left transition" data-reagent="phenolphthalein">
                                 <div class="font-bold">酚酞指示劑</div>
-                                <div class="text-[10px] text-fuchsia-400/80">pH 8.2~10</div>
+                                <div class="text-[10px] text-fuchsia-400/80">變色範圍 pH 8.2~10</div>
                             </button>
-                            <button class="reagent-btn bg-amber-950/20 hover:bg-amber-900/40 text-amber-300 border border-amber-900/30 rounded-xl p-2 text-left transition" data-reagent="methyl_orange">
+                            <button class="reagent-btn bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-900/60 rounded p-2 text-left transition" data-reagent="methyl_orange">
                                 <div class="font-bold">甲基橙指示劑</div>
-                                <div class="text-[10px] text-amber-400/80">pH 3.1~4.4</div>
+                                <div class="text-[10px] text-amber-400/80">變色範圍 pH 3.1~4.4</div>
                             </button>
                         </div>
                     </div>
@@ -292,49 +328,53 @@
                     <!-- 分頁2: 鹽類、金屬與氧化劑 -->
                     <div id="tab-salt-metal" class="reagent-panel hidden space-y-2">
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <button class="reagent-btn bg-violet-950/20 hover:bg-violet-900/40 text-violet-300 border border-violet-900/30 rounded-xl p-2 text-left transition" data-reagent="KMnO4">
-                                <div class="font-bold">KMnO₄</div>
-                                <div class="text-[10px] text-violet-400/80">強氧化劑</div>
+                            <button class="reagent-btn bg-violet-950/40 hover:bg-violet-900/60 text-violet-300 border border-violet-900/60 rounded p-2 text-left transition" data-reagent="KMnO4">
+                                <div class="font-bold">KMnO₄ (過錳酸鉀)</div>
+                                <div class="text-[10px] text-violet-400/80">強氧化劑紫紅色</div>
                             </button>
-                            <button class="reagent-btn bg-rose-950/20 hover:bg-rose-900/40 text-rose-300 border border-rose-900/30 rounded-xl p-2 text-left transition" data-reagent="FeC2O4">
-                                <div class="font-bold">FeC₂O₄</div>
+                            <button class="reagent-btn bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-900/60 rounded p-2 text-left transition" data-reagent="FeC2O4">
+                                <div class="font-bold">FeC₂O₄ (草酸亞鐵)</div>
                                 <div class="text-[10px] text-rose-400/80">還原劑</div>
                             </button>
-                            <button class="reagent-btn bg-amber-950/20 hover:bg-amber-900/40 text-amber-300 border border-amber-900/30 rounded-xl p-2 text-left transition" data-reagent="FeCl3">
-                                <div class="font-bold">FeCl₃</div>
-                                <div class="text-[10px] text-amber-400/80">黃褐色溶液</div>
+                            <button class="reagent-btn bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-900/60 rounded p-2 text-left transition" data-reagent="FeCl3">
+                                <div class="font-bold">FeCl₃ (氯化鐵)</div>
+                                <div class="text-[10px] text-amber-400/80">勒沙特列黃褐色</div>
                             </button>
-                            <button class="reagent-btn bg-amber-950/20 hover:bg-amber-900/40 text-amber-200 border border-amber-900/30 rounded-xl p-2 text-left transition" data-reagent="KSCN">
-                                <div class="font-bold">KSCN</div>
-                                <div class="text-[10px] text-amber-400/80">血紅色配體</div>
+                            <button class="reagent-btn bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 border border-amber-900/60 rounded p-2 text-left transition" data-reagent="KSCN">
+                                <div class="font-bold">KSCN (硫氰化鉀)</div>
+                                <div class="text-[10px] text-amber-400/80">血紅色錯合物源</div>
                             </button>
-                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-800 rounded-xl p-2 text-left transition" data-reagent="BaCl2">
-                                <div class="font-bold">BaCl₂</div>
-                                <div class="text-[10px] text-slate-400/80">重金屬沉澱</div>
+                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-900/60 rounded p-2 text-left transition" data-reagent="BaCl2">
+                                <div class="font-bold">BaCl₂ (氯化鋇)</div>
+                                <div class="text-[10px] text-slate-400/80">重金屬沉澱與反應熱</div>
                             </button>
-                            <button class="reagent-btn bg-indigo-950/20 hover:bg-indigo-900/40 text-indigo-300 border border-indigo-900/30 rounded-xl p-2 text-left transition" data-reagent="H2SO4">
-                                <div class="font-bold">H₂SO₄</div>
+                            <button class="reagent-btn bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 border border-indigo-900/60 rounded p-2 text-left transition" data-reagent="H2SO4">
+                                <div class="font-bold">H₂SO₄ (硫酸)</div>
                                 <div class="text-[10px] text-indigo-400/80">強酸 1.0 M</div>
                             </button>
-                            <button class="reagent-btn bg-emerald-950/20 hover:bg-emerald-900/40 text-emerald-300 border border-emerald-900/30 rounded-xl p-2 text-left transition" data-reagent="CuSO4">
-                                <div class="font-bold">CuSO₄</div>
-                                <div class="text-[10px] text-emerald-400/80">電極藍色</div>
+                            <button class="reagent-btn bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-900/60 rounded p-2 text-left transition" data-reagent="CuSO4">
+                                <div class="font-bold">CuSO₄ (硫酸銅)</div>
+                                <div class="text-[10px] text-emerald-400/80">電鍍/電池藍色</div>
                             </button>
-                            <button class="reagent-btn bg-teal-950/20 hover:bg-teal-900/40 text-teal-300 border border-teal-900/30 rounded-xl p-2 text-left transition" data-reagent="ZnSO4">
-                                <div class="font-bold">ZnSO₄</div>
-                                <div class="text-[10px] text-teal-400/80">電鍍無色</div>
+                            <button class="reagent-btn bg-teal-950/40 hover:bg-teal-900/60 text-teal-300 border border-teal-900/60 rounded p-2 text-left transition" data-reagent="ZnSO4">
+                                <div class="font-bold">ZnSO₄ (硫酸鋅)</div>
+                                <div class="text-[10px] text-teal-400/80">丹尼爾電池無色</div>
                             </button>
-                            <button class="reagent-btn bg-yellow-950/20 hover:bg-yellow-900/40 text-yellow-300 border border-yellow-900/30 rounded-xl p-2 text-left transition" data-reagent="KI">
-                                <div class="font-bold">KI</div>
-                                <div class="text-[10px] text-yellow-400/80">碘化鉀</div>
+                            <button class="reagent-btn bg-yellow-950/40 hover:bg-yellow-900/60 text-yellow-300 border border-yellow-900/60 rounded p-2 text-left transition" data-reagent="KI">
+                                <div class="font-bold">KI (碘化鉀)</div>
+                                <div class="text-[10px] text-yellow-400/80">黃金雨無色</div>
                             </button>
-                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-800 rounded-xl p-2 text-left transition" data-reagent="PbNO32">
-                                <div class="font-bold">Pb(NO₃)₂</div>
-                                <div class="text-[10px] text-slate-400/80">硝酸鉛</div>
+                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-900/60 rounded p-2 text-left transition" data-reagent="PbNO32">
+                                <div class="font-bold">Pb(NO₃)₂ (硝酸鉛)</div>
+                                <div class="text-[10px] text-slate-400/80">黃金雨無色</div>
                             </button>
-                            <button class="reagent-btn bg-orange-950/20 hover:bg-orange-900/40 text-orange-200 border border-orange-900/30 rounded-xl p-2 text-left transition" data-reagent="Na_metal">
-                                <div class="font-bold">Na (鈉塊)</div>
-                                <div class="text-[10px] text-orange-400/80">活性強</div>
+                            <button class="reagent-btn bg-orange-950/40 hover:bg-orange-900/60 text-orange-200 border border-orange-900/60 rounded p-2 text-left transition" data-reagent="Na_metal">
+                                <div class="font-bold">Na (金屬鈉塊)</div>
+                                <div class="text-[10px] text-orange-400/80">高度活潑金屬</div>
+                            </button>
+                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-200 border border-slate-900/60 rounded p-2 text-left transition" data-reagent="CaOH2">
+                                <div class="font-bold">Ca(OH)₂ (澄清石灰水)</div>
+                                <div class="text-[10px] text-slate-300">檢驗二氧化碳</div>
                             </button>
                         </div>
                     </div>
@@ -342,29 +382,29 @@
                     <!-- 分頁3: 有機試劑與檢驗 -->
                     <div id="tab-organic" class="reagent-panel hidden space-y-2">
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <button class="reagent-btn bg-amber-950/20 hover:bg-amber-900/40 text-amber-300 border border-amber-900/30 rounded-xl p-2 text-left transition" data-reagent="ethanol">
-                                <div class="font-bold">乙醇</div>
+                            <button class="reagent-btn bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-900/60 rounded p-2 text-left transition" data-reagent="ethanol">
+                                <div class="font-bold">Ethanol (乙醇)</div>
                                 <div class="text-[10px] text-amber-400/80">酯化反應原料</div>
                             </button>
-                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-800 rounded-xl p-2 text-left transition" data-reagent="salicylic_acid">
-                                <div class="font-bold">水楊酸</div>
-                                <div class="text-[10px] text-slate-400/80">固體化合物</div>
+                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-900/60 rounded p-2 text-left transition" data-reagent="salicylic_acid">
+                                <div class="font-bold">水楊酸 (固體)</div>
+                                <div class="text-[10px] text-slate-400/80">阿斯匹靈原料</div>
                             </button>
-                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-800 rounded-xl p-2 text-left transition" data-reagent="acetic_anhydride">
+                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-900/60 rounded p-2 text-left transition" data-reagent="acetic_anhydride">
                                 <div class="font-bold">乙酸酐</div>
-                                <div class="text-[10px] text-slate-400/80">合成阿斯匹靈</div>
+                                <div class="text-[10px] text-slate-400/80">酯化與阿斯匹靈</div>
                             </button>
-                            <button class="reagent-btn bg-cyan-950/20 hover:bg-cyan-900/40 text-cyan-300 border border-cyan-900/30 rounded-xl p-2 text-left transition" data-reagent="hexane">
-                                <div class="font-bold">正己烷</div>
-                                <div class="text-[10px] text-cyan-400/80">有機油分層</div>
+                            <button class="reagent-btn bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-900/60 rounded p-2 text-left transition" data-reagent="hexane">
+                                <div class="font-bold">n-Hexane (正己烷)</div>
+                                <div class="text-[10px] text-cyan-400/80">不溶於水雙相分層</div>
                             </button>
-                            <button class="reagent-btn bg-purple-950/20 hover:bg-purple-900/40 text-purple-300 border border-purple-900/30 rounded-xl p-2 text-left transition" data-reagent="iodine_solution">
-                                <div class="font-bold">碘液 (I₂/KI)</div>
-                                <div class="text-[10px] text-purple-400/80">深褐色溶液</div>
+                            <button class="reagent-btn bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 border border-purple-900/60 rounded p-2 text-left transition" data-reagent="iodine_solution">
+                                <div class="font-bold">碘液 (I₂ in KI)</div>
+                                <div class="text-[10px] text-purple-400/80">萃取用深褐色</div>
                             </button>
-                            <button class="reagent-btn bg-amber-950/20 hover:bg-amber-900/40 text-amber-300 border border-amber-900/30 rounded-xl p-2 text-left transition" data-reagent="AgNO3">
-                                <div class="font-bold">AgNO₃</div>
-                                <div class="text-[10px] text-amber-400/80">硝酸銀溶液</div>
+                            <button class="reagent-btn bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-900/60 rounded p-2 text-left transition" data-reagent="AgNO3">
+                                <div class="font-bold">AgNO₃ (硝酸銀)</div>
+                                <div class="text-[10px] text-amber-400/80">銀鏡反應/沉澱試劑</div>
                             </button>
                         </div>
                     </div>
@@ -372,25 +412,25 @@
                     <!-- 分頁4: 氣體源與水 -->
                     <div id="tab-gas" class="reagent-panel hidden space-y-2">
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <button class="reagent-btn bg-cyan-950/20 hover:bg-cyan-900/40 text-cyan-300 border border-cyan-900/30 rounded-xl p-2 text-left transition" data-reagent="H2O">
-                                <div class="font-bold">蒸餾水</div>
-                                <div class="text-[10px] text-cyan-400/80">100 ml 溶劑</div>
+                            <button class="reagent-btn bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-900/60 rounded p-2 text-left transition" data-reagent="H2O">
+                                <div class="font-bold">蒸餾水 (H₂O)</div>
+                                <div class="text-[10px] text-cyan-400/80">基礎溶劑 100 ml</div>
                             </button>
-                            <button class="reagent-btn bg-sky-950/20 hover:bg-sky-900/40 text-sky-300 border border-sky-900/30 rounded-xl p-2 text-left transition" data-reagent="H2O2">
-                                <div class="font-bold">雙氧水</div>
-                                <div class="text-[10px] text-sky-400/80">3% 反應液</div>
+                            <button class="reagent-btn bg-sky-950/40 hover:bg-sky-900/60 text-sky-300 border border-sky-900/60 rounded p-2 text-left transition" data-reagent="H2O2">
+                                <div class="font-bold">H₂O₂ (雙氧水)</div>
+                                <div class="text-[10px] text-sky-400/80">搭配二氧化錳製氧</div>
                             </button>
-                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-800 rounded-xl p-2 text-left transition" data-reagent="MnO2">
-                                <div class="font-bold">二氧化錳</div>
-                                <div class="text-[10px] text-slate-400/80">固體黑色</div>
+                            <button class="reagent-btn bg-slate-950/40 hover:bg-slate-900/60 text-slate-300 border border-slate-900/60 rounded p-2 text-left transition" data-reagent="MnO2">
+                                <div class="font-bold">MnO₂ (二氧化錳)</div>
+                                <div class="text-[10px] text-slate-400/80">催化劑 (固體)</div>
                             </button>
-                            <button class="reagent-btn bg-yellow-950/20 hover:bg-yellow-900/40 text-yellow-300 border border-yellow-900/30 rounded-xl p-2 text-left transition" data-reagent="CaCO3">
-                                <div class="font-bold">大理石</div>
-                                <div class="text-[10px] text-yellow-400/80">固體顆粒</div>
+                            <button class="reagent-btn bg-yellow-950/40 hover:bg-yellow-900/60 text-yellow-300 border border-yellow-900/60 rounded p-2 text-left transition" data-reagent="CaCO3">
+                                <div class="font-bold">CaCO₃ (大理石)</div>
+                                <div class="text-[10px] text-yellow-400/80">固體 搭配酸製CO₂</div>
                             </button>
-                            <button class="reagent-btn bg-stone-950/40 hover:bg-stone-900/60 text-stone-300 border border-slate-800 rounded-xl p-2 text-left transition" data-reagent="Zn_metal">
-                                <div class="font-bold">鋅粒 (Zn)</div>
-                                <div class="text-[10px] text-stone-400/80">活潑金屬</div>
+                            <button class="reagent-btn bg-stone-950/40 hover:bg-stone-900/60 text-stone-300 border border-stone-900/60 rounded p-2 text-left transition" data-reagent="Zn_metal">
+                                <div class="font-bold">Zn (金屬鋅粒)</div>
+                                <div class="text-[10px] text-stone-400/80">搭配酸製氫氣</div>
                             </button>
                         </div>
                     </div>
@@ -398,50 +438,50 @@
                 </div>
             </div>
 
-            <!-- 器材櫃 -->
+            <!-- 器材櫃 (滑鼠拖曳到實驗桌) -->
             <div class="h-1/2 flex flex-col overflow-hidden">
-                <div class="bg-slate-900 px-3 py-2.5 border-b border-slate-800 flex items-center justify-between shrink-0">
+                <div class="bg-slate-800 p-2 border-b border-slate-700 flex items-center justify-between shrink-0">
                     <span class="text-xs font-bold text-slate-300 tracking-wider flex items-center gap-1">
                         <i class="fa-solid fa-boxes-stacked text-amber-400"></i> 器材儲藏櫃
                     </span>
-                    <span class="text-[9px] bg-amber-950 text-amber-400 border border-amber-900/40 px-1.5 py-0.5 rounded">按住拖曳至實驗桌</span>
+                    <span class="text-[10px] bg-amber-950 text-amber-400 border border-amber-800 px-1.5 py-0.5 rounded">按住拖曳至實驗桌</span>
                 </div>
-                <div class="flex-grow p-3 overflow-y-auto no-scrollbar bg-slate-950/40 grid grid-cols-2 gap-3">
+                <div class="flex-grow p-3 overflow-y-auto no-scrollbar bg-slate-900/90 grid grid-cols-2 gap-3">
                     
                     <div class="instrument-item glass-card rounded-xl p-2.5 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing text-center" draggable="true" data-type="beaker">
-                        <i class="fa-solid fa-glass-water text-3xl text-sky-400 mb-1.5"></i>
+                        <i class="fa-solid fa-glass-water text-3xl text-sky-450 mb-1.5"></i>
                         <span class="text-xs font-bold text-slate-200">250ml 燒杯</span>
                         <span class="text-[9px] text-slate-400">標準反應容器</span>
                     </div>
 
                     <div class="instrument-item glass-card rounded-xl p-2.5 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing text-center" draggable="true" data-type="testtube">
-                        <i class="fa-solid fa-flask-vial text-3xl text-emerald-400 mb-1.5"></i>
+                        <i class="fa-solid fa-flask-vial text-3xl text-emerald-450 mb-1.5"></i>
                         <span class="text-xs font-bold text-slate-200">試管</span>
-                        <span class="text-[9px] text-slate-400">少量反應驗證</span>
+                        <span class="text-[9px] text-slate-400">少量反應/檢驗</span>
                     </div>
 
                     <div class="instrument-item glass-card rounded-xl p-2.5 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing text-center" draggable="true" data-type="burette">
-                        <i class="fa-solid fa-prescription-bottle text-3xl text-purple-400 mb-1.5"></i>
+                        <i class="fa-solid fa-prescription-bottle text-3xl text-purple-450 mb-1.5"></i>
                         <span class="text-xs font-bold text-slate-200">滴定管組</span>
-                        <span class="text-[9px] text-slate-400">中和精確滴定</span>
+                        <span class="text-[9px] text-slate-400">酸鹼/氧化還原</span>
                     </div>
 
                     <div class="instrument-item glass-card rounded-xl p-2.5 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing text-center" draggable="true" data-type="bunsen">
-                        <i class="fa-solid fa-fire-burner text-3xl text-rose-400 mb-1.5"></i>
+                        <i class="fa-solid fa-fire-burner text-3xl text-rose-450 mb-1.5"></i>
                         <span class="text-xs font-bold text-slate-200">本生燈</span>
-                        <span class="text-[9px] text-slate-400">反應熱源加熱</span>
+                        <span class="text-[9px] text-slate-400">熱源加熱儀器</span>
                     </div>
 
                     <div class="instrument-item glass-card rounded-xl p-2.5 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing text-center" draggable="true" data-type="daniell_kit">
-                        <i class="fa-solid fa-battery-half text-3xl text-teal-400 mb-1.5"></i>
+                        <i class="fa-solid fa-battery-half text-3xl text-teal-450 mb-1.5"></i>
                         <span class="text-xs font-bold text-slate-200">鹽橋與雙槽</span>
-                        <span class="text-[9px] text-slate-400">電化學模擬套組</span>
+                        <span class="text-[9px] text-slate-400">丹尼爾電池套件</span>
                     </div>
 
                     <div class="instrument-item glass-card rounded-xl p-2.5 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing text-center" draggable="true" data-type="electrolysis_kit">
-                        <i class="fa-solid fa-bolt text-3xl text-yellow-400 mb-1.5"></i>
+                        <i class="fa-solid fa-bolt text-3xl text-yellow-450 mb-1.5"></i>
                         <span class="text-xs font-bold text-slate-200">電解與電鍍槽</span>
-                        <span class="text-[9px] text-slate-400">金屬電鍍板套件</span>
+                        <span class="text-[9px] text-slate-400">含電鍍金屬銅/鋅片</span>
                     </div>
 
                 </div>
@@ -451,11 +491,39 @@
 
     </main>
 
-    <!-- 音效與反應引擎腳本 -->
+    <!-- 音效控制 script 與反應引擎 -->
     <script>
         // --- Web Audio API 音效合成器 ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let soundEnabled = true;
+
+        // --- 試劑與器材名稱對照表 ---
+        function getReagentName(key) {
+            const names = {
+                HCl: 'HCl (鹽酸)', NaOH: 'NaOH (氫氧化鈉)', CH3COOH: 'CH₃COOH (醋酸)', NH3_aq: 'NH₃ (氨水)',
+                phenolphthalein: '酚酞指示劑', methyl_orange: '甲基橙指示劑', KMnO4: 'KMnO₄ (過錳酸鉀)',
+                FeC2O4: 'FeC₂O₄ (草酸亞鐵)', FeCl3: 'FeCl₃ (氯化鐵)', KSCN: 'KSCN (硫氰化鉀)',
+                BaCl2: 'BaCl₂ (氯化鋇)', H2SO4: 'H₂SO₄ (硫酸)', CuSO4: 'CuSO₄ (硫酸銅)', ZnSO4: 'ZnSO₄ (硫酸鋅)',
+                KI: 'KI (碘化鉀)', PbNO32: 'Pb(NO₃)₂ (硝酸鉛)', Na_metal: 'Na (金屬鈉塊)',
+                ethanol: '乙醇', salicylic_acid: '水楊酸', acetic_anhydride: '乙酸酐',
+                hexane: '正己烷', iodine_solution: '碘液', AgNO3: 'AgNO₃ (硝酸銀)',
+                H2O: '蒸餾水', H2O2: 'H₂O₂ (雙氧水)', MnO2: 'MnO₂ (二氧化錳)', CaCO3: 'CaCO₃ (大理石)', Zn_metal: 'Zn (金屬鋅粒)',
+                CaOH2: 'Ca(OH)₂ (澄清石灰水)'
+            };
+            return names[key] || key;
+        }
+
+        function getInstrumentName(type) {
+            switch(type) {
+                case 'beaker': return '250ml 燒杯';
+                case 'testtube': return '試管';
+                case 'burette': return '滴定管組';
+                case 'bunsen': return '本生燈';
+                case 'daniell_kit': return '鹽橋與雙槽';
+                case 'electrolysis_kit': return '電解與電鍍槽';
+                default: return '未知儀器';
+            }
+        }
 
         function playPourSound() {
             if (!soundEnabled) return;
@@ -531,7 +599,7 @@
             },
             titration: {
                 title: "1. 酸鹼中和滴定實驗",
-                desc: "【步驟】1. 拖入[滴定管組]與[燒杯]。2. 在燒杯中加入 [HCl(鹽酸)] 及 [酚酞指示劑] (呈現無色)。3. 在滴定管中加入 [NaOH]。4. 點擊滴定管開關進行滴定。當pH接近7時酚酞將呈現粉紅色。下方Canvas將即時繪製滴定pH突變曲線。"
+                desc: "【步驟】1. 拖入[滴定管組]與[燒杯]。2. 在燒杯中加入 [HCl(鹽酸)] 及 [酚酞指示劑] (呈現無色)。3. 在滴定管中加入 [NaOH(氫氧化鈉)]。4. 點擊滴定管開關進行滴定。當pH接近7時酚酞將呈現粉紅色。下方Canvas將即時繪製滴定pH突變曲線。"
             },
             le_chatelier: {
                 title: "2. 勒沙特列原理 (平衡移動)",
@@ -539,7 +607,7 @@
             },
             silver_mirror: {
                 title: "3. 銀鏡反應 (醛類檢驗)",
-                desc: "【步驟】1. 拖入[試管]。2. 加入 [AgNO₃] 與 [NH₃ (氨水)] 配製出銀氨錯離子，接著加入 [ethanol(乙醇/乙醛氧化物)]。3. 拖入 [本生燈] 點火並靠近試管加熱。試管壁面將動態還原出高質感的「亮銀色鏡面」，這也是高中化學最重要的有機檢驗！"
+                desc: "【步驟】1. 拖入[試管]。2. 加入 [AgNO₃] 與 [NH₃ (氨水)] 配製出銀氨錯離子，接著加入 [ethanol(乙醇/乙醛氧化物結構)]。3. 拖入 [本生燈] 點火並靠近試管加熱。試管壁面將動態還原出高質感的「亮銀色鏡面」，這也是高中化學最重要的有機檢驗！"
             },
             daniell_cell: {
                 title: "4. 丹尼爾電池 (電化學)",
@@ -547,7 +615,7 @@
             },
             redox_titration: {
                 title: "5. 氧化還原滴定 (過錳酸鉀法)",
-                desc: "【步驟】1. 拖入[滴定管組]與[燒杯]。2. 燒杯中注入 [FeC₂O₄] 與 [H₂SO₄] 提供酸性環境。3. 滴定管中注入深紫色的 [KMnO₄]。4. 開始滴定，KMnO₄ 會在接觸到還原劑時瞬間褪色。當達到當量點時，溶液會變為穩定的微淡粉紅色。"
+                desc: "【步驟】1. 拖入[滴定管組]與[燒杯]。2. 燒杯中注入 [FeC₂O₄(草酸亞鐵)] 與 [H₂SO₄(濃硫酸)] 提供酸性環境。3. 滴定管中注入深紫色的 [KMnO₄]。4. 開始滴定，KMnO₄ 會在接觸到還原劑時瞬間褪色。當達到當量點時，溶液會變為穩定的微淡粉紅色。"
             },
             golden_rain: {
                 title: "6. 「黃金雨」沉澱與溶解度平衡",
@@ -562,8 +630,8 @@
                 desc: "【步驟】1. 拖入[電解與電鍍槽]套件。2. 注入 [CuSO₄] 做為電解液。3. 接通直流電後，負極上的銅片表面會動態析出一層紅褐色的金屬銅，完成精細的電鍍演示。下方可即時監測導電度提升。"
             },
             gas_prep: {
-                title: "9. 氣體快速製備 (排水集氣與檢驗)",
-                desc: "【步驟】1. 拖入[試管]或[燒杯]。2. 製備 O₂：加入 [MnO₂] 固體再注入 [H₂O₂]。反應劇烈，產生大量 O₂ 氣泡！ 3. 製備 CO₂：加入 [CaCO₃] 固體再注入 [HCl]。4. 製備 H₂：加入 [Zn粒] 再注入 [HCl]。5. 氨氣製備：加入 [NH₃(氨水)] 與 [NaOH] 混合並稍加加熱，釋放 NH₃ 氣體。"
+                title: "9. 氣體快速製備、收集與檢驗",
+                desc: "【步驟】1. 拖入[試管]或[燒杯]當反應器，並拖入另一個[燒杯]做為氣體收集器。2. 用【導管連接】兩個容器。3. 注入反應物（例：大理石 CaCO₃ + 鹽酸 HCl ）。4. 點選氣體產生容器，按下【🔍 檢驗氣體】以進行化學性質探討檢測！"
             },
             active_metal: {
                 title: "10. 活潑金屬(鈉)與水/酸的劇烈反應",
@@ -575,7 +643,7 @@
             },
             aspirin_synth: {
                 title: "12. 阿斯匹靈合成 (有機化學學術)",
-                desc: "【步驟】1. 拖入[試管]或[燒杯]。2. 注入 [salicylic_acid (水楊酸固體)] 及 [acetic_anhydride (乙酸酐)]。3. 注入 [H₂SO₄ (硫酸)] 作為催化劑。4. 拖入 [本生燈] 並點火加熱至 60°C 以上以引發反應。5. 反應完成後，日誌將顯示成功合成並產生 [阿斯匹靈] 白色針狀結晶！"
+                desc: "【步驟】1. 拖入[試管]或[燒杯]。2. 注入 [salicylic_acid (水楊酸固體)] 及 [acetic_anhydride (乙酸酐)]。3. 注入 [H₂SO₄ (濃硫酸)] 作為催化劑。4. 拖入 [本生燈] 並點火加熱至 60°C 以上以引發反應. 反應完成後，日誌將顯示成功合成並產生 [阿斯匹靈] 白色針狀結晶！"
             }
         };
 
@@ -592,11 +660,16 @@
         const canvas = document.getElementById('data-canvas');
         const ctx = canvas.getContext('2d');
 
-        let activeInstrument = null;
-        let instruments = [];
+        let activeInstrument = null; 
+        let instruments = []; 
         let dragOffset = { x: 0, y: 0 };
         let dragTarget = null;
-        let chartData = [];
+        let chartData = []; 
+
+        // 導管連線與氣體檢驗狀態
+        let inConnectionMode = false;
+        let connectionSource = null;
+        let currentTestingInstrument = null; 
 
         // 初始化 Canvas 大小
         function resizeCanvas() {
@@ -646,7 +719,7 @@
             });
         });
 
-        // --- 儀器拖拉功能 ---
+        // --- 儀器拖拉功能 (器材櫃 -> 實驗桌) ---
         const items = document.querySelectorAll('.instrument-item');
         items.forEach(item => {
             item.addEventListener('dragstart', (e) => {
@@ -664,7 +737,7 @@
             if (!type) return;
 
             const rect = labTable.getBoundingClientRect();
-            const x = e.clientX - rect.left - 50;
+            const x = e.clientX - rect.left - 50; 
             const y = e.clientY - rect.top - 50;
 
             createInstrument(type, x, y);
@@ -683,20 +756,22 @@
                 ph: 7.00,
                 volume: 0,
                 maxVolume: type === 'beaker' ? 250 : (type === 'testtube' ? 50 : 100),
-                reagents: {},
+                reagents: {}, 
                 precipitate: "無明顯沉澱",
-                flameOn: false,
+                flameOn: false, 
                 heating: false,
                 cooling: false,
-                titrating: false,
-                daniellActive: false,
-                electrolysisActive: false,
-                silverMirrorPercent: 0,
-                organicPhase: false,
-                esterProduced: false,
-                aspirinProduced: false,
-                yellowRainState: 'none',
-                color: 'rgba(255, 255, 255, 0.1)'
+                titrating: false, 
+                daniellActive: false, 
+                electrolysisActive: false, 
+                silverMirrorPercent: 0, 
+                organicPhase: false, 
+                esterProduced: false, 
+                aspirinProduced: false, 
+                yellowRainState: 'none', 
+                color: 'rgba(255, 255, 255, 0.1)',
+                connectedToId: null, 
+                gasType: null 
             };
 
             instruments.push(inst);
@@ -704,18 +779,7 @@
             setActiveInstrument(inst);
             writeLog(`向實驗桌添加了：${getInstrumentName(type)}`, 'info');
             playPourSound();
-        }
-
-        function getInstrumentName(type) {
-            switch(type) {
-                case 'beaker': return '250ml 燒杯';
-                case 'testtube': return '試管';
-                case 'burette': return '滴定管組';
-                case 'bunsen': return '本生燈';
-                case 'daniell_kit': return '鹽橋與雙槽';
-                case 'electrolysis_kit': return '電解與電鍍槽';
-                default: return '未知儀器';
-            }
+            drawConnections();
         }
 
         // --- 增量渲染與事件綁定機制 ---
@@ -724,7 +788,7 @@
             const existingIds = existingWrappers.map(el => el.id);
             const activeIds = instruments.map(inst => inst.id);
 
-            // 回收
+            // 1. 回收不需要的 DOM
             existingIds.forEach(id => {
                 if (!activeIds.includes(id)) {
                     const el = document.getElementById(id);
@@ -732,7 +796,7 @@
                 }
             });
 
-            // 建立與更新
+            // 2. 建立或更新 DOM
             instruments.forEach(inst => {
                 let wrapper = document.getElementById(inst.id);
                 const isNew = !wrapper;
@@ -746,14 +810,32 @@
                 wrapper.style.left = `${inst.x}px`;
                 wrapper.style.top = `${inst.y}px`;
                 wrapper.style.zIndex = activeInstrument && activeInstrument.id === inst.id ? '50' : '10';
-                wrapper.className = `lab-instrument-wrapper absolute pointer-events-auto cursor-grab active:cursor-grabbing select-none transition-shadow duration-150 ${activeInstrument && activeInstrument.id === inst.id ? 'ring-2 ring-cyan-400 shadow-lg shadow-cyan-500/20' : ''}`;
+                wrapper.className = `lab-instrument-wrapper absolute pointer-events-auto cursor-grab active:cursor-grabbing select-none transition-shadow duration-150 ${activeInstrument && activeInstrument.id === inst.id ? 'ring-2 ring-emerald-400 shadow-lg shadow-emerald-500/20' : ''}`;
 
                 let controlPanelHTML = '';
                 if (activeInstrument && activeInstrument.id === inst.id) {
+                    const isReceptacle = inst.type === 'beaker' || inst.type === 'testtube';
+                    const hasGas = inst.gasType !== null;
+                    const isConnected = inst.connectedToId !== null;
+
                     controlPanelHTML = `
-                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-slate-900 border border-slate-700 p-0.5 rounded-md shadow-md z-30 pointer-events-auto text-[10px]">
-                            <button class="btn-wash bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-2 py-0.5 rounded flex items-center gap-1 transition" title="清空儀器內試劑">清空</button>
-                            <button class="btn-delete bg-rose-600 hover:bg-rose-500 text-white font-bold px-2 py-0.5 rounded flex items-center gap-1 transition" title="回收移除此儀器">回收</button>
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-slate-800/90 border border-slate-700 p-0.5 rounded-md shadow-md z-30 pointer-events-auto text-[10px]">
+                            ${isReceptacle ? `
+                                <button class="btn-connect bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 transition" title="使用氣體收集導管與其他容器連接">
+                                    ${isConnected ? '拔除導管' : '連接導管'}
+                                </button>
+                            ` : ''}
+                            ${hasGas ? `
+                                <button class="btn-gas-test bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 transition" title="化學分析容器中的氣體成分">
+                                    檢驗氣體
+                                </button>
+                            ` : ''}
+                            <button class="btn-wash bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 transition" title="清空儀器內試劑">
+                                清空
+                            </button>
+                            <button class="btn-delete bg-rose-600 hover:bg-rose-500 text-white font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 transition" title="回收移除此儀器">
+                                回收
+                            </button>
                         </div>
                     `;
                 }
@@ -764,7 +846,10 @@
                         ${controlPanelHTML}
                         <div class="relative w-28 h-32 border-4 border-slate-500/70 border-t-0 rounded-b-xl flex flex-col justify-end overflow-hidden bg-slate-900/30 backdrop-blur-xs">
                             <div class="absolute left-2 top-4 text-[8px] text-slate-500 flex flex-col gap-2.5">
-                                <span>- 200ml</span><span>- 150ml</span><span>- 100ml</span><span>- 50ml</span>
+                                <span>- 200ml</span>
+                                <span>- 150ml</span>
+                                <span>- 100ml</span>
+                                <span>- 50ml</span>
                             </div>
                             <div class="w-full relative flex flex-col-reverse justify-start transition-all" style="height: ${(inst.volume / inst.maxVolume) * 100}%">
                                 <div class="w-full liquid-layer relative" style="height: ${inst.organicPhase ? '50%' : '100%'}; background-color: ${inst.color}">
@@ -775,8 +860,9 @@
                                     ${inst.esterProduced ? '<div class="absolute inset-0 flex items-center justify-center text-[8px] text-white/60 font-semibold select-none">乙酸乙酯層</div>' : ''}
                                 </div>` : ''}
                             </div>
+                            ${inst.connectedToId ? `<div class="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-3 bg-amber-800 rounded-b-md border border-amber-900 opacity-90"></div>` : ''}
                         </div>
-                        <div class="text-center text-[10px] bg-slate-900 border border-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1">${getInstrumentName(inst.type)}</div>
+                        <div class="text-center text-[10px] bg-slate-900 border border-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1 border border-slate-700/50">${getInstrumentName(inst.type)}</div>
                     `;
                 } else if (inst.type === 'testtube') {
                     let borderStyle = 'border-slate-500/70';
@@ -792,21 +878,22 @@
                                 ${inst.precipitate !== "無明顯沉澱" ? `<div class="absolute bottom-0 w-full h-4 bg-slate-200/80 rounded-b-full"></div>` : ''}
                                 ${inst.heating ? '<div class="bubble w-1.5 h-1.5" style="left: 30%; animation-delay: 0.2s"></div><div class="bubble w-2 h-2" style="left: 60%; animation-delay: 0.5s"></div>' : ''}
                             </div>
+                            ${inst.connectedToId ? `<div class="absolute top-0 left-0 right-0 h-4 bg-amber-800 rounded-b-md border border-amber-900 opacity-90"></div>` : ''}
                         </div>
-                        <div class="text-center text-[10px] bg-slate-900 border border-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1">${getInstrumentName(inst.type)}</div>
+                        <div class="text-center text-[10px] bg-slate-900 border border-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1 border border-slate-700/50">${getInstrumentName(inst.type)}</div>
                     `;
                 } else if (inst.type === 'burette') {
                     contentHTML = `
                         ${controlPanelHTML}
                         <div class="relative flex flex-col items-center">
-                            <div class="absolute left-1/2 -translate-x-1/2 -top-10 w-1 bg-slate-700 h-48 -z-10"></div>
+                            <div class="absolute left-1/2 -translate-x-1/2 -top-10 w-1 bg-slate-600 h-48 -z-10"></div>
                             <div class="relative w-6 h-36 border border-slate-500 bg-slate-900/30 rounded flex flex-col justify-end overflow-hidden">
                                 <div class="absolute left-0.5 top-2 text-[6px] text-slate-500 flex flex-col gap-1.5">
                                     <span>-0</span><span>-10</span><span>-20</span><span>-30</span><span>-40</span><span>-50</span>
                                 </div>
                                 <div class="w-full transition-all" style="height: ${(inst.volume / inst.maxVolume) * 100}%; background-color: ${inst.color}"></div>
                             </div>
-                            <button class="btn-burette-valve mt-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-[9px] font-bold py-1 px-2.5 rounded-full shadow-md z-20">
+                            <button class="btn-burette-valve mt-1 bg-amber-600 hover:bg-amber-500 text-white text-[9px] font-bold py-0.5 px-2 rounded-full shadow-md z-20">
                                 ${inst.titrating ? '關閉旋塞' : '打開旋塞'}
                             </button>
                         </div>
@@ -821,8 +908,8 @@
                                 </div>
                             ` : ''}
                             <div class="w-6 h-16 bg-slate-600 rounded-t-md border-b-4 border-slate-800 relative"></div>
-                            <div class="w-16 h-4 bg-slate-800 rounded-t-lg shadow-inner"></div>
-                            <button class="btn-bunsen-switch mt-1.5 bg-rose-600 hover:bg-rose-500 text-white text-[9px] font-bold py-1 px-2.5 rounded-full shadow-md z-20">
+                            <div class="w-16 h-4 bg-slate-700 rounded-t-lg shadow-inner"></div>
+                            <button class="btn-bunsen-switch mt-1 bg-rose-600 hover:bg-rose-500 text-white text-[9px] font-bold py-0.5 px-2 rounded-full shadow-md z-20">
                                 ${inst.flameOn ? '熄滅' : '點火'}
                             </button>
                         </div>
@@ -830,38 +917,40 @@
                 } else if (inst.type === 'daniell_kit') {
                     contentHTML = `
                         ${controlPanelHTML}
-                        <div class="relative w-44 h-28 border border-slate-700 bg-slate-900/40 rounded-lg p-2 flex gap-2 justify-between items-end">
-                            <div class="w-1/2 h-20 border-2 border-slate-700 rounded relative flex flex-col justify-end overflow-hidden bg-slate-950/40">
+                        <div class="relative w-44 h-28 border border-slate-400 bg-slate-900/40 rounded-lg p-2 flex gap-2 justify-between items-end">
+                            <div class="w-1/2 h-20 border-2 border-slate-700 rounded relative flex flex-col justify-end overflow-hidden bg-white/5">
                                 <div class="w-full h-3/4 bg-sky-500/10" id="zinc-liquid"></div>
-                                <div class="absolute top-1 left-2 w-3 h-16 bg-stone-500 border border-stone-600 rounded-sm text-[8px] text-center font-bold text-slate-300">Zn</div>
+                                <div class="absolute top-1 left-2 w-3 h-16 bg-stone-300 border border-stone-400 rounded-sm text-[8px] text-center font-bold text-slate-600">Zn</div>
+                                <div class="absolute top-1 text-[8px] right-1 text-slate-400">ZnSO₄</div>
                             </div>
                             <div class="absolute left-1/2 -translate-x-1/2 bottom-8 w-14 h-12 border-4 border-b-0 border-cyan-500/30 rounded-t-lg pointer-events-none"></div>
-                            <div class="w-1/2 h-20 border-2 border-slate-700 rounded relative flex flex-col justify-end overflow-hidden bg-slate-950/40">
+                            <div class="w-1/2 h-20 border-2 border-slate-700 rounded relative flex flex-col justify-end overflow-hidden bg-white/5">
                                 <div class="w-full h-3/4 bg-blue-500/20 transition-all" id="copper-liquid"></div>
                                 <div class="absolute top-1 left-2 w-3 h-16 bg-amber-600 border border-amber-700 rounded-sm text-[8px] text-center font-bold text-amber-100">Cu</div>
+                                <div class="absolute top-1 text-[8px] right-1 text-slate-400">CuSO₄</div>
                             </div>
-                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-[8px] text-cyan-400 px-1.5 py-0.5 rounded border border-slate-800">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 text-[8px] text-emerald-400 px-1.5 py-0.5 rounded border border-slate-600">
                                 ${inst.daniellActive ? '⚡ 1.10 V' : '斷路'}
                             </div>
                         </div>
-                        <div class="text-center text-[10px] bg-slate-900 border border-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1 border border-slate-700/50">鹽橋與雙槽套件</div>
+                        <div class="text-center text-[10px] bg-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1 border border-slate-700/50">鹽橋與雙槽套件</div>
                     `;
                 } else if (inst.type === 'electrolysis_kit') {
                     contentHTML = `
                         ${controlPanelHTML}
-                        <div class="relative w-40 h-28 border border-slate-700 bg-slate-900/40 rounded-lg p-2 flex flex-col justify-end overflow-hidden">
-                            <div class="absolute top-1 left-1/2 -translate-x-1/2 bg-slate-900 text-[8px] text-yellow-400 px-1.5 py-0.5 rounded border border-slate-800 flex items-center gap-1">
+                        <div class="relative w-40 h-28 border border-slate-400 bg-slate-900/40 rounded-lg p-2 flex flex-col justify-end overflow-hidden">
+                            <div class="absolute top-1 left-1/2 -translate-x-1/2 bg-slate-800 text-[8px] text-yellow-400 px-1.5 py-0.5 rounded border border-slate-600 flex items-center gap-1">
                                 <i class="fa-solid fa-car-battery text-amber-500"></i> ${inst.electrolysisActive ? '電解電鍍中...' : '未通電'}
                             </div>
-                            <div class="absolute top-5 left-10 w-3 h-16 bg-amber-600 border border-amber-800 rounded-sm text-[8px] text-center font-bold text-amber-200">負</div>
-                            <div class="absolute top-5 right-10 w-3 h-16 bg-stone-500 border border-stone-600 rounded-sm text-[8px] text-center font-bold text-stone-300">正</div>
+                            <div class="absolute top-5 left-10 w-3 h-16 bg-amber-650 border border-amber-800 rounded-sm text-[8px] text-center font-bold text-amber-200">負</div>
+                            <div class="absolute top-5 right-10 w-3 h-16 bg-stone-400 border border-stone-500 rounded-sm text-[8px] text-center font-bold text-stone-200">正</div>
                             <div class="w-full h-16 bg-blue-500/20 transition-all rounded-b" id="electrolysis-liquid"></div>
                         </div>
-                        <div class="text-center text-[10px] bg-slate-900 border border-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1 border border-slate-700/50">電解與電鍍槽</div>
+                        <div class="text-center text-[10px] bg-slate-800 text-slate-200 py-0.5 rounded px-1.5 mt-1 border border-slate-700/50">電解與電鍍槽</div>
                     `;
                 }
 
-                const contentHash = JSON.stringify(inst) + (activeInstrument && activeInstrument.id === inst.id ? '-active' : '');
+                const contentHash = JSON.stringify(inst) + (activeInstrument && activeInstrument.id === inst.id ? '-active' : '') + `-${inst.connectedToId ? 'conn' : 'dis'}`;
                 if (isNew || wrapper.getAttribute('data-content-hash') !== contentHash) {
                     wrapper.innerHTML = contentHTML;
                     wrapper.setAttribute('data-content-hash', contentHash);
@@ -885,10 +974,12 @@
                     inst.silverMirrorPercent = 0;
                     inst.esterProduced = false;
                     inst.aspirinProduced = false;
+                    inst.gasType = null;
                     inst.color = 'rgba(255, 255, 255, 0.1)';
-                    writeLog(`🧹 已清洗並清空 ${getInstrumentName(inst.type)} 內的所有化學試劑與殘餘物。`, "info");
+                    writeLog(`🧹 已清洗並清空 ${getInstrumentName(inst.type)} 內的所有化學試劑與殘餘氣體。`, "info");
                     renderInstruments();
                     updateSensors();
+                    drawConnections();
                 });
             }
 
@@ -897,12 +988,41 @@
                 deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     writeLog(`🗑️ 已回收並移除了 ${getInstrumentName(inst.type)}。`, "info");
+                    instruments.forEach(i => {
+                        if (i.connectedToId === inst.id) i.connectedToId = null;
+                    });
                     instruments = instruments.filter(i => i.id !== inst.id);
                     if (activeInstrument && activeInstrument.id === inst.id) {
                         activeInstrument = null;
                     }
                     renderInstruments();
                     updateSensors();
+                    drawConnections();
+                });
+            }
+
+            const connectBtn = wrapper.querySelector('.btn-connect');
+            if (connectBtn) {
+                connectBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (inst.connectedToId) {
+                        inst.connectedToId = null;
+                        writeLog(`🔌 已拔除 ${getInstrumentName(inst.type)} 上的導管。`, "info");
+                        renderInstruments();
+                        drawConnections();
+                    } else {
+                        inConnectionMode = true;
+                        connectionSource = inst;
+                        writeLog(`🔌 [導管配接模式] 請點選實驗桌上的另一個容器（燒杯或試管）以連接氣體傳輸管線。`, "warning");
+                    }
+                });
+            }
+
+            const gasTestBtn = wrapper.querySelector('.btn-gas-test');
+            if (gasTestBtn) {
+                gasTestBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openGasTestModal(inst);
                 });
             }
 
@@ -943,12 +1063,77 @@
             wrapper.addEventListener('mousedown', (e) => {
                 if (e.target.closest('button')) return;
                 e.preventDefault(); 
+                
+                if (inConnectionMode) {
+                    if (inst.id !== connectionSource.id && (inst.type === 'beaker' || inst.type === 'testtube')) {
+                        connectionSource.connectedToId = inst.id;
+                        writeLog(`🔌 成功配接！已將 ${getInstrumentName(connectionSource.type)} 與 ${getInstrumentName(inst.type)} 用導管相連。`, "success");
+                        inConnectionMode = false;
+                        connectionSource = null;
+                        renderInstruments();
+                        drawConnections();
+                    } else {
+                        writeLog("⚠️ 導管只能連接至不同的燒杯或試管！配接取消。", "warning");
+                        inConnectionMode = false;
+                        connectionSource = null;
+                    }
+                    return;
+                }
+
                 setActiveInstrument(inst);
                 dragTarget = inst;
                 const rect = wrapper.getBoundingClientRect();
                 dragOffset.x = e.clientX - rect.left;
                 dragOffset.y = e.clientY - rect.top;
                 e.stopPropagation();
+            });
+        }
+
+        // --- 繪製導管連線 ---
+        function drawConnections() {
+            const svg = document.getElementById('connections-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            instruments.forEach(inst => {
+                if (inst.connectedToId) {
+                    const target = instruments.find(i => i.id === inst.connectedToId);
+                    if (target) {
+                        const x1 = inst.x + (inst.type === 'beaker' ? 56 : 24);
+                        const y1 = inst.y + 8;
+                        const x2 = target.x + (target.type === 'beaker' ? 56 : 24);
+                        const y2 = target.y + 8;
+
+                        const cpY = Math.min(y1, y2) - 80;
+
+                        const pathShadow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        pathShadow.setAttribute('d', `M ${x1} ${y1} Q ${(x1 + x2)/2} ${cpY} ${x2} ${y2}`);
+                        pathShadow.setAttribute('stroke', 'rgba(15, 23, 42, 0.4)');
+                        pathShadow.setAttribute('stroke-width', '10');
+                        pathShadow.setAttribute('fill', 'none');
+                        svg.appendChild(pathShadow);
+
+                        const pathGlass = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        pathGlass.setAttribute('d', `M ${x1} ${y1} Q ${(x1 + x2)/2} ${cpY} ${x2} ${y2}`);
+                        pathGlass.setAttribute('stroke', 'rgba(255, 255, 255, 0.55)');
+                        pathGlass.setAttribute('stroke-width', '6');
+                        pathGlass.setAttribute('fill', 'none');
+                        svg.appendChild(pathGlass);
+
+                        const pathCore = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        pathCore.setAttribute('d', `M ${x1} ${y1} Q ${(x1 + x2)/2} ${cpY} ${x2} ${y2}`);
+                        
+                        if (inst.gasType) {
+                            pathCore.setAttribute('stroke', 'rgba(56, 189, 248, 0.95)'); 
+                            pathCore.setAttribute('class', 'animate-tube-flow');
+                        } else {
+                            pathCore.setAttribute('stroke', 'rgba(255, 255, 255, 0.2)');
+                        }
+                        pathCore.setAttribute('stroke-width', '2');
+                        pathCore.setAttribute('fill', 'none');
+                        svg.appendChild(pathCore);
+                    }
+                }
             });
         }
 
@@ -964,7 +1149,7 @@
                     }
                 }
             });
-            renderInstruments();
+            renderInstruments(); 
             updateSensors();
         }
 
@@ -1010,6 +1195,7 @@
             }
 
             checkPhysicalInteractions(dragTarget);
+            drawConnections(); 
         });
 
         document.addEventListener('mouseup', () => {
@@ -1034,7 +1220,7 @@
                     if (dx < 60 && dy < 60) {
                         if (!inst.heating) {
                             inst.heating = true;
-                            writeLog(`🔥 ${getInstrumentName(inst.type)} 靠近本生燈火焰，開始受熱升溫！`, "warning");
+                            writeLog("🔥 儀器靠近本生燈火焰，開始受熱升溫！", "warning");
                         }
                     } else {
                         inst.heating = false;
@@ -1066,9 +1252,9 @@
 
         function pourReagent(inst, reagent) {
             playPourSound();
-            const increment = 15;
+            const increment = 15; 
             if (inst.volume + increment > inst.maxVolume) {
-                writeLog(`⚠️ ${getInstrumentName(inst.type)} 已達容量上限！`, "warning");
+                writeLog("⚠️ " + getInstrumentName(inst.type) + " 已達容量上限！", "warning");
                 return;
             }
 
@@ -1078,27 +1264,15 @@
             }
             inst.reagents[reagent] += increment;
 
-            writeLog(`向 ${getInstrumentName(inst.type)} 注入了 ${increment} ml 的 [${getReagentName(reagent)}]`, "info");
+            writeLog("向 " + getInstrumentName(inst.type) + " 注入了 " + increment + " ml 的 [" + getReagentName(reagent) + "]", "info");
             
             processChemicalReaction(inst);
             renderInstruments();
             updateSensors();
+            drawConnections();
         }
 
-        function getReagentName(key) {
-            const names = {
-                HCl: 'HCl (鹽酸)', NaOH: 'NaOH (氫氧化鈉)', CH3COOH: 'CH₃COOH (醋酸)', NH3_aq: 'NH₃ (氨水)',
-                phenolphthalein: '酚酞指示劑', methyl_orange: '甲基橙指示劑', KMnO4: 'KMnO₄',
-                FeC2O4: 'FeC₂O₄', FeCl3: 'FeCl₃', KSCN: 'KSCN', BaCl2: 'BaCl₂', H2SO4: 'H₂SO₄',
-                CuSO4: 'CuSO₄', ZnSO4: 'ZnSO₄', KI: 'KI', PbNO32: 'Pb(NO₃)₂', Na_metal: '金屬鈉塊',
-                ethanol: '乙醇', salicylic_acid: '水楊酸', acetic_anhydride: '乙酸酐',
-                hexane: '正己烷', iodine_solution: '碘液', AgNO3: 'AgNO₃',
-                H2O: '蒸餾水', H2O2: '雙氧水', MnO2: '二氧化錳', CaCO3: '大理石', Zn_metal: '鋅粒'
-            };
-            return names[key] || key;
-        }
-
-        // --- 核心化學反應引擎 ---
+        // --- 核心反應運算引擎 ---
         function processChemicalReaction(inst) {
             const r = inst.reagents;
 
@@ -1106,14 +1280,14 @@
                 const neutralized = Math.min(r['HCl'], r['NaOH']);
                 r['HCl'] -= neutralized;
                 r['NaOH'] -= neutralized;
-                writeLog(`💥 發生酸鹼中和放熱反應！產生了 [NaCl] 鹽與 [H₂O]！`, "success");
+                writeLog(`💥 發生酸鹼中和放熱反應！產生了 [NaCl (氯化鈉)] 鹽與 [H₂O (水)] 物質！`, "success");
                 inst.temp += neutralized * 0.4;
                 playReactFizzSound();
             }
 
             if (r['hexane'] && (r['H2O'] || r['HCl'] || r['NaOH'])) {
                 inst.organicPhase = true;
-                writeLog("🧪 出現物理「雙相分層」！(上層正己烷，下層水溶液)！", "success");
+                writeLog("🧪 出現物理「雙相分層」！產生了 [不溶於水的雙相分層界面] (上層正己烷，下層水溶液)！", "success");
             }
 
             if (inst.organicPhase && r['iodine_solution']) {
@@ -1125,7 +1299,7 @@
                     inst.precipitate = "PbI₂ (黃色沉澱)";
                     inst.yellowRainState = 'precipitate';
                     inst.color = 'rgba(234, 179, 8, 0.45)';
-                    writeLog("💛 發生複分解沉澱反應！產生了 [PbI₂ (黃色碘化鉛沉澱)] 固體！", "warning");
+                    writeLog("💛 發生複分解沉澱反應！產生了 [PbI₂ (黃色碘化鉛沉澱)] 固體物質！", "warning");
                 }
             }
 
@@ -1133,7 +1307,7 @@
                 inst.precipitate = "BaSO₄ (白色硫酸鋇沉澱)";
                 inst.color = 'rgba(241, 245, 249, 0.6)';
                 inst.temp = Math.min(100, inst.temp + 15);
-                writeLog("💥 BaCl₂ 與硫酸劇烈反應，產生了 [BaSO₄] 白色沉澱！", "success");
+                writeLog("💥 BaCl₂ 與硫酸劇烈反應，產生了 [BaSO₄ (硫酸鋇白色沉澱)] 固體與大量反應熱能！", "success");
             }
 
             if (r['FeCl3'] && r['KSCN']) {
@@ -1143,33 +1317,41 @@
             }
 
             if (r['H2O2'] && r['MnO2']) {
-                inst.precipitate = "MnO₂ 催化分解反應中";
+                inst.precipitate = "MnO₂ 催化劑氣泡產生中";
+                inst.gasType = "O2";
                 playReactFizzSound();
-                writeLog("🫧 催化分解反應進行中！釋放大量 [O₂ (氧氣)] 氣泡！", "success");
+                writeLog("🫧 催化分解反應進行中！產生了 [O₂ (氧氣)] 氣泡與水分子！此氣體具有高度助燃性。", "success");
             }
 
             if (r['CaCO3'] && r['HCl']) {
                 inst.precipitate = "CaCO₃ 溶解並釋放氣泡";
+                inst.gasType = "CO2";
                 playReactFizzSound();
-                writeLog("🫧 大理石與強酸發生反應！釋放 [CO₂ (二氧化碳)] 氣體！", "success");
+                writeLog("🫧 大理石與強酸發生複分解反應！產生了 [CO₂ (二氧化碳)] 氣體與溶於水的 CaCl₂！此氣體不助燃，可使石灰水變混濁。", "success");
             }
 
             if (r['Zn_metal'] && r['HCl']) {
                 inst.precipitate = "Zn 溶解並釋放氣泡";
+                inst.gasType = "H2";
                 playReactFizzSound();
-                writeLog("🫧 金屬鋅與酸反應！釋放 [H₂ (氫氣)] 氣體！", "success");
+                writeLog("🫧 金屬鋅與酸進行置換反應！產生了 [H₂ (氫氣)] 氣體與 ZnCl₂ 鹽類！此氣體極輕且具可燃性。", "success");
+            }
+
+            if (r['NH3_aq'] && r['NaOH']) {
+                inst.precipitate = "氨氣揮發中";
+                inst.gasType = "NH3";
+                writeLog("🫧 鹼性位移效應！產生了鹼性刺激性 [NH₃ (氨氣)] 氣體！其極易溶於水且顯弱鹼性。", "success");
             }
 
             if (r['ethanol'] && r['CH3COOH'] && r['H2SO4'] && !inst.esterProduced) {
-                writeLog("🧪 儀器內已成功混合有機酸與醇類。請本生燈加熱至 70°C 以上，以啟動酯化反應！", "warning");
+                writeLog("🧪 儀器內已成功混合乙醇、醋酸與濃硫酸催化劑。請將本生燈拖入下方並「點火加熱」至 70°C 以上，以啟動酯化反應！", "warning");
             }
 
             if (r['salicylic_acid'] && r['acetic_anhydride'] && r['H2SO4'] && !inst.aspirinProduced) {
-                writeLog("💊 已成功混合水楊酸與乙酸酐原料，並注入硫酸催化劑。請用本生燈加熱至 60°C 以上，以啟動合成反應！", "warning");
+                writeLog("🧪 儀器內已混合固體水楊酸、乙酸酐與濃硫酸。請將本生燈靠近並「點火加熱」至 60°C 以上，以啟動合成反應！", "warning");
             }
 
             if (r['salicylic_acid'] && r['acetic_anhydride'] && r['H2SO4'] && inst.aspirinProduced) {
-                // 已合成阿斯匹靈
                 inst.precipitate = "產生白色針狀阿斯匹靈結晶";
                 inst.color = 'rgba(241, 245, 249, 0.55)';
             }
@@ -1177,10 +1359,11 @@
             if (r['Na_metal'] && (r['H2O'] || r['HCl'])) {
                 playReactFizzSound();
                 inst.temp = Math.min(100, inst.temp + 35);
+                inst.gasType = "H2"; 
                 if (r['HCl']) {
-                    writeLog("🔥 金屬鈉與強酸發生極劇烈的氧化還原爆鳴放熱！", "danger");
+                    writeLog("🔥 金屬鈉與強酸發生極劇烈的氧化還原反應！產生了大量 [H₂ (氫氣)] 與強烈爆鳴！", "danger");
                 } else {
-                    writeLog("🫧 金屬鈉與水劇烈反應！釋出氫氣並生成 [NaOH] 強鹼！", "warning");
+                    writeLog("🫧 金屬鈉與水劇烈反應！產生了 [H₂ (氫氣)] 與強鹼 [NaOH (氫氧化鈉)] 溶液！", "warning");
                 }
                 r['Na_metal'] = 0;
             }
@@ -1197,6 +1380,7 @@
             else if (r['CH3COOH']) finalPh = 2.8;
             else if (r['NaOH']) finalPh = 13.0;
             else if (r['NH3_aq']) finalPh = 11.2;
+            else if (r['CaOH2']) finalPh = 12.4; 
 
             inst.ph = finalPh;
 
@@ -1220,12 +1404,73 @@
                 liquidColor = 'rgba(59, 130, 246, 0.35)';
             } else if (r['FeCl3']) {
                 liquidColor = 'rgba(202, 138, 4, 0.4)';
+            } else if (r['CaOH2']) {
+                liquidColor = 'rgba(241, 245, 249, 0.25)'; 
             }
 
             inst.color = liquidColor;
         }
 
-        // --- 定時物理變化引擎 ---
+        // --- 氣體檢驗選單開關控制 ---
+        function openGasTestModal(inst) {
+            currentTestingInstrument = inst;
+            const modal = document.getElementById('gas-test-modal');
+            const hint = document.getElementById('gas-test-hint');
+            modal.classList.remove('hidden');
+            hint.innerHTML = `偵測到容器中含有特殊氣體 [${inst.gasType}]，請選擇欲施加的化學檢驗方式：`;
+        }
+
+        function closeGasTestModal() {
+            const modal = document.getElementById('gas-test-modal');
+            modal.classList.add('hidden');
+            currentTestingInstrument = null;
+        }
+
+        function performGasTest(testType) {
+            if (!currentTestingInstrument) return;
+            const inst = currentTestingInstrument;
+            const gas = inst.gasType;
+
+            writeLog(`[檢驗程序] 正在對瓶口氣體進行化學分析...`, "warning");
+
+            setTimeout(() => {
+                if (testType === 'glowing_splint') {
+                    if (gas === 'O2') {
+                        writeLog(`✨ [帶火星木條] 木條在富氧環境中瞬間【復燃】，發出耀眼的白色光芒！證實此氣體為氧氣 ($O_2$)。反應：$C + O_2 \\rightarrow CO_2$`, "success");
+                        playIgniteSound();
+                    } else {
+                        writeLog(`💨 [帶火星木條] 木條並未復燃，緩緩熄滅。`, "info");
+                    }
+                } else if (testType === 'burning_splint') {
+                    if (gas === 'H2') {
+                        writeLog(`💥 [點燃木條] 聽到一聲清脆明亮的【啵】爆鳴聲，且瓶口產生淡藍色 H₂ 火焰！證實含有高度可燃的氫氣！`, "success");
+                        playReactFizzSound();
+                    } else if (gas === 'CO2') {
+                        writeLog(`💨 [點燃木條] 木條火焰瞬間【熄滅】！證實具有窒息且不助燃的二氧化碳 ($CO_2$) 存在。`, "success");
+                    } else {
+                        writeLog(`💨 [點燃木條] 火焰無明顯變化或緩慢熄滅。`, "info");
+                    }
+                } else if (testType === 'litmus_paper') {
+                    if (gas === 'NH3') {
+                        writeLog(`🔵 [潮濕紅色石蕊試紙] 試紙與氨氣接觸後立刻【由紅轉深藍色】！證實此氣體為弱鹼性氨氣。`, "success");
+                    } else {
+                        writeLog(`⚪ [潮濕紅色石蕊試紙] 試紙無明顯顏色變化。`, "info");
+                    }
+                } else if (testType === 'limewater_test') {
+                    if (gas === 'CO2') {
+                        inst.precipitate = "CaCO₃ 白色碳酸鈣混濁";
+                        inst.color = "rgba(241, 245, 249, 0.7)"; 
+                        writeLog(`⚪ [澄清石灰水測試] 溶液變為【混濁乳白色】！因二氧化碳與石灰水反應生成碳酸鈣：$Ca(OH)_2 + CO_2 \\rightarrow CaCO_3\\downarrow + H_2O$。證實此氣體為二氧化碳。`, "success");
+                        renderInstruments();
+                    } else {
+                        writeLog(`⚪ [澄清石灰水測試] 溶液澄清，無任何混濁沉澱反應。`, "info");
+                    }
+                }
+                closeGasTestModal();
+            }, 1000);
+        }
+
+        // --- 定時器 ---
         setInterval(() => {
             let stateChanged = false;
 
@@ -1239,8 +1484,8 @@
                             if (inst.temp >= 70 && !inst.esterProduced) {
                                 inst.esterProduced = true;
                                 inst.organicPhase = true;
-                                inst.precipitate = "產生芳香酯類 (乙酸乙酯)";
-                                writeLog("🍍 有機混合物高溫加熱下，進行酯化反應！上層浮現出無色油狀乙酸乙酯層。", "success");
+                                inst.precipitate = "產生無色芳香酯類 (乙酸乙酯)";
+                                writeLog("🍍 乙醇與醋酸在高溫加熱下進行酯化反應！產生了具有芳香水果味的 [乙酸乙酯 (酯類)]！上層浮現出無色油狀酯層。", "success");
                             }
                         }
 
@@ -1248,8 +1493,8 @@
                             if (inst.temp >= 60 && !inst.aspirinProduced) {
                                 inst.aspirinProduced = true;
                                 inst.precipitate = "產生白色針狀阿斯匹靈結晶";
-                                inst.color = 'rgba(241, 245, 249, 0.55)';
-                                writeLog("💊 水楊酸與乙酸酐完成高溫催化反應！成功合成 [乙醯水楊酸 (阿斯匹靈)] 針狀分子體結晶！", "success");
+                                inst.color = 'rgba(241, 245, 249, 0.55)'; 
+                                writeLog("💊 水楊酸與乙酸酐完成高溫催化反應！成功合成 [阿斯匹靈] 結晶體！可放入冰水浴以完整析出白色結晶體。", "success");
                             }
                         }
 
@@ -1257,7 +1502,7 @@
                             if (inst.temp >= 60 && inst.silverMirrorPercent < 100) {
                                 inst.silverMirrorPercent += 5;
                                 inst.precipitate = "析出精緻銀鏡層";
-                                writeLog("✨ 管壁產生了耀眼反光的 [金屬銀鏡] 反應結晶層！", "success");
+                                writeLog("✨ 管壁產生了耀眼反光的 [金屬銀鏡 (銀鏡反應)] 物質！", "success");
                             }
                         }
 
@@ -1265,7 +1510,7 @@
                             inst.yellowRainState = 'dissolved';
                             inst.precipitate = "無明顯沉澱 (高溫溶解)";
                             inst.color = 'rgba(255, 255, 255, 0.15)';
-                            writeLog("✨ 碘化鉛受熱完全溶解！呈現澄清無色狀態。", "success");
+                            writeLog("✨ 碘化鉛受熱完全溶解！呈現澄清無色的碘化鉛溶液狀態。", "success");
                         }
                     }
                 }
@@ -1292,6 +1537,29 @@
                     } else if (inst.temp < 25) {
                         inst.temp += 0.15;
                         stateChanged = true;
+                    }
+                }
+
+                if (inst.connectedToId && inst.gasType) {
+                    const target = instruments.find(i => i.id === inst.connectedToId);
+                    if (target) {
+                        if (target.volume > 0 && !target.precipitate.includes('氣泡')) {
+                            target.precipitate = `🫧 [導管連通] 正在導入來自源頭的 ${inst.gasType} 氣體並冒泡！`;
+                            stateChanged = true;
+
+                            if (inst.gasType === 'CO2' && target.reagents['CaOH2']) {
+                                target.precipitate = "CaCO₃ 白色混濁固體沉澱";
+                                target.color = "rgba(241, 245, 249, 0.75)";
+                                target.reagents['CaOH2'] = 0; 
+                                writeLog("🫧 [氣體聯動反應] $CO_2$ 二氧化碳經導管導入澄清石灰水，產生了白色 [CaCO₃] 混濁沉澱！", "success");
+                            }
+
+                            if (inst.gasType === 'NH3' && target.reagents['H2O'] && target.reagents['phenolphthalein']) {
+                                target.ph = 11.0; 
+                                target.color = "rgba(236, 72, 153, 0.6)"; 
+                                writeLog("🫧 [氣體聯動反應] 氨氣 $NH_3$ 經導管溶入裝有酚酞水溶液，使溶液轉為弱鹼性粉紅色！", "success");
+                            }
+                        }
                     }
                 }
 
@@ -1365,8 +1633,8 @@
 
             if (chartData.length === 0) {
                 ctx.fillStyle = '#475569';
-                ctx.font = '11px sans-serif';
-                ctx.fillText("尚無滴定觀測數據 (在下方滴定管滴入溶液後開始繪製曲線)", canvas.width / 2 - 160, canvas.height / 2);
+                ctx.font = '12px sans-serif';
+                ctx.fillText("尚無滴定觀測數據 (在下方滴定管滴入酸/鹼溶液後開始記錄)", canvas.width / 2 - 170, canvas.height / 2);
                 return;
             }
 
@@ -1411,7 +1679,8 @@
             renderInstruments();
             updateSensors();
             drawChart();
-            writeLog("實驗桌已全部淨空！所有化學反應平衡已復位。", "warning");
+            writeLog("實驗桌已全部淨空！所有化學反應平衡與配接導管已重置。", "warning");
+            drawConnections();
         });
 
         window.addEventListener("DOMContentLoaded", () => {
