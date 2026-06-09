@@ -4,26 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>藥劑互動百科與指示劑混合儀 - ChemHub Reagent Cabinet</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=300;400;500;700;900&family=Orbitron:wght=400;700;900&family=Fira+Code:wght=400;600&display=swap" rel="stylesheet">
     
-    <!-- KaTeX for chemical equations -->
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        chemDark: '#0b0f19',
+                        chemCard: '#151d30',
+                        chemBorder: '#263554',
+                        accentBlue: '#38bdf8',
+                        accentGreen: '#4ade80',
+                        accentRed: '#f87171',
+                        accentOrange: '#fb923c'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- KaTeX for beautiful LaTeX rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+TC:wght=300;400;500;700;900&family=Orbitron:wght=400;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #0b0f19;
-            color: #f3f4f6;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.07) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(74, 222, 128, 0.05) 0px, transparent 50%);
         }
         .tech-font {
             font-family: 'Orbitron', sans-serif;
@@ -67,7 +86,7 @@
             background: #0b0f19;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #263554;
             border-radius: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -75,10 +94,10 @@
         }
     </style>
 </head>
-<body class="text-slate-200 min-h-screen flex flex-col grid-bg selection:bg-cyan-500 selection:text-slate-900">
+<body class="text-slate-200 min-h-screen flex flex-col grid-bg selection:bg-sky-500 selection:text-white">
 
-    <!-- 頂部導覽列 (完美融入首頁主視覺) -->
-    <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800 px-6 py-3">
+    <!-- 頂部導覽列 (完美融入首頁主視覺，點擊左上角返回 index.html) -->
+    <header class="sticky top-0 z-40 bg-chemDark/80 backdrop-blur-md border-b border-chemBorder/50 px-6 py-3">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <!-- 回首頁點擊區域 (左上角圖標標題整合) -->
             <a href="index.html" class="flex items-center gap-3 hover:opacity-90 active:scale-95 transition-all select-none group" title="返回主入口畫面">
@@ -91,53 +110,53 @@
                 </div>
             </a>
             
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <a href="#lab-simulator" class="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     指示劑混合儀
                 </a>
-                <span class="text-xs text-slate-400 code-font bg-slate-900 px-2.5 py-1 rounded-md border border-slate-800">v3.0 Premium</span>
+                <span class="text-xs text-slate-400 code-font bg-chemBorder/30 px-2.5 py-1 rounded-md border border-chemBorder/50">v3.0 Ultra</span>
             </div>
         </div>
     </header>
 
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
         
-        <!-- 橫幅區 -->
-        <section class="relative rounded-3xl overflow-hidden border border-slate-800 bg-slate-950/60 p-6 sm:p-10 flex flex-col lg:flex-row items-center gap-8 shadow-2xl">
-            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent pointer-events-none"></div>
+        <!-- 英雄橫幅區 -->
+        <section class="relative rounded-3xl overflow-hidden border border-chemBorder bg-chemCard p-6 sm:p-10 flex flex-col lg:flex-row items-center gap-8 shadow-2xl">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-900/20 via-transparent to-transparent pointer-events-none"></div>
             <div class="flex-1 space-y-4 relative z-10 text-center lg:text-left">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 uppercase tracking-wider">專業化學藥劑知識庫</span>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/10 border border-sky-500/30 text-sky-400">專業化學藥劑知識庫</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-                    安全、精準、系統化的<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">化學藥劑百科全書</span>
+                    安全、精準、系統化的<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">化學藥劑百科全書</span>
                 </h2>
-                <p class="text-slate-400 text-xs sm:text-sm max-w-xl">
+                <p class="text-slate-400 text-sm sm:text-base max-w-xl">
                     收錄實驗室及工業常用化學藥劑。整合學術配方、GHS 危險警告標示、精確安全技術說明書 (SDS) 指引，並搭載即時虛擬酸鹼滴定反應觀測儀。
                 </p>
             </div>
             <div class="flex-1 max-w-sm w-full relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-2xl blur opacity-20 group-hover:opacity-45 transition duration-1000"></div>
-                <div class="relative bg-slate-950 border border-slate-800 p-6 rounded-2xl space-y-4">
+                <div class="absolute -inset-1 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative bg-chemDark border border-chemBorder p-6 rounded-2xl space-y-4">
                     <div class="flex justify-between items-center text-xs text-slate-400 code-font">
-                        <span>當前觀測化學品</span>
-                        <span class="text-emerald-400">SECURE CONNECT</span>
+                        <span>當前化學元素趨勢</span>
+                        <span class="text-emerald-400">連線安全</span>
                     </div>
-                    <div class="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
-                        <div class="text-slate-400 text-[10px]">當前展示化學式：</div>
-                        <div class="text-2xl font-bold text-cyan-400 py-2" id="hero-molecule">$\text{H}_2\text{SO}_4$</div>
+                    <div class="p-4 bg-chemCard/50 border border-chemBorder/50 rounded-lg">
+                        <div class="text-slate-400 text-xs">當前展示化學分子：</div>
+                        <div class="text-2xl font-bold text-sky-400 py-2" id="hero-molecule">$\text{H}_2\text{SO}_4$</div>
                         <div class="text-xs text-slate-300">硫酸 (Sulfuric Acid)：工業之母，極具強氧化性與脫水性。</div>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-                        <div class="bg-slate-900 p-2 rounded border border-slate-800">
-                            <div class="text-slate-500">酸性強度</div>
-                            <div class="font-bold text-rose-400">強酸</div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+                        <div class="bg-chemCard p-2 rounded border border-chemBorder/50">
+                            <div class="text-slate-400">酸性強度</div>
+                            <div class="font-bold text-red-400">強酸</div>
                         </div>
-                        <div class="bg-slate-900 p-2 rounded border border-slate-800">
-                            <div class="text-slate-500">沸點</div>
-                            <div class="font-bold text-cyan-400">337 °C</div>
+                        <div class="bg-chemCard p-2 rounded border border-chemBorder/50">
+                            <div class="text-slate-400">沸點</div>
+                            <div class="font-bold text-sky-400">337 °C</div>
                         </div>
-                        <div class="bg-slate-900 p-2 rounded border border-slate-800">
-                            <div class="text-slate-500">密度</div>
+                        <div class="bg-chemCard p-2 rounded border border-chemBorder/50">
+                            <div class="text-slate-400">密度</div>
                             <div class="font-bold text-emerald-400">1.84</div>
                         </div>
                     </div>
@@ -146,34 +165,34 @@
         </section>
 
         <!-- 搜尋與篩選控制區 -->
-        <section class="glass-card p-5 rounded-2xl space-y-4 border-slate-800">
+        <section class="glass-card p-5 rounded-2xl space-y-4 border-chemBorder">
             <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
                 <!-- 搜尋欄 -->
                 <div class="relative w-full md:max-w-md">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <i data-lucide="search" class="w-5 h-5 text-slate-500"></i>
                     </div>
-                    <input type="text" id="searchInput" placeholder="搜尋化學品名稱、化學式或別名..." class="w-full bg-slate-900/90 border border-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 transition outline-none">
+                    <input type="text" id="searchInput" placeholder="搜尋化學品名稱、化學式或別名..." class="w-full bg-chemDark/80 border border-chemBorder focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 transition outline-none">
                 </div>
 
                 <!-- 分類篩選鈕 -->
                 <div class="flex flex-wrap gap-2 w-full md:w-auto justify-start md:justify-end" id="categoryContainer">
-                    <button class="filter-btn active text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-cyan-500/10 border-cyan-500/30 text-cyan-400" data-category="all">全部藥劑</button>
-                    <button class="filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-500 text-slate-300" data-category="acid">酸類</button>
-                    <button class="filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-500 text-slate-300" data-category="base">鹼類</button>
-                    <button class="filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-500 text-slate-300" data-category="solvent">溶劑/通用高分子</button>
-                    <button class="filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-500 text-slate-300" data-category="oxidizer">氧化/鹽類</button>
-                    <button class="filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-500 text-slate-300" data-category="indicator">指示劑</button>
+                    <button class="filter-btn active text-xs px-4 py-2.5 rounded-lg border font-medium transition duration-200 bg-sky-500/10 border-sky-500/30 text-sky-400" data-category="all">全部藥劑</button>
+                    <button class="filter-btn text-xs px-4 py-2.5 rounded-lg border font-medium transition duration-200 bg-chemCard border-chemBorder hover:border-slate-500 text-slate-300" data-category="acid">酸類 (Acids)</button>
+                    <button class="filter-btn text-xs px-4 py-2.5 rounded-lg border font-medium transition duration-200 bg-chemCard border-chemBorder hover:border-slate-500 text-slate-300" data-category="base">鹼類 (Bases)</button>
+                    <button class="filter-btn text-xs px-4 py-2.5 rounded-lg border font-medium transition duration-200 bg-chemCard border-chemBorder hover:border-slate-500 text-slate-300" data-category="solvent">溶劑/通用高分子</button>
+                    <button class="filter-btn text-xs px-4 py-2.5 rounded-lg border font-medium transition duration-200 bg-chemCard border-chemBorder hover:border-slate-500 text-slate-300" data-category="oxidizer">氧化/還原/安全鹽類</button>
+                    <button class="filter-btn text-xs px-4 py-2.5 rounded-lg border font-medium transition duration-200 bg-chemCard border-chemBorder hover:border-slate-500 text-slate-300" data-category="indicator">指示劑</button>
                 </div>
             </div>
 
             <!-- 危害指標標籤快速篩選 -->
-            <div class="flex items-center gap-3 pt-2 border-t border-slate-800/60 overflow-x-auto custom-scrollbar pb-1">
+            <div class="flex items-center gap-3 pt-2 border-t border-chemBorder/40 overflow-x-auto custom-scrollbar pb-1">
                 <span class="text-xs text-slate-400 shrink-0">危害篩選：</span>
-                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition" data-hazard="corrosive">⚠️ 腐蝕性</button>
-                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition" data-hazard="flammable">🔥 易燃性</button>
-                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition" data-hazard="toxic">☠️ 急毒性</button>
-                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition" data-hazard="environmental">🍀 環境危害</button>
+                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-hazard="corrosive">⚠️ 腐蝕性</button>
+                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-hazard="flammable">🔥 易燃性</button>
+                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-hazard="toxic">☠️ 急毒性</button>
+                <button class="hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-hazard="environmental">🍀 環境危害</button>
                 <button id="clearFilters" class="text-xs text-rose-400 hover:underline ml-auto shrink-0">清除所有篩選</button>
             </div>
         </section>
@@ -181,11 +200,11 @@
         <!-- 藥劑卡片網格 -->
         <section>
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-base font-bold flex items-center gap-2">
-                    <span class="w-1.5 h-4 bg-cyan-500 rounded-full"></span>
-                    藥劑清單 (<span id="reagentCount" class="code-font text-cyan-400">0</span>)
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-sky-500 rounded-full"></span>
+                    藥劑清單 (<span id="reagentCount" class="code-font text-sky-400">0</span>)
                 </h3>
-                <span class="text-xs text-slate-500">點擊卡片可查看詳細安全資料表 (SDS)</span>
+                <span class="text-xs text-slate-400">點擊卡片可查看詳細安全資料表 (SDS)</span>
             </div>
 
             <div id="reagentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -193,18 +212,18 @@
             </div>
 
             <!-- 查無結果 -->
-            <div id="noResults" class="hidden text-center py-16 bg-slate-950/20 rounded-2xl border border-dashed border-slate-800">
+            <div id="noResults" class="hidden text-center py-16 bg-chemCard/20 rounded-2xl border border-dashed border-chemBorder/50">
                 <i data-lucide="alert-triangle" class="w-12 h-12 mx-auto text-slate-500 mb-3"></i>
                 <p class="text-slate-400 font-medium">找不到相符的化學藥劑</p>
-                <p class="text-xs text-slate-600 mt-1">請嘗試變更搜尋關鍵字或篩選分類</p>
+                <p class="text-xs text-slate-650 mt-1">請嘗試變更搜尋關鍵字或篩選分類</p>
             </div>
         </section>
 
         <!-- 互動酸鹼滴定實驗室 -->
-        <section id="lab-simulator" class="bg-gradient-to-br from-slate-950 to-slate-900/50 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
+        <section id="lab-simulator" class="bg-gradient-to-br from-slate-950 to-chemCard border border-chemBorder rounded-3xl p-6 sm:p-8 space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h3 class="text-lg font-bold flex items-center gap-2">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
                         <span class="w-2.5 h-5 bg-emerald-500 rounded-full"></span>
                         虛擬酸鹼反應與指示劑測試儀
                     </h3>
@@ -215,12 +234,12 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                 <!-- 操作面板 -->
-                <div class="lg:col-span-5 bg-slate-950/40 border border-slate-800 rounded-2xl p-5 space-y-5 flex flex-col justify-between">
+                <div class="lg:col-span-5 bg-chemDark/60 border border-chemBorder/50 rounded-2xl p-5 space-y-5 flex flex-col justify-between">
                     <div class="space-y-4">
                         <!-- 第一步：選擇被測化學液 -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-2">1. 選擇受測化學溶劑</label>
-                            <select id="simChemSelect" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                            <select id="simChemSelect" class="w-full bg-chemCard border border-chemBorder rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500/20">
                                 <!-- 填充可用作實驗的化學品 -->
                             </select>
                         </div>
@@ -228,7 +247,7 @@
                         <!-- 第二步：選擇指示劑 -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-2">2. 添加酸鹼指示劑</label>
-                            <select id="simIndicatorSelect" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                            <select id="simIndicatorSelect" class="w-full bg-chemCard border border-chemBorder rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500/20">
                                 <option value="litmus">石蕊溶液 (Litmus)</option>
                                 <option value="phenolphthalein">酚酞溶液 (Phenolphthalein)</option>
                                 <option value="methylOrange">甲基橙 (Methyl Orange)</option>
@@ -237,7 +256,7 @@
                         </div>
 
                         <!-- 反應說明 -->
-                        <div class="p-4 bg-slate-900/30 rounded-xl border border-slate-800">
+                        <div class="p-4 bg-chemCard/30 rounded-xl border border-chemBorder/30">
                             <div class="text-xs font-semibold text-slate-400 mb-1">化學機制解讀：</div>
                             <div id="simExplanation" class="text-xs text-slate-300 leading-relaxed">
                                 請點擊下方「注入並混勻」按鈕開始化學反應。
@@ -245,24 +264,27 @@
                         </div>
                     </div>
 
-                    <button id="btnRunSim" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl transition shadow-lg shadow-emerald-500/10 flex justify-center items-center gap-2 text-xs">
-                        <i data-lucide="beaker" class="w-4 h-4"></i>
+                    <button id="btnRunSim" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-chemDark font-bold rounded-xl transition shadow-lg shadow-emerald-500/10 flex justify-center items-center gap-2">
+                        <i data-lucide="beaker" class="w-5 h-5"></i>
                         注入並混合試劑
                     </button>
                 </div>
 
                 <!-- 模擬視覺展示區 -->
-                <div class="lg:col-span-7 bg-slate-950/20 border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-around gap-6 relative overflow-hidden">
+                <div class="lg:col-span-7 bg-chemDark/40 border border-chemBorder/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-around gap-6 relative overflow-hidden">
                     
+                    <!-- 水流、反應氣泡背景 -->
                     <div class="absolute inset-0 pointer-events-none opacity-20">
                         <div class="absolute w-40 h-40 bg-emerald-500/20 blur-3xl -bottom-10 left-10 rounded-full animate-pulse"></div>
                     </div>
 
-                    <!-- 滴定管 -->
+                    <!-- 試管/燒杯儀器 A -->
                     <div class="flex flex-col items-center gap-3 relative z-10">
-                        <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">滴定管 (試劑)</div>
-                        <div class="relative w-16 h-36 border-4 border-slate-700 rounded-b-full overflow-hidden bg-slate-900/40">
+                        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">滴定管 (試劑)</div>
+                        <div class="relative w-16 h-36 border-4 border-slate-500 rounded-b-full overflow-hidden bg-slate-900/40">
+                            <!-- 液體 -->
                             <div id="dropperLiquid" class="absolute bottom-0 w-full bg-sky-400/80 transition-all duration-1000" style="height: 60%"></div>
+                            <!-- 刻度 -->
                             <div class="absolute inset-y-0 right-1.5 flex flex-col justify-between text-[8px] text-slate-400 py-2">
                                 <span>- 10</span><span>- 8</span><span>- 6</span><span>- 4</span><span>- 2</span>
                             </div>
@@ -273,30 +295,34 @@
                     <!-- 流滴特效 -->
                     <div class="h-24 w-12 relative flex items-center justify-center">
                         <div id="dropAnim" class="w-2.5 h-2.5 rounded-full bg-sky-400 absolute top-0 opacity-0"></div>
-                        <svg class="w-8 h-8 text-slate-750" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                         </svg>
                     </div>
 
-                    <!-- 燒杯 -->
+                    <!-- 燒杯 B (主體反應) -->
                     <div class="flex flex-col items-center gap-3 relative z-10">
-                        <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">反應燒杯</div>
-                        <div class="relative w-36 h-36 border-b-4 border-x-4 border-slate-600 rounded-b-2xl overflow-hidden bg-slate-900/40">
+                        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">反應燒杯</div>
+                        <div class="relative w-36 h-36 border-b-4 border-x-4 border-slate-400 rounded-b-2xl overflow-hidden bg-slate-900/40">
+                            <!-- 液面水流微風動效 -->
                             <div id="beakerLiquid" class="absolute bottom-0 w-full bg-slate-700/60 transition-all duration-1000 ease-in-out" style="height: 35%">
+                                <!-- 液體波動效果 -->
                                 <div class="absolute -top-1 left-0 right-0 h-2 bg-white/20 rounded-full blur-[1px]"></div>
                             </div>
+                            <!-- 氣泡 (酸鹼反應產生二氧化碳/氫氣時顯示) -->
                             <div id="bubbles" class="absolute inset-0 overflow-hidden hidden">
                                 <div class="bubble absolute w-1 h-1 bg-white/40 rounded-full bottom-0 left-1/4 animate-ping"></div>
                                 <div class="bubble absolute w-1.5 h-1.5 bg-white/30 rounded-full bottom-2 left-2/4 animate-bounce"></div>
                                 <div class="bubble absolute w-1 h-1 bg-white/50 rounded-full bottom-1 left-3/4 animate-ping"></div>
                             </div>
-                            <div class="absolute inset-y-0 left-2.5 flex flex-col justify-between text-[8px] text-slate-500 py-4">
+                            <!-- 刻度 -->
+                            <div class="absolute inset-y-0 left-2.5 flex flex-col justify-between text-[8px] text-slate-400 py-4">
                                 <span>- 250ml</span><span>- 150ml</span><span>- 50ml</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span id="beakerPH" class="px-2.5 py-1 rounded bg-slate-900 text-xs font-semibold code-font border border-slate-800">pH: --</span>
-                            <span id="beakerState" class="px-2.5 py-1 rounded bg-slate-900 text-xs font-semibold text-slate-400 border border-slate-800">未混合</span>
+                            <span id="beakerPH" class="px-2.5 py-1 rounded bg-slate-800 text-xs font-semibold code-font border border-chemBorder">pH: --</span>
+                            <span id="beakerState" class="px-2.5 py-1 rounded bg-slate-800 text-xs font-semibold text-slate-400 border border-chemBorder">未混合</span>
                         </div>
                     </div>
 
@@ -307,59 +333,60 @@
     </main>
 
     <!-- 頁尾 -->
-    <footer class="bg-slate-950 border-t border-slate-900 py-12 px-6 mt-16 text-center text-xs text-slate-500">
+    <footer class="bg-chemDark border-t border-chemBorder/50 py-12 px-6 mt-16 text-center text-sm text-slate-500">
         <div class="max-w-7xl mx-auto space-y-4">
             <div class="flex justify-center gap-6 text-slate-400">
-                <a href="#lab-simulator" class="hover:text-cyan-400 transition">虛擬滴定實驗</a>
+                <a href="#lab-simulator" class="hover:text-sky-400 transition">虛擬滴定實驗</a>
                 <span>•</span>
-                <a href="#" class="hover:text-cyan-400 transition">安全標準指南 (GHS)</a>
+                <a href="#" class="hover:text-sky-400 transition">安全標準指南 (GHS)</a>
                 <span>•</span>
-                <a href="#" class="hover:text-cyan-400 transition">免責聲明</a>
+                <a href="#" class="hover:text-sky-400 transition">免責聲明</a>
             </div>
             <p>© 2026 元素之域實驗室百科。本平台僅供教學與學術研究模擬，實際操作化學品時務必穿戴合格防護裝備，並遵循嚴格安全規範。</p>
-            <p class="text-[10px] text-slate-600 code-font">Designed for educational excellence & interactive physics-chemistry visualization.</p>
+            <p class="text-xs text-slate-600 code-font">Designed for educational excellence & interactive physics-chemistry visualization.</p>
         </div>
     </footer>
 
     <!-- ==================== SDS 詳細彈窗 (Modal) ==================== -->
     <div id="sdsModal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="relative bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+        <div class="relative bg-chemCard border border-chemBorder rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
             <!-- 彈窗頂部 -->
-            <div class="px-6 py-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/60">
+            <div class="px-6 py-5 border-b border-chemBorder/80 flex justify-between items-center bg-chemDark/40">
                 <div>
-                    <span class="text-[9px] text-cyan-400 font-semibold tracking-wider uppercase code-font">Material Safety Data Sheet (SDS)</span>
-                    <h4 class="text-lg font-black text-white flex items-center gap-2" id="modalChemName">
+                    <span class="text-[10px] text-sky-400 font-semibold tracking-wider uppercase code-font">Material Safety Data Sheet (SDS)</span>
+                    <h4 class="text-xl font-black text-white flex items-center gap-2" id="modalChemName">
                         化學品詳細安全數據表
                     </h4>
                 </div>
-                <button id="btnCloseModal" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                <button id="btnCloseModal" class="p-2 rounded-xl bg-chemBorder/30 hover:bg-chemBorder text-slate-300 transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
             <!-- 彈窗主體內容 -->
             <div class="p-6 overflow-y-auto custom-scrollbar space-y-6 flex-grow">
-                <!-- 基本標籤 -->
+                <!-- 基本標籤與分子式 -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
-                        <div class="text-[10px] text-slate-500 mb-1">系統化學式</div>
-                        <div class="text-base font-bold text-cyan-400 code-font" id="modalFormula"></div>
+                    <div class="bg-chemDark/50 p-4 rounded-xl border border-chemBorder/40">
+                        <div class="text-[11px] text-slate-400 mb-1">系統化學式</div>
+                        <div class="text-lg font-bold text-sky-400 code-font" id="modalFormula"></div>
                     </div>
-                    <div class="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
-                        <div class="text-[10px] text-slate-500 mb-1">英文名稱 & CAS</div>
+                    <div class="bg-chemDark/50 p-4 rounded-xl border border-chemBorder/40">
+                        <div class="text-[11px] text-slate-400 mb-1">英文名稱 & CAS</div>
                         <div class="text-xs font-bold text-slate-200" id="modalCas"></div>
                     </div>
-                    <div class="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
-                        <div class="text-[10px] text-slate-500 mb-1">主要酸鹼性</div>
+                    <div class="bg-chemDark/50 p-4 rounded-xl border border-chemBorder/40">
+                        <div class="text-[11px] text-slate-400 mb-1">主要酸鹼性</div>
                         <div class="text-xs font-bold" id="modalPhType"></div>
                     </div>
                 </div>
 
                 <!-- 危害特性說明 -->
                 <div class="space-y-3">
-                    <h5 class="text-xs font-bold text-rose-400 flex items-center gap-1.5">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i> 危害警告標示 (GHS Hazard Statements)
+                    <h5 class="text-sm font-bold text-rose-400 flex items-center gap-1.5">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-450"></i> 危害警告標示 (GHS Hazard Statements)
                     </h5>
+                    <!-- 警告標章容器 -->
                     <div class="flex flex-wrap gap-2" id="modalGhsBadges">
                         <!-- 預留給 JS 載入 -->
                     </div>
@@ -371,24 +398,24 @@
 
                 <!-- 物理及化學性質 -->
                 <div class="space-y-3">
-                    <h5 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                        <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> 主要物理和化學性質
+                    <h5 class="text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+                        <i data-lucide="activity" class="w-4 h-4 text-emerald-450"></i> 主要物理和化學性質
                     </h5>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                            <span class="text-slate-500 block mb-1">外觀：</span>
+                        <div class="bg-chemDark/40 p-3 rounded-lg border border-chemBorder/30">
+                            <span class="text-slate-400 block">外觀：</span>
                             <span class="font-semibold text-slate-200" id="propAppearance">--</span>
                         </div>
-                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                            <span class="text-slate-500 block mb-1">熔點/冰點：</span>
+                        <div class="bg-chemDark/40 p-3 rounded-lg border border-chemBorder/30">
+                            <span class="text-slate-400 block">熔點/冰點：</span>
                             <span class="font-semibold text-slate-200" id="propMelting">--</span>
                         </div>
-                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                            <span class="text-slate-500 block mb-1">沸點：</span>
+                        <div class="bg-chemDark/40 p-3 rounded-lg border border-chemBorder/30">
+                            <span class="text-slate-400 block">沸點：</span>
                             <span class="font-semibold text-slate-200" id="propBoiling">--</span>
                         </div>
-                        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                            <span class="text-slate-500 block mb-1">溶解性：</span>
+                        <div class="bg-chemDark/40 p-3 rounded-lg border border-chemBorder/30">
+                            <span class="text-slate-400 block">溶解性：</span>
                             <span class="font-semibold text-slate-200" id="propSolubility">--</span>
                         </div>
                     </div>
@@ -400,34 +427,40 @@
                         <h6 class="text-xs font-bold text-amber-400 flex items-center gap-1">
                             🛡️ 個人防護設備 (PPE)
                         </h6>
-                        <ul class="text-[11px] text-slate-300 list-disc list-inside space-y-1" id="modalPpe"></ul>
+                        <ul class="text-[11px] text-slate-300 list-disc list-inside space-y-1" id="modalPpe">
+                            <!-- JS 填充 -->
+                        </ul>
                     </div>
                     <div class="p-4 bg-sky-950/10 border border-sky-500/20 rounded-xl space-y-2">
                         <h6 class="text-xs font-bold text-sky-400 flex items-center gap-1">
                             🚑 緊急與急救處置
                         </h6>
-                        <ul class="text-[11px] text-slate-300 list-disc list-inside space-y-1" id="modalFirstAid"></ul>
+                        <ul class="text-[11px] text-slate-300 list-disc list-inside space-y-1" id="modalFirstAid">
+                            <!-- JS 填充 -->
+                        </ul>
                     </div>
                 </div>
 
                 <!-- 儲存處置 -->
-                <div class="p-4 bg-slate-950/60 border border-slate-800 rounded-xl">
+                <div class="p-4 bg-chemDark/60 border border-chemBorder/40 rounded-xl">
                     <h6 class="text-xs font-bold text-slate-300 mb-1.5">📦 安全儲存與特殊限制：</h6>
                     <p class="text-[11px] text-slate-400 leading-relaxed" id="modalStorage"></p>
                 </div>
             </div>
 
             <!-- 彈窗底部 -->
-            <div class="px-6 py-4 border-t border-slate-800 bg-slate-950/60 flex justify-end">
-                <button id="btnCloseModalBottom" class="px-5 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition text-xs font-semibold">
-                    關閉說明
+            <div class="px-6 py-4 border-t border-chemBorder/80 bg-chemDark/40 flex justify-end">
+                <button id="btnCloseModalBottom" class="px-5 py-2 rounded-xl bg-chemBorder text-slate-200 hover:bg-slate-700 transition text-xs font-semibold">
+                    關閉 SDS 說明
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+
+    <!-- ==================== JAVASCRIPT ==================== -->
     <script>
+        // 1. 化學藥劑資料庫
         const reagentsData = [
             {
                 id: "sulfuric_acid",
@@ -453,7 +486,7 @@
                 firstAid: [
                     "皮膚接觸：立即用大量流動清水沖洗至少20分鐘，並脫去污染衣物，迅速就醫。",
                     "眼睛接觸：提起眼瞼，用流動清水或生理鹽水沖洗20分鐘，隨即就醫。",
-                    "食入：切勿催吐，可飲用大量牛奶、蛋白，立即送醫。"
+                    "吸入：迅速脫離現場至空氣新鮮處。保持呼吸道通暢，必要時給予輸氧。"
                 ],
                 storage: "儲存於陰涼、通風、防腐蝕的倉庫中。遠離易燃物、還原劑、鹼類及金屬活性物質。"
             },
@@ -558,7 +591,7 @@
                 ],
                 firstAid: [
                     "皮膚接觸：使用肥皂與大量清水洗淨。",
-                    "眼睛接觸: 立即拉開眼瞼，用生理鹽水或溫水洗滌數分鐘，不適者請尋求醫師診斷。"
+                    "眼睛接觸：立即拉開眼瞼，用生理鹽水或溫水洗滌數分鐘，不適者請尋求醫師診斷。"
                 ],
                 storage: "貯存於乾燥通風良好的位置，防潮以防止粉末結塊。"
             },
@@ -598,7 +631,7 @@
                 boiling: "1413 °C",
                 melting: "801 °C",
                 solubility: "易溶於水 (35.9g / 100mL)",
-                appearance: "無色立方晶體或白色結晶性粉末，具鹹味",
+                appearance: "無色立方晶體或白色結晶粉末，具鹹味",
                 hazards: "安全無毒。高濃度對眼睛可能產生微弱物理性刺激。",
                 ghs: [],
                 ppe: [
@@ -611,7 +644,7 @@
             },
             {
                 id: "calcium_carbonate",
-                name: "碳酸鈣 (大理石)",
+                name: "碳酸鈣 (粉筆/大理石)",
                 engName: "Calcium Carbonate",
                 cas: "471-34-1",
                 formula: "$\\text{CaCO}_3$",
@@ -658,7 +691,350 @@
                     "眼睛接觸：提起眼瞼用生理鹽水沖洗15分鐘並送醫。",
                     "食入：立即用水漱口，並緊急送醫診治。"
                 ],
-                storage: "防潮，避免陽光直射，與食品及生活原料分開儲存。"
+                storage: "防潮，避免陽光直射，與食品及生活原料分開儲存."
+            },
+            {
+                id: "glucose",
+                name: "葡萄糖",
+                engName: "D-Glucose",
+                cas: "50-99-7",
+                formula: "$\\text{C}_6\\text{H}_{12}\\text{O}_6$",
+                category: "solvent",
+                ph: 7.0,
+                density: "1.54 g/cm³",
+                boiling: "不適用 (受熱焦糖化分解)",
+                melting: "146 °C",
+                solubility: "極易溶於水 (約 90g / 100mL)",
+                appearance: "白色無味結晶性粉末，具溫和甜味",
+                hazards: "完全無毒，是生物體主要的能量來源。",
+                ghs: [],
+                ppe: [
+                    "基本防護衣"
+                ],
+                firstAid: [
+                    "無特別緊急處置。若眼睛沾染，用清水沖洗即可。"
+                ],
+                storage: "陰涼乾燥處密閉儲存，防止昆蟲與老鼠侵入。"
+            },
+            {
+                id: "sucrose",
+                name: "蔗糖 (食糖)",
+                engName: "Sucrose",
+                cas: "57-50-1",
+                formula: "$\\text{C}_{12}\\text{H}_{22}\\text{O}_{11}$",
+                category: "solvent",
+                ph: 7.0,
+                density: "1.58 g/cm³",
+                boiling: "受熱分解",
+                melting: "186 °C",
+                solubility: "極易溶於水 (200g / 100mL)",
+                appearance: "無色晶體或白色結晶性粉末，甜度適中",
+                hazards: "完全無毒。在化學中常作為非還原糖測試的標準對照物。",
+                ghs: [],
+                ppe: [
+                    "基本防護衣"
+                ],
+                firstAid: [
+                    "無特定危險，清水沖洗即可。"
+                ],
+                storage: "防潮，密閉存放於陰涼處。"
+            },
+            {
+                id: "starch",
+                name: "可溶性澱粉",
+                engName: "Soluble Starch",
+                cas: "9005-25-8",
+                formula: "$(\\text{C}_6\\text{H}_{10}\\text{O}_5)_n$",
+                category: "solvent",
+                ph: 7.0,
+                density: "1.5 g/cm³",
+                boiling: "受熱分解",
+                melting: "不適用",
+                solubility: "可溶於熱水形成半透明膠體溶液",
+                appearance: "白色無定形粉末，無臭無味",
+                hazards: "完全無毒。與碘液反應呈現極具特徵的深藍色。",
+                ghs: [],
+                ppe: [
+                    "基本防護眼鏡",
+                    "基本實驗衣"
+                ],
+                firstAid: [
+                    "一般不需要特別急救措施。若吸入過多粉塵，移至空氣新鮮處。"
+                ],
+                storage: "存於乾燥處，注意防潮與防黴害。"
+            },
+            {
+                id: "ascorbic_acid",
+                name: "維生素 C (抗壞血酸)",
+                engName: "Ascorbic Acid (Vitamin C)",
+                cas: "50-81-7",
+                formula: "$\\text{C}_6\\text{H}_8\\text{O}_6$",
+                category: "acid",
+                ph: 2.5,
+                density: "1.65 g/cm³",
+                boiling: "受熱分解",
+                melting: "190 °C",
+                solubility: "易溶於水 (約 33g / 100mL)",
+                appearance: "白色至微黃色結晶或結晶性粉末，具強烈酸味",
+                hazards: "基本無毒，為人體必需營養素。高濃度可能對眼睛與黏膜有輕微酸性刺激。",
+                ghs: [],
+                ppe: [
+                    "安全防濺眼鏡",
+                    "常規乳膠手套"
+                ],
+                firstAid: [
+                    "眼睛接觸：提起眼瞼用冷水溫和沖洗。"
+                ],
+                storage: "避光、防潮儲存。與空氣長期接觸易被氧化變黃。"
+            },
+            {
+                id: "sodium_carbonate",
+                name: "碳酸鈉 (蘇打/鹼純)",
+                engName: "Sodium Carbonate",
+                cas: "497-19-8",
+                formula: "$\\text{Na}_2\\text{CO}_3$",
+                category: "base",
+                ph: 11.5,
+                density: "2.54 g/cm³",
+                boiling: "1600 °C",
+                melting: "851 °C",
+                solubility: "易溶於水，溶液呈強鹼性",
+                appearance: "白色細結晶或結晶粉末，具吸濕性",
+                hazards: "造成嚴重的眼睛刺激。吸入粉塵可能導致呼吸道刺痛咳嗽。",
+                ghs: ["corrosive"],
+                ppe: [
+                    "化學防護眼鏡",
+                    "實驗手套",
+                    "防塵口罩"
+                ],
+                firstAid: [
+                    "皮膚接觸：用大量清水洗淨。",
+                    "眼睛接觸：立即提起眼瞼用流水沖洗15分鐘以上，若刺激持續需看醫生。"
+                ],
+                storage: "存於乾燥通風處，防潮儲存避免潮解。"
+            },
+            {
+                id: "calcium_chloride",
+                name: "氯化鈣",
+                engName: "Calcium Chloride",
+                cas: "10043-52-4",
+                formula: "$\\text{CaCl}_2$",
+                category: "oxidizer",
+                ph: 6.5,
+                density: "2.15 g/cm³",
+                boiling: "1935 °C",
+                melting: "772 °C",
+                solubility: "極易溶於水，釋放熱量",
+                appearance: "白色顆粒狀、片狀或塊狀固體",
+                hazards: "對眼睛與皮膚有中度刺激。具有強吸濕性，可用作乾燥劑。與海藻酸鈉接觸可迅速凝膠化。",
+                ghs: ["toxic"],
+                ppe: [
+                    "基本防護眼鏡",
+                    "乳膠手套"
+                ],
+                firstAid: [
+                    "皮膚接觸：脫去污染衣物，使用大量清水徹底沖洗。",
+                    "眼睛接觸：立即拉開上下眼膜用溫水洗滌15分鐘以上。"
+                ],
+                storage: "必須在極度乾燥防潮處密封保存，接觸空氣極易潮解。"
+            },
+            {
+                id: "sodium_alginate",
+                name: "海藻酸鈉 (分子料理凝膠)",
+                engName: "Sodium Alginate",
+                cas: "9005-38-3",
+                formula: "$(\\text{C}_6\\text{H}_7\\text{NaO}_6)_n$",
+                category: "solvent",
+                ph: 7.0,
+                density: "1.6 g/cm³",
+                boiling: "不適用",
+                melting: "受熱碳化",
+                solubility: "溶於水呈粘稠膠狀，不溶於乙醇",
+                appearance: "白色至淡黃色纖維狀或顆粒狀粉末，幾乎無味",
+                hazards: "安全無毒。遇鈣離子（如氯化鈣）會形成穩定的交聯不溶性水膠（晶球化效應），用於人造鮭魚卵製造。",
+                ghs: [],
+                ppe: [
+                    "防塵眼鏡",
+                    "實驗工作服"
+                ],
+                firstAid: [
+                    "無特定危害，若誤入眼睛，使用清水輕微沖洗即可。"
+                ],
+                storage: "儲存於陰涼乾燥環境，防潮，防霉害。"
+            },
+            {
+                id: "sodium_polyacrylate",
+                name: "聚丙烯酸鈉 (吸水人造雪)",
+                engName: "Sodium Polyacrylate",
+                cas: "9003-04-7",
+                formula: "$[\\text{-CH}_2\\text{-CH(COONa)-}]_n$",
+                category: "solvent",
+                ph: 7.0,
+                density: "1.22 g/cm³",
+                boiling: "不適用",
+                melting: "不適用",
+                solubility: "在水中極度溶脹（吸水可達自身重量的數百倍），形成不溶性凝膠",
+                appearance: "白色細微乾燥粉末",
+                hazards: "安全無毒。吸水倍率高。粉塵可能輕微刺激呼吸道，請避免大量吸入。",
+                ghs: [],
+                ppe: [
+                    "防塵面罩",
+                    "基本護目鏡"
+                ],
+                firstAid: [
+                    "吸入：移至通風新鮮空氣處休養。",
+                    "眼睛接觸：避免揉眼睛，以免粉塵摩擦眼角膜。使用大量清水將其沖洗排出。"
+                ],
+                storage: "極度防潮！接觸微量水蒸氣即會結塊，保持容器絕對密閉。"
+            },
+            {
+                id: "calcium_hydroxide",
+                name: "氫氧化鈣 (澄清石灰水固體)",
+                engName: "Calcium Hydroxide",
+                cas: "1305-62-0",
+                formula: "$\\text{Ca(OH)}_2$",
+                category: "base",
+                ph: 12.4,
+                density: "2.21 g/cm³",
+                boiling: "受熱失水",
+                melting: "580 °C (失水分解)",
+                solubility: "微溶於水 (約 0.16g / 100mL)，呈弱鹼性",
+                appearance: "白色細微粉末或晶體",
+                hazards: "對皮膚與眼部具有強腐蝕性與中度鹼性傷害。飽和溶液（石灰水）遇二氧化碳會變渾濁（生成碳酸鈣）。",
+                ghs: ["corrosive"],
+                ppe: [
+                    "化學防濺眼鏡",
+                    "防化手套",
+                    "防塵粉塵口罩"
+                ],
+                firstAid: [
+                    "皮膚接觸：脫去受污染衣物，使用大量肥皂水與清水沖洗。",
+                    "眼睛接觸：極度危險！立刻拉開眼瞼用流水沖洗15分鐘以上並迅速送醫。"
+                ],
+                storage: "必須密封貯存，防潮、防止其吸入空氣中二氧化碳變質退化。"
+            },
+            {
+                id: "magnesium_sulfate",
+                name: "硫酸鎂 (瀉鹽)",
+                engName: "Magnesium Sulfate (Epsom Salt)",
+                cas: "7487-88-9",
+                formula: "$\\text{MgSO}_4\\cdot7\\text{H}_2\\text{O}$",
+                category: "oxidizer",
+                ph: 6.0,
+                density: "1.68 g/cm³",
+                boiling: "受熱失水",
+                melting: "150 °C (失水)",
+                solubility: "易溶於水 (71g / 100mL)",
+                appearance: "無色斜方晶系細柱狀晶體，外觀極像食鹽",
+                hazards: "安全無毒。可用於泡澡、促進植物生長，以及極佳的晶體析出與生長展示材料。",
+                ghs: [],
+                ppe: [
+                    "基本防護服與眼鏡"
+                ],
+                firstAid: [
+                    "眼睛接觸：使用冷水溫和沖洗。"
+                ],
+                storage: "密封防潮保存於乾燥、陰涼倉庫內。"
+            },
+            {
+                id: "potassium_alum",
+                name: "明礬 (鉀明礬)",
+                engName: "Potassium Alum",
+                cas: "7784-24-9",
+                formula: "$\\text{KAl(SO}_4)_2\\cdot12\\text{H}_2\\text{O}$",
+                category: "acid",
+                ph: 3.5,
+                density: "1.757 g/cm³",
+                boiling: "200 °C (失水)",
+                melting: "92 °C",
+                solubility: "可溶於水 (14g / 100mL)，水解產生氫氧化鋁膠體",
+                appearance: "無色透明八面體晶體或白色結晶性粉末，具收斂性酸鹼味",
+                hazards: "基本無毒。大量攝入可能引發胃腸不適。常規水淨化演示與經典大型晶體生長之核心材料。",
+                ghs: [],
+                ppe: [
+                    "基本防護手套",
+                    "護目鏡"
+                ],
+                firstAid: [
+                    "食入：飲用足量清水漱口。如有持續不適應看醫生。"
+                ],
+                storage: "避免高溫受熱，保持乾燥密封，勿與食品同置。"
+            },
+            {
+                id: "sodium_thiosulfate",
+                name: "硫代硫酸鈉 (海波/大蘇打)",
+                engName: "Sodium Thiosulfate",
+                cas: "7772-98-7",
+                formula: "$\\text{Na}_2\\text{S}_2\\text{O}_3$",
+                category: "oxidizer",
+                ph: 7.5,
+                density: "1.66 g/cm³",
+                boiling: "100 °C (失水)",
+                melting: "48.3 °C",
+                solubility: "極易溶於水，溶解時強烈吸熱",
+                appearance: "無色、透明單斜晶體或顆粒",
+                hazards: "基本無毒。吞食大量可能產生輕微瀉肚。主要作為抗氧化劑、除氯劑，以及經典「碘鐘反應」之核心關鍵劑。",
+                ghs: [],
+                ppe: [
+                    "基本防護衣",
+                    "常規實驗手套"
+                ],
+                firstAid: [
+                    "一般無特別反應，沾染皮膚時使用清水沖洗乾淨即可。"
+                ],
+                storage: "陰涼乾燥處保存，防熱，避免與酸類接觸（遇酸會分解析出黃色硫磺並釋放二氧化硫）。"
+            },
+            {
+                id: "iodine_solution",
+                name: "碘-碘化鉀溶液 (澱粉指示劑)",
+                engName: "Iodine-Potassium Iodide Solution",
+                cas: "12298-68-9",
+                formula: "$\\text{I}_3^-$",
+                category: "indicator",
+                ph: 6.0,
+                density: "約 1.05 g/cm³",
+                boiling: "100 °C (溶劑水)",
+                melting: "0 °C",
+                solubility: "完全溶於水",
+                appearance: "紅褐色至黃褐色澄清液體",
+                hazards: "對眼黏膜與皮膚有輕微染色與刺激。遇澱粉會立即產生極具特徵的深藍色-黑色絡合物反應。",
+                ghs: ["toxic"],
+                ppe: [
+                    "乳膠防色染手套",
+                    "安全防濺護目鏡"
+                ],
+                firstAid: [
+                    "皮膚接觸：碘具有強烈染色力，可用溫水及肥皂徹底擦洗，色素會隨時間消退。",
+                    "眼睛接觸：用生理食鹽水緩慢沖洗眼膜10分鐘，隨後就醫。"
+                ],
+                storage: "必須貯存在「避光茶色瓶」內！避免陽光直射導致游離碘揮發失效。"
+            },
+            {
+                id: "ammonia_water",
+                name: "稀氨水",
+                engName: "Ammonium Hydroxide",
+                cas: "1336-21-6",
+                formula: "$\\text{NH}_3\\cdot\\text{H}_2\\text{O}$",
+                category: "base",
+                ph: 11.6,
+                density: "0.91 g/cm³",
+                boiling: "27 °C",
+                melting: "-57.5 °C",
+                solubility: "與水互溶",
+                appearance: "無色澄清、具強烈刺鼻氨臭味的液體",
+                hazards: "造成嚴重皮膚灼傷及眼部損傷。極高濃度對水生生物有毒。",
+                ghs: ["corrosive", "environmental"],
+                ppe: [
+                    "化學安全防護鏡",
+                    "丁腈橡膠耐鹼手套",
+                    "操作時必須開啟抽風排煙設備（排煙櫃）"
+                ],
+                firstAid: [
+                    "皮膚接觸：脫去污染衣物，用流動清水洗滌15分鐘以上。",
+                    "眼睛接觸：立即提起眼瞼用生理鹽水或清潔溫水淋洗，迅速就醫。",
+                    "吸入：迅速移至開闊處呼吸新鮮空氣，保持暢通。必要時給氧或求醫。"
+                ],
+                storage: "必須低溫保存。防止高溫使氨氣揮發、造成容器膨脹爆炸。與酸類物質嚴格分開。"
             },
             {
                 id: "ethanol",
@@ -678,13 +1054,127 @@
                 ppe: [
                     "防化防濺眼鏡",
                     "防靜電手套",
-                    "防靜電工作服"
+                    "防靜電工作服",
+                    "若有大體積溢漏風險，應配戴防毒面罩（配有機蒸氣濾罐）"
                 ],
                 firstAid: [
                     "吸入：迅速脫離現場至新鮮空氣處。保持呼吸道通暢。",
-                    "眼睛接觸：提起眼瞼，用流動清水沖洗，如不適持續應就醫。"
+                    "眼睛接觸：提起眼瞼，用流動清水沖洗，如不適持續應就醫。",
+                    "食入：飲足量溫水，促使催吐，不適者送醫。"
                 ],
-                storage: "儲存於陰涼、通風的防火庫房。遠離火種、熱源。保持容器密封。"
+                storage: "儲存於陰涼、通風的防火庫房。遠離火種、熱源。庫溫不宜超過30℃。保持容器密封。"
+            },
+            {
+                id: "hydrogen_peroxide",
+                name: "過氧化氫 (雙氧水)",
+                engName: "Hydrogen Peroxide",
+                cas: "7722-84-1",
+                formula: "$\\text{H}_2\\text{O}_2$",
+                category: "oxidizer",
+                ph: 3.5,
+                density: "1.11 g/cm³ (30%)",
+                boiling: "108 °C (30% 溶液)",
+                melting: "-25.7 °C (30% 溶液)",
+                solubility: "能與水完全混溶",
+                appearance: "無色透明液體，稍有特殊刺激性氣味",
+                hazards: "強氧化劑，能促使可燃物燃燒。造成嚴重皮膚灼傷及眼部受損。受熱或雜質催化易劇烈分解爆炸。",
+                ghs: ["corrosive", "oxidizer"],
+                ppe: [
+                    "化學防濺眼鏡",
+                    "防化學腐蝕耐氧手套",
+                    "防酸鹼/防靜電專用圍裙",
+                    "確保通風系統優良，或使用全面罩防毒面具"
+                ],
+                firstAid: [
+                    "皮膚接觸：立即用清水沖洗，注意衣服若沾濕可能有燃燒風險，先用大量水浸透再行脫除。",
+                    "眼睛接觸：用生理鹽水洗淨，就醫。",
+                    "吸入：脫離現場，吸入新鮮空氣，給予氧氣治療，就醫。"
+                ],
+                storage: "避光儲存在通風陰涼處，嚴防受熱。防塵防雜質污染，避免與易燃物、還原劑接觸。容器必須配備洩壓排氣蓋。"
+            },
+            {
+                id: "hydrochloric_acid",
+                name: "鹽酸",
+                engName: "Hydrochloric Acid",
+                cas: "7647-01-0",
+                formula: "$\\text{HCl}$",
+                category: "acid",
+                ph: 1.0,
+                density: "1.18 g/cm³",
+                boiling: "108.5 °C (37% 溶液)",
+                melting: "-30 °C (37% 溶液)",
+                solubility: "與水混溶",
+                appearance: "無色至淡黃色、具窒息刺激性臭味的發煙液體",
+                hazards: "強烈酸性腐蝕物。吸入其酸霧會對呼吸道造成嚴重灼傷、化學性肺炎。",
+                ghs: ["corrosive", "toxic"],
+                ppe: [
+                    "化學安全防護眼鏡或全面罩",
+                    "防強酸耐磨橡膠手套",
+                    "連體防化衣及高筒靴",
+                    "高濃度作業環境必須使用防酸性氣體防毒面具"
+                ],
+                firstAid: [
+                    "吸入：立即轉移至通風處，保持溫暖靜臥。呼吸困難時施以輸氧，迅速就醫。",
+                    "皮膚接觸：用大量水沖洗至少15分鐘，去除受污染衣物鞋襪，就醫。",
+                    "眼睛接觸：立刻翻開上下眼瞼用流動清水沖洗20分鐘，隨即尋求專科醫生治療。"
+                ],
+                storage: "存於陰涼通風處，避免日曬。容器材質必須防酸，與鹼類、活潑金屬等分開存放。"
+            },
+            {
+                id: "acetone",
+                name: "丙酮",
+                engName: "Acetone",
+                cas: "67-64-1",
+                formula: "$\\text{CH}_3\\text{COCH}_3$",
+                category: "solvent",
+                ph: 7.0,
+                density: "0.791 g/cm³",
+                boiling: "56.05 °C",
+                melting: "-94.7 °C",
+                solubility: "與水互溶，亦溶於多數有機溶劑",
+                appearance: "無色易揮發、具特異香氣的液體",
+                hazards: "高度易燃。蒸氣可能引起昏迷與頭痛。對眼睛具中度刺激性。長期接觸可能導致皮膚乾燥與龜裂。",
+                ghs: ["flammable", "toxic"],
+                ppe: [
+                    "防液體噴濺安全護目鏡",
+                    "耐有機溶劑（如丁基橡膠）手套",
+                    "防靜電工裝、防爆電氣系統",
+                    "若在排風不良處操作需配戴活性碳防毒半面罩"
+                ],
+                firstAid: [
+                    "吸入：迅速脫離至空氣新鮮處。呼吸暫停時施行人工呼吸，就醫。",
+                    "皮膚接觸：脫去污染衣物，用肥皂水及清水徹底沖洗皮膚。",
+                    "眼睛接觸：睜開眼瞼，以清水溫和沖洗數分鐘，諮詢醫生。"
+                ],
+                storage: "儲存於極低溫防火安全櫃，嚴禁煙火與火花，遠離強氧化劑。"
+            },
+            {
+                id: "nitric_acid",
+                name: "硝酸",
+                engName: "Nitric Acid",
+                cas: "7697-37-2",
+                formula: "$\\text{HNO}_3$",
+                category: "acid",
+                ph: 1.0,
+                density: "1.51 g/cm³",
+                boiling: "83 °C",
+                melting: "-42 °C",
+                solubility: "易溶於水",
+                appearance: "無色、發煙液體，放置後易分解變黃",
+                hazards: "極強氧化劑。與可燃物接觸可燃燒。造成嚴重皮膚灼傷及眼睛損傷。吸入蒸氣可致致命性肺水腫。",
+                ghs: ["corrosive", "oxidizer", "toxic"],
+                ppe: [
+                    "防濺全面罩與酸鹼護目鏡",
+                    "重型耐酸防化橡膠手套",
+                    "防化隔絕性連體服",
+                    "操作時必須配戴自帶呼吸源的防毒防塵面具"
+                ],
+                firstAid: [
+                    "皮膚接觸：立刻脫去受污染衣物，用大量清水沖洗，隨後用碳酸氫鈉溶液沖洗中和，就醫。",
+                    "眼睛接觸：提起眼瞼用生理鹽水或溫水沖洗20分鐘，立即看眼科醫生。",
+                    "吸入：移至新鮮空氣處。若呼吸不順，提供氧氣並就醫檢查肺部損傷。"
+                ],
+                storage: "置於陰涼避光之酸類專屬庫，容器不可暴露日照。嚴格禁止與易燃物、強還原劑及鹼金屬混放。"
             },
             {
                 id: "phenolphthalein_ind",
@@ -700,7 +1190,7 @@
                 solubility: "難溶於水，易溶於乙醇",
                 appearance: "無色澄清液體（乙醇配製溶液）",
                 hazards: "主要危害取決於溶劑（通常為乙醇，具高度易燃性）。酚酞本身經分類可能具致突變性。",
-                ghs: ["flammable"],
+                ghs: ["flammable", "environmental"],
                 ppe: [
                     "安全防護眼鏡",
                     "丁腈手套",
@@ -710,7 +1200,7 @@
                     "皮膚接觸：以溫和肥皂水沖洗、脫去污染衣物。",
                     "眼睛接觸：輕柔以清水沖洗，若感覺刺激未改善，就醫。"
                 ],
-                storage: "陰涼、密閉防爆倉庫存放，遠離熱源和電火花。"
+                storage: "陰涼、密閉防爆倉庫存放，遠離熱源 and 電火花。"
             },
             {
                 id: "litmus_indicator",
@@ -738,6 +1228,7 @@
             }
         ];
 
+        // 危害標籤 SVG & 樣式配置
         const hazardConfig = {
             corrosive: {
                 label: "腐蝕性",
@@ -750,9 +1241,9 @@
                 icon: `<i data-lucide="flame" class="w-3.5 h-3.5"></i>`
             },
             toxic: {
-                label: "急性毒性",
+                label: "急毒性/物理刺激",
                 class: "bg-purple-500/10 border-purple-500/30 text-purple-400",
-                icon: `<i data-lucide="skull" class="w-3.5 h-3.5"></i>`
+                icon: `<i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>`
             },
             oxidizer: {
                 label: "強氧化性",
@@ -766,10 +1257,12 @@
             }
         };
 
+        // 2. 頁面狀態
         let currentCategory = "all";
         let currentHazardFilters = new Set();
         let searchQuery = "";
 
+        // DOM 元素快取
         const reagentGrid = document.getElementById("reagentGrid");
         const reagentCountEl = document.getElementById("reagentCount");
         const searchInput = document.getElementById("searchInput");
@@ -778,6 +1271,7 @@
         const clearFiltersBtn = document.getElementById("clearFilters");
         const noResultsEl = document.getElementById("noResults");
 
+        // 彈窗元素
         const sdsModal = document.getElementById("sdsModal");
         const btnCloseModal = document.getElementById("btnCloseModal");
         const btnCloseModalBottom = document.getElementById("btnCloseModalBottom");
@@ -796,6 +1290,7 @@
             }
         }
 
+        // 3. 渲染化學藥劑卡片
         function renderCards() {
             const filteredData = reagentsData.filter(item => {
                 const matchCategory = currentCategory === "all" || item.category === currentCategory;
@@ -824,7 +1319,7 @@
                     const conf = hazardConfig[h];
                     if (!conf) return '';
                     return `
-                        <span class="flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-md border ${conf.class}">
+                        <span class="flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-md border ${conf.class}">
                             ${conf.icon}
                             ${conf.label}
                         </span>
@@ -836,45 +1331,45 @@
                 switch(item.category) {
                     case 'acid': catText="強酸/弱酸"; catClass="bg-red-500/10 text-red-400 border border-red-500/20"; break;
                     case 'base': catText="強鹼/弱鹼"; catClass="bg-purple-500/10 text-purple-400 border border-purple-500/20"; break;
-                    case 'solvent': catText="溶劑"; catClass="bg-blue-500/10 text-blue-400 border border-blue-500/20"; break;
-                    case 'oxidizer': catText="氧化/還原/鹽類"; catClass="bg-amber-500/10 text-amber-400 border border-amber-500/20"; break;
-                    case 'indicator': catText="指示劑"; catClass="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"; break;
+                    case 'solvent': catText="溶劑/通用高分子"; catClass="bg-blue-500/10 text-blue-400 border border-blue-500/20"; break;
+                    case 'oxidizer': catText="氧化/還原/安全鹽類"; catClass="bg-amber-500/10 text-amber-400 border border-amber-500/20"; break;
+                    case 'indicator': catText="酸鹼指示劑"; catClass="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"; break;
                 }
 
                 return `
-                    <div class="group bg-slate-900 border border-slate-800 hover:border-cyan-500/50 rounded-2xl p-5 shadow-lg hover:shadow-cyan-500/5 transition-all duration-300 cursor-pointer flex flex-col justify-between" onclick="openSDSModal('${item.id}')">
+                    <div class="group bg-chemCard border border-chemBorder/50 hover:border-sky-500/50 rounded-2xl p-5 shadow-lg hover:shadow-sky-500/5 transition-all duration-300 cursor-pointer flex flex-col justify-between" onclick="openSDSModal('${item.id}')">
                         <div class="space-y-4">
                             <div class="flex justify-between items-start gap-2">
                                 <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${catClass}">
                                     ${catText}
                                 </span>
-                                <span class="text-sm font-bold text-cyan-400 code-font pr-1 transition group-hover:scale-105 duration-200">
+                                <span class="text-sm font-bold text-sky-400 code-font pr-1 transition group-hover:scale-105 duration-200">
                                     ${item.formula}
                                 </span>
                             </div>
 
                             <div>
-                                <h4 class="text-base font-bold text-slate-100 group-hover:text-cyan-300 transition-colors">${item.name}</h4>
-                                <p class="text-xs text-slate-450 italic mt-0.5 line-clamp-1">${item.engName}</p>
+                                <h4 class="text-lg font-bold text-slate-100 group-hover:text-sky-300 transition-colors">${item.name}</h4>
+                                <p class="text-xs text-slate-400 italic mt-0.5 line-clamp-1">${item.engName}</p>
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 text-[11px] py-1">
-                                <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                                    <span class="text-slate-500 block">pH 常數</span>
+                                <div class="bg-chemDark/40 p-2 rounded border border-chemBorder/30">
+                                    <span class="text-slate-400 block">系統 pH 值</span>
                                     <span class="font-bold text-slate-200 code-font">${item.ph}</span>
                                 </div>
-                                <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                                    <span class="text-slate-500 block">物理狀態</span>
+                                <div class="bg-chemDark/40 p-2 rounded border border-chemBorder/30">
+                                    <span class="text-slate-400 block">外觀物理狀態</span>
                                     <span class="font-bold text-slate-300 truncate block">${item.appearance}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="border-t border-slate-800 pt-4 mt-4 flex flex-wrap items-center justify-between gap-2">
+                        <div class="border-t border-chemBorder/50 pt-4 mt-4 flex flex-wrap items-center justify-between gap-2">
                             <div class="flex flex-wrap gap-1">
-                                ${hazardHtml.length > 0 ? hazardHtml : '<span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">🟢 安全學術物質</span>'}
+                                ${hazardHtml.length > 0 ? hazardHtml : '<span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">🟢 安全學術物質</span>'}
                             </div>
-                            <span class="text-xs text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1 font-medium">
+                            <span class="text-xs text-sky-400 group-hover:translate-x-1 transition-transform flex items-center gap-1 font-medium">
                                 SDS →
                             </span>
                         </div>
@@ -886,6 +1381,7 @@
             lucide.createIcons();
         }
 
+        // 4. 監聽搜尋與篩選事件
         searchInput.addEventListener("input", (e) => {
             searchQuery = e.target.value.toLowerCase().trim();
             renderCards();
@@ -893,8 +1389,12 @@
 
         categoryButtons.forEach(btn => {
             btn.addEventListener("click", () => {
-                categoryButtons.forEach(b => b.className = "filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-505 text-slate-300");
-                btn.className = "filter-btn active text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-cyan-500/10 border-cyan-500/30 text-cyan-400";
+                categoryButtons.forEach(b => b.classList.remove("active", "bg-sky-500/10", "border-sky-500/30", "text-sky-400"));
+                categoryButtons.forEach(b => b.classList.add("bg-chemCard", "border-chemBorder", "text-slate-300"));
+                
+                btn.classList.add("active", "bg-sky-500/10", "border-sky-500/30", "text-sky-400");
+                btn.classList.remove("bg-chemCard", "border-chemBorder", "text-slate-300");
+
                 currentCategory = btn.getAttribute("data-category");
                 renderCards();
             });
@@ -905,10 +1405,12 @@
                 const targetHazard = btn.getAttribute("data-hazard");
                 if (currentHazardFilters.has(targetHazard)) {
                     currentHazardFilters.delete(targetHazard);
-                    btn.className = "hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition";
+                    btn.classList.remove("bg-sky-500/30", "border-sky-400", "text-white");
+                    btn.classList.add("bg-slate-800", "text-slate-300");
                 } else {
                     currentHazardFilters.add(targetHazard);
-                    btn.className = "hazard-filter-btn text-xs px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-white hover:bg-cyan-500/30 transition";
+                    btn.classList.remove("bg-slate-800", "text-slate-300");
+                    btn.classList.add("bg-sky-500/30", "border-sky-400", "text-white");
                 }
                 renderCards();
             });
@@ -917,21 +1419,28 @@
         clearFiltersBtn.addEventListener("click", () => {
             searchInput.value = "";
             searchQuery = "";
+            
             categoryButtons.forEach(b => {
                 if(b.getAttribute("data-category") === "all") {
-                    b.className = "filter-btn active text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-cyan-500/10 border-cyan-500/30 text-cyan-400";
+                    b.classList.add("active", "bg-sky-500/10", "border-sky-500/30", "text-sky-400");
+                    b.classList.remove("bg-chemCard", "border-chemBorder", "text-slate-300");
                 } else {
-                    b.className = "filter-btn text-xs px-3.5 py-2 rounded-xl border font-medium transition duration-200 bg-slate-900 border-slate-800 hover:border-slate-550 text-slate-300";
+                    b.classList.remove("active", "bg-sky-500/10", "border-sky-500/30", "text-sky-400");
+                    b.classList.add("bg-chemCard", "border-chemBorder", "text-slate-300");
                 }
             });
             currentCategory = "all";
+
             currentHazardFilters.clear();
             hazardButtons.forEach(btn => {
-                btn.className = "hazard-filter-btn text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition";
+                btn.classList.remove("bg-sky-500/30", "border-sky-400", "text-white");
+                btn.classList.add("bg-slate-800", "text-slate-300");
             });
+
             renderCards();
         });
 
+        // 5. SDS 彈窗邏輯
         function openSDSModal(id) {
             const chem = reagentsData.find(c => c.id === id);
             if (!chem) return;
@@ -942,18 +1451,24 @@
             
             const phTypeEl = document.getElementById("modalPhType");
             if (chem.ph < 3) {
-                phTypeEl.textContent = `強酸性 (pH: ${chem.ph})`; phTypeEl.className = "text-xs font-bold text-rose-400";
+                phTypeEl.textContent = `強酸性 (pH: ${chem.ph})`;
+                phTypeEl.className = "text-xs font-bold text-red-400";
             } else if (chem.ph < 6.5) {
-                phTypeEl.textContent = `弱酸性 (pH: ${chem.ph})`; phTypeEl.className = "text-xs font-bold text-amber-300";
+                phTypeEl.textContent = `弱酸性 (pH: ${chem.ph})`;
+                phTypeEl.className = "text-xs font-bold text-amber-300";
             } else if (chem.ph > 11) {
-                phTypeEl.textContent = `強鹼性 (pH: ${chem.ph})`; phTypeEl.className = "text-xs font-bold text-purple-400";
+                phTypeEl.textContent = `強鹼性 (pH: ${chem.ph})`;
+                phTypeEl.className = "text-xs font-bold text-purple-400";
             } else if (chem.ph > 7.5) {
-                phTypeEl.textContent = `弱鹼性 (pH: ${chem.ph})`; phTypeEl.className = "text-xs font-bold text-blue-300";
+                phTypeEl.textContent = `弱鹼性 (pH: ${chem.ph})`;
+                phTypeEl.className = "text-xs font-bold text-blue-300";
             } else {
-                phTypeEl.textContent = `中性 (pH: ${chem.ph})`; phTypeEl.className = "text-xs font-bold text-emerald-400";
+                phTypeEl.textContent = `中性 (pH: ${chem.ph})`;
+                phTypeEl.className = "text-xs font-bold text-emerald-400";
             }
 
             document.getElementById("modalHazards").textContent = chem.hazards;
+
             document.getElementById("propAppearance").textContent = chem.appearance;
             document.getElementById("propMelting").textContent = chem.melting;
             document.getElementById("propBoiling").textContent = chem.boiling;
@@ -966,7 +1481,7 @@
                     return `<span class="flex items-center gap-1 text-[11px] font-bold px-3 py-1.5 rounded-full border ${conf.class}">${conf.icon} ${conf.label}</span>`;
                 }).join('');
             } else {
-                badgesContainer.innerHTML = `<span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full font-bold">🟢 無危險評級 (常規安全學術物質)</span>`;
+                badgesContainer.innerHTML = `<span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full font-bold">🟢 無危險評級 (日常安全常規物質)</span>`;
             }
 
             const ppeList = document.getElementById("modalPpe");
@@ -979,6 +1494,7 @@
 
             sdsModal.classList.remove("hidden");
             document.body.style.overflow = "hidden";
+
             safeRenderMath(sdsModal);
             lucide.createIcons();
         }
@@ -991,8 +1507,11 @@
         btnCloseModal.addEventListener("click", closeSDSModal);
         btnCloseModalBottom.addEventListener("click", closeSDSModal);
         sdsModal.addEventListener("click", (e) => {
-            if (e.target === sdsModal) closeSDSModal();
+            if (e.target === sdsModal) {
+                closeSDSModal();
+            }
         });
+
 
         // ==================== 互動虛擬酸鹼實驗室代碼 ====================
         const simChemSelect = document.getElementById("simChemSelect");
@@ -1011,8 +1530,7 @@
             simChemSelect.innerHTML = reagentsData
                 .filter(c => c.category !== "indicator")
                 .map(chem => {
-                    const cleanFormula = chem.formula.replace(/\$/g, '').replace(/\\text/g, '');
-                    return `<option value="${chem.id}">${chem.name} (${cleanFormula})</option>`;
+                    return `<option value="${chem.id}">${chem.name} (${chem.formula.replace(/\$/g, '')})</option>`;
                 }).join('');
         }
 
@@ -1094,13 +1612,15 @@
 
                 simExplanation.innerHTML = `
                     將 <strong>${chem.name} (pH ${chem.ph})</strong> 注入滴加 <strong>${indName}</strong> 的燒杯中。<br>
-                    由於系統 pH 值轉化為 <strong>${chem.ph}</strong>，指示劑分子結構與質子化狀態改變，溶液呈 <strong>${response.text}</strong>。
+                    由於系統 pH 值轉化為 <strong>${chem.ph}</strong>，指示劑分子結構與質子化狀態改變，溶液瞬即呈現 <strong>${response.text}</strong>。這有助於觀察和紀錄不同化學品的酸鹼特性差異。
                 `;
 
                 setTimeout(() => {
                     dropperLiquid.style.height = "60%";
                     btnRunSim.disabled = false;
-                    btnRunSim.innerHTML = `<i data-lucide="beaker" class="w-4 h-4 inline-block mr-1"></i> 再次注入並混合`;
+                    btnRunSim.innerHTML = `
+                        <i data-lucide="beaker" class="w-4 h-4 inline-block mr-1"></i> 再次注入並混合
+                    `;
                     lucide.createIcons();
                 }, 1000);
 
